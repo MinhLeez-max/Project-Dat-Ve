@@ -3,56 +3,56 @@
     <div class="col-md-6">
       <div class="card shadow-sm">
         <div class="card-body p-4">
-          <h2 class="text-center mb-4">Register</h2>
+          <h2 class="text-center mb-4">Đăng Ký</h2>
           
           <form action="/register" method="POST" class="needs-validation" novalidate>
             <div class="mb-3">
-              <label for="name" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" value="<%= typeof name != 'undefined' ? name : '' %>" required>
+              <label for="name" class="form-label">Họ và Tên</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Nhập họ và tên của bạn" value="<%= typeof name != 'undefined' ? name : '' %>" required>
               <div class="invalid-feedback">
-                Please enter your name.
+                Vui lòng nhập họ và tên.
               </div>
             </div>
             
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="<%= typeof email != 'undefined' ? email : '' %>" required>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email của bạn" value="<%= typeof email != 'undefined' ? email : '' %>" required>
               <div class="invalid-feedback">
-                Please enter a valid email.
+                Vui lòng nhập email hợp lệ.
               </div>
             </div>
             
             <div class="mb-3">
-              <label for="phone" class="form-label">Phone Number</label>
-              <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number" value="<%= typeof phone != 'undefined' ? phone : '' %>" required pattern="[0-9]{10,11}">
+              <label for="phone" class="form-label">Số Điện Thoại</label>
+              <input type="tel" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn" value="<%= typeof phone != 'undefined' ? phone : '' %>" required pattern="[0-9]{10,11}">
               <div class="invalid-feedback">
-                Please enter a valid phone number (10-11 digits).
+                Vui lòng nhập số điện thoại hợp lệ (10-11 số).
               </div>
             </div>
             
             <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required minlength="6">
+              <label for="password" class="form-label">Mật Khẩu</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required minlength="6">
               <div class="invalid-feedback">
-                Password must be at least 6 characters.
+                Mật khẩu phải có ít nhất 6 ký tự.
               </div>
             </div>
             
             <div class="mb-3">
-              <label for="password2" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" required>
+              <label for="password2" class="form-label">Xác Nhận Mật Khẩu</label>
+              <input type="password" class="form-control" id="password2" name="password2" placeholder="Xác nhận mật khẩu" required>
               <div class="invalid-feedback">
-                Please confirm your password.
+                Vui lòng xác nhận mật khẩu.
               </div>
             </div>
             
             <div class="d-grid gap-2 mt-4">
-              <button type="submit" class="btn btn-primary">Register</button>
+              <button type="submit" class="btn btn-primary">Đăng Ký</button>
             </div>
           </form>
           
           <div class="text-center mt-4">
-            <p class="mb-0">Already have an account? <a href="/login" class="text-decoration-none">Login</a></p>
+            <p class="mb-0">Đã có tài khoản? <a href="/login" class="text-decoration-none">Đăng Nhập</a></p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@
     const password2 = this.value;
     
     if (password !== password2) {
-      this.setCustomValidity('Passwords do not match');
+      this.setCustomValidity('Mật khẩu không khớp');
     } else {
       this.setCustomValidity('');
     }

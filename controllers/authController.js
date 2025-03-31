@@ -6,7 +6,7 @@ module.exports = {
   // Render register page
   getRegister: (req, res) => {
     res.render('auth/register', {
-      title: 'Register'
+      title: 'Đăng Ký'
     });
   },
 
@@ -18,27 +18,27 @@ module.exports = {
 
       // Check required fields
       if (!name || !email || !phone || !password || !password2) {
-        errors.push({ msg: 'Please fill in all fields' });
+        errors.push({ msg: 'Vui lòng điền đầy đủ thông tin' });
       }
 
       // Check passwords match
       if (password !== password2) {
-        errors.push({ msg: 'Passwords do not match' });
+        errors.push({ msg: 'Mật khẩu không khớp' });
       }
 
       // Check password length
       if (password.length < 6) {
-        errors.push({ msg: 'Password should be at least 6 characters' });
+        errors.push({ msg: 'Mật khẩu phải có ít nhất 6 ký tự' });
       }
 
       // Valid phone number
       if (!/^\d{10,11}$/.test(phone)) {
-        errors.push({ msg: 'Please provide a valid phone number' });
+        errors.push({ msg: 'Vui lòng nhập số điện thoại hợp lệ' });
       }
 
       if (errors.length > 0) {
         return res.render('auth/register', {
-          title: 'Register',
+          title: 'Đăng Ký',
           errors,
           name,
           email,
@@ -52,9 +52,9 @@ module.exports = {
       });
 
       if (existingUser) {
-        errors.push({ msg: 'Email is already registered' });
+        errors.push({ msg: 'Email này đã được đăng ký' });
         return res.render('auth/register', {
-          title: 'Register',
+          title: 'Đăng Ký',
           errors,
           name,
           email,
@@ -74,11 +74,11 @@ module.exports = {
         password: hashedPassword
       });
 
-      req.flash('success_msg', 'You are now registered and can log in');
+      req.flash('success_msg', 'Bạn đã đăng ký thành công và có thể đăng nhập ngay bây giờ');
       res.redirect('/login');
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Server error during registration');
+      req.flash('error_msg', 'Lỗi máy chủ trong quá trình đăng ký');
       res.redirect('/register');
     }
   },
@@ -86,7 +86,7 @@ module.exports = {
   // Render login page
   getLogin: (req, res) => {
     res.render('auth/login', {
-      title: 'Login'
+      title: 'Đăng Nhập'
     });
   },
 
@@ -97,7 +97,7 @@ module.exports = {
       
       // Validate inputs
       if (!email || !password) {
-        req.flash('error_msg', 'Please provide email and password');
+        req.flash('error_msg', 'Vui lòng nhập email và mật khẩu');
         return res.redirect('/login');
       }
 
@@ -107,7 +107,7 @@ module.exports = {
       });
       
       if (!user) {
-        req.flash('error_msg', 'Invalid email or password');
+        req.flash('error_msg', 'Email hoặc mật khẩu không chính xác');
         return res.redirect('/login');
       }
 
@@ -115,7 +115,7 @@ module.exports = {
       const isMatch = await bcrypt.compare(password, user.password);
       
       if (!isMatch) {
-        req.flash('error_msg', 'Invalid email or password');
+        req.flash('error_msg', 'Email hoặc mật khẩu không chính xác');
         return res.redirect('/login');
       }
 
@@ -137,7 +137,7 @@ module.exports = {
       res.redirect('/');
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Server error during login');
+      req.flash('error_msg', 'Lỗi máy chủ trong quá trình đăng nhập');
       res.redirect('/login');
     }
   },
@@ -146,7 +146,7 @@ module.exports = {
   logout: (req, res) => {
     req.session.destroy((err) => {
       if (err) {
-        console.error('Error destroying session:', err);
+        console.error('Lỗi hủy phiên:', err);
         return res.redirect('/');
       }
       res.redirect('/login');

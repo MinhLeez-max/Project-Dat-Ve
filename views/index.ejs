@@ -3,9 +3,9 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8">
-        <h1 class="mb-4">Find and Book Bus Tickets</h1>
-        <p class="lead mb-5">Travel anywhere in the country with comfortable buses and affordable prices.</p>
-        <a href="/buses/search" class="btn btn-primary btn-lg">Search Buses</a>
+        <h1 class="mb-4">Tìm và Đặt Vé Xe Khách</h1>
+        <p class="lead mb-5">Du lịch đến bất kỳ đâu trong cả nước với các xe khách thoải mái và giá cả phải chăng.</p>
+        <a href="/buses/search" class="btn btn-primary btn-lg">Tìm Xe</a>
       </div>
     </div>
   </div>
@@ -16,26 +16,26 @@
   <section class="mb-5">
     <div class="card search-form">
       <div class="card-body">
-        <h3 class="mb-4 text-center">Quick Search</h3>
+        <h3 class="mb-4 text-center">Tìm Kiếm Nhanh</h3>
         <form action="/buses/search" method="POST">
           <div class="row g-3">
             <div class="col-md-4">
-              <label for="departureCity" class="form-label">From</label>
-              <input type="text" class="form-control city-autocomplete" id="departureCity" name="departureCity" list="departureCities" placeholder="Departure City" required>
+              <label for="departureCity" class="form-label">Từ</label>
+              <input type="text" class="form-control city-autocomplete" id="departureCity" name="departureCity" list="departureCities" placeholder="Điểm khởi hành" required>
               <datalist id="departureCities"></datalist>
             </div>
             <div class="col-md-4">
-              <label for="arrivalCity" class="form-label">To</label>
-              <input type="text" class="form-control city-autocomplete" id="arrivalCity" name="arrivalCity" list="arrivalCities" placeholder="Arrival City" required>
+              <label for="arrivalCity" class="form-label">Đến</label>
+              <input type="text" class="form-control city-autocomplete" id="arrivalCity" name="arrivalCity" list="arrivalCities" placeholder="Điểm đến" required>
               <datalist id="arrivalCities"></datalist>
             </div>
             <div class="col-md-4">
-              <label for="departureDate" class="form-label">Date</label>
+              <label for="departureDate" class="form-label">Ngày</label>
               <input type="date" class="form-control datepicker" id="departureDate" name="departureDate" required>
             </div>
           </div>
           <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary">Search Buses</button>
+            <button type="submit" class="btn btn-primary">Tìm Xe</button>
           </div>
         </form>
       </div>
@@ -44,7 +44,7 @@
 
   <!-- Features Section -->
   <section class="mb-5">
-    <h2 class="text-center mb-4">Why Choose Us</h2>
+    <h2 class="text-center mb-4">Tại Sao Chọn Chúng Tôi</h2>
     <div class="row g-4">
       <div class="col-md-4">
         <div class="card h-100 border-0 shadow-sm">
@@ -52,8 +52,8 @@
             <div class="mb-3">
               <i class="fas fa-ticket-alt fa-3x text-primary"></i>
             </div>
-            <h4>Easy Booking</h4>
-            <p class="text-muted">Book your bus tickets online in just a few clicks with our simple and intuitive interface.</p>
+            <h4>Đặt Vé Dễ Dàng</h4>
+            <p class="text-muted">Đặt vé xe khách trực tuyến chỉ với vài cú nhấp chuột thông qua giao diện đơn giản và trực quan.</p>
           </div>
         </div>
       </div>
@@ -63,8 +63,8 @@
             <div class="mb-3">
               <i class="fas fa-bus fa-3x text-primary"></i>
             </div>
-            <h4>Wide Selection</h4>
-            <p class="text-muted">Choose from hundreds of buses covering routes across the country with various amenities.</p>
+            <h4>Nhiều Lựa Chọn</h4>
+            <p class="text-muted">Lựa chọn từ hàng trăm xe khách phủ sóng các tuyến đường trên cả nước với nhiều tiện nghi khác nhau.</p>
           </div>
         </div>
       </div>
@@ -74,8 +74,8 @@
             <div class="mb-3">
               <i class="fas fa-money-bill-wave fa-3x text-primary"></i>
             </div>
-            <h4>Secure Payment</h4>
-            <p class="text-muted">Multiple secure payment options available to make your booking process seamless.</p>
+            <h4>Thanh Toán An Toàn</h4>
+            <p class="text-muted">Nhiều phương thức thanh toán an toàn để giúp quá trình đặt vé của bạn diễn ra suôn sẻ.</p>
           </div>
         </div>
       </div>
@@ -84,38 +84,38 @@
 
   <!-- Popular Routes Section -->
   <section class="mb-5">
-    <h2 class="text-center mb-4">Popular Routes</h2>
+    <h2 class="text-center mb-4">Tuyến Đường Phổ Biến</h2>
     <div class="row g-4">
       <div class="col-md-4">
         <div class="card h-100 bus-card">
           <div class="card-body">
-            <h5 class="card-title">Hanoi - Ho Chi Minh City</h5>
-            <p class="text-muted">Distance: 1,600 km</p>
-            <p class="text-muted">Duration: 35-40 hours</p>
-            <p class="card-text">The longest route connecting the northern and southern parts of Vietnam.</p>
-            <a href="/buses/search" class="btn btn-sm btn-outline-primary">View Buses</a>
+            <h5 class="card-title">Hà Nội - TP. Hồ Chí Minh</h5>
+            <p class="text-muted">Khoảng cách: 1.600 km</p>
+            <p class="text-muted">Thời gian: 35-40 giờ</p>
+            <p class="card-text">Tuyến đường dài nhất kết nối miền Bắc và miền Nam Việt Nam.</p>
+            <a href="/buses/search" class="btn btn-sm btn-outline-primary">Xem Các Xe</a>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card h-100 bus-card">
           <div class="card-body">
-            <h5 class="card-title">Hanoi - Da Nang</h5>
-            <p class="text-muted">Distance: 790 km</p>
-            <p class="text-muted">Duration: 14-16 hours</p>
-            <p class="card-text">Popular route connecting Hanoi with the beautiful coastal city of Da Nang.</p>
-            <a href="/buses/search" class="btn btn-sm btn-outline-primary">View Buses</a>
+            <h5 class="card-title">Hà Nội - Đà Nẵng</h5>
+            <p class="text-muted">Khoảng cách: 790 km</p>
+            <p class="text-muted">Thời gian: 14-16 giờ</p>
+            <p class="card-text">Tuyến đường phổ biến kết nối Hà Nội với thành phố biển đẹp Đà Nẵng.</p>
+            <a href="/buses/search" class="btn btn-sm btn-outline-primary">Xem Các Xe</a>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card h-100 bus-card">
           <div class="card-body">
-            <h5 class="card-title">Ho Chi Minh City - Da Lat</h5>
-            <p class="text-muted">Distance: 300 km</p>
-            <p class="text-muted">Duration: 6-8 hours</p>
-            <p class="card-text">Scenic route to the beautiful highland city known for its cool climate.</p>
-            <a href="/buses/search" class="btn btn-sm btn-outline-primary">View Buses</a>
+            <h5 class="card-title">TP. Hồ Chí Minh - Đà Lạt</h5>
+            <p class="text-muted">Khoảng cách: 300 km</p>
+            <p class="text-muted">Thời gian: 6-8 giờ</p>
+            <p class="card-text">Tuyến đường cảnh quan đến thành phố cao nguyên đẹp với khí hậu mát mẻ.</p>
+            <a href="/buses/search" class="btn btn-sm btn-outline-primary">Xem Các Xe</a>
           </div>
         </div>
       </div>
@@ -124,7 +124,7 @@
 
   <!-- How It Works Section -->
   <section class="mb-5">
-    <h2 class="text-center mb-4">How It Works</h2>
+    <h2 class="text-center mb-4">Cách Thức Hoạt Động</h2>
     <div class="row g-4">
       <div class="col-md-3">
         <div class="card h-100 border-0 shadow-sm">
@@ -132,8 +132,8 @@
             <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
               <i class="fas fa-search text-white fa-lg"></i>
             </div>
-            <h5>Search</h5>
-            <p class="text-muted small">Enter your departure and destination cities along with the travel date.</p>
+            <h5>Tìm Kiếm</h5>
+            <p class="text-muted small">Nhập thành phố khởi hành và điểm đến cùng với ngày đi.</p>
           </div>
         </div>
       </div>
@@ -143,8 +143,8 @@
             <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
               <i class="fas fa-bus text-white fa-lg"></i>
             </div>
-            <h5>Select</h5>
-            <p class="text-muted small">Compare options and choose the best bus for your journey.</p>
+            <h5>Lựa Chọn</h5>
+            <p class="text-muted small">So sánh các lựa chọn và chọn xe tốt nhất cho hành trình của bạn.</p>
           </div>
         </div>
       </div>
@@ -154,8 +154,8 @@
             <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
               <i class="fas fa-credit-card text-white fa-lg"></i>
             </div>
-            <h5>Pay</h5>
-            <p class="text-muted small">Make a secure payment using your preferred payment method.</p>
+            <h5>Thanh Toán</h5>
+            <p class="text-muted small">Thực hiện thanh toán an toàn bằng phương thức thanh toán ưa thích của bạn.</p>
           </div>
         </div>
       </div>
@@ -165,8 +165,8 @@
             <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
               <i class="fas fa-ticket-alt text-white fa-lg"></i>
             </div>
-            <h5>Travel</h5>
-            <p class="text-muted small">Receive your e-ticket and get ready for your journey.</p>
+            <h5>Di Chuyển</h5>
+            <p class="text-muted small">Nhận vé điện tử và chuẩn bị cho hành trình của bạn.</p>
           </div>
         </div>
       </div>
