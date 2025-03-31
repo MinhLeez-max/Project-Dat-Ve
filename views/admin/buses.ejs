@@ -215,7 +215,7 @@
                     <select class="form-select" id="routeId" name="routeId" required>
                       <option value="">Select Tuyến Đường</option>
                       <% routes.forEach(route => { %>
-                        <option value="<%= route.id %>" <%= bus.routeId.toString() === route.id.toString() ? 'selected' : '' %>>
+                        <option value="<%= route.id %>" <%= bus.RouteId.toString() === route.id.toString() ? 'selected' : '' %>>
                           <%= route.departureCity %> đến <%= route.arrivalCity %>
                         </option>
                       <% }); %>
@@ -408,7 +408,7 @@
                       <tr>
                         <td><%= bus.busNumber %></td>
                         <td><%= bus.busName %></td>
-                        <td><%= bus.routeId.departureCity %> đến <%= bus.routeId.arrivalCity %></td>
+                        <td><%= bus.Route.departureCity %> đến <%= bus.Route.arrivalCity %></td>
                         <td><%= bus.busType %></td>
                         <td><%= new Date(bus.departureTime).toLocaleString('en-US', { 
                           hour: '2-digit', 
