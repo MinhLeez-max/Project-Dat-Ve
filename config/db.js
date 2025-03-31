@@ -3,11 +3,7 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(
-      process.env.MONGO_URI || 'mongodb://localhost:27017/vexere-clone',
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
+      process.env.MONGO_URI || 'mongodb://localhost:27017/vexere-clone'
     );
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {

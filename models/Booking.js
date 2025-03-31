@@ -46,7 +46,7 @@ const BookingSchema = new mongoose.Schema({
   },
   bookingReference: {
     type: String,
-    unique: true
+    unique: true  // This implicitly creates an index
   }
 });
 
@@ -67,6 +67,6 @@ BookingSchema.pre('save', function(next) {
 // Add index for faster lookups
 BookingSchema.index({ userId: 1, bookingDate: -1 });
 BookingSchema.index({ busId: 1, journeyDate: 1 });
-BookingSchema.index({ bookingReference: 1 });
+// Unique index is automatically created by the 'unique: true' property on bookingReference
 
 module.exports = mongoose.model('Booking', BookingSchema);
