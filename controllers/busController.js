@@ -2,6 +2,38 @@ const { sequelize, Bus, Route, Booking } = require('../models/index');
 const { Op } = require('sequelize');
 
 module.exports = {
+  // Get all routes and buses
+  getAllRoutesAndBuses: async (req, res) => {
+    try {
+      // Get all routes
+      const routes = await Route.findAll({
+        order: [['departureCity', 'ASC']]
+      });
+      
+      // Get buses for each route
+      const routesWithBuses = await Promise.all(routes.map(async (route) => {
+        const buses = await Bus.findAll({
+          where: { RouteId: route.id },
+          order: [['departureDate', 'ASC'], ['departureTime', 'ASC']]
+        });
+        
+        return {
+          route: route,
+          buses: buses
+        };
+      }));
+      
+      res.render('bus/all-routes', {
+        title: 'Tất Cả Tuyến Đường',
+        routesWithBuses
+      });
+    } catch (err) {
+      console.error(err);
+      req.flash('error_msg', 'Lỗi khi tải danh sách tuyến đường');
+      res.redirect('/');
+    }
+  },
+  
   // Get search form
   getSearchForm: async (req, res) => {
     try {

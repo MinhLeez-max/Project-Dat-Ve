@@ -110,8 +110,8 @@
                 
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="price" class="form-label">Giá Vé (VND)</label>
-                    <input type="number" class="form-control" id="price" name="price" min="1" required>
+                    <label for="fare" class="form-label">Giá Vé (VND)</label>
+                    <input type="number" class="form-control" id="fare" name="fare" min="1" required>
                     <div class="invalid-feedback">
                       Vui lòng nhập giá vé hợp lệ.
                     </div>
@@ -280,8 +280,8 @@
                 
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="price" class="form-label">Giá Vé (VND)</label>
-                    <input type="number" class="form-control" id="price" name="price" value="<%= bus.price %>" min="1" required>
+                    <label for="fare" class="form-label">Giá Vé (VND)</label>
+                    <input type="number" class="form-control" id="fare" name="fare" value="<%= bus.fare %>" min="1" required>
                     <div class="invalid-feedback">
                       Vui lòng nhập giá vé hợp lệ.
                     </div>
@@ -424,7 +424,7 @@
                           month: 'short',
                           day: 'numeric'
                         }) %></td>
-                        <td><%= bus.price.toLocaleString() %> VND</td>
+                        <td><%= bus.fare.toLocaleString() %> VND</td>
                         <td>
                           <span class="badge bg-<%= bus.available ? 'success' : 'danger' %>">
                             <%= bus.available ? 'Hoạt Động' : 'Không Hoạt Động' %>

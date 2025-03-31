@@ -5,7 +5,10 @@
       <div class="col-lg-8">
         <h1 class="mb-4">Tìm và Đặt Vé Xe Khách</h1>
         <p class="lead mb-5">Du lịch đến bất kỳ đâu trong cả nước với các xe khách thoải mái và giá cả phải chăng.</p>
-        <a href="/buses/search" class="btn btn-primary btn-lg">Tìm Xe</a>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="/buses/search" class="btn btn-primary btn-lg">Tìm Xe</a>
+          <a href="/all-routes" class="btn btn-outline-primary btn-lg">Xem Tất Cả Tuyến Đường</a>
+        </div>
       </div>
     </div>
   </div>
@@ -86,39 +89,33 @@
   <section class="mb-5">
     <h2 class="text-center mb-4">Tuyến Đường Phổ Biến</h2>
     <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card h-100 bus-card">
-          <div class="card-body">
-            <h5 class="card-title">Hà Nội - TP. Hồ Chí Minh</h5>
-            <p class="text-muted">Khoảng cách: 1.600 km</p>
-            <p class="text-muted">Thời gian: 35-40 giờ</p>
-            <p class="card-text">Tuyến đường dài nhất kết nối miền Bắc và miền Nam Việt Nam.</p>
-            <a href="/buses/search" class="btn btn-sm btn-outline-primary">Xem Các Xe</a>
+      <% if (typeof popularRoutes !== 'undefined' && popularRoutes.length > 0) { %>
+        <% popularRoutes.forEach(route => { %>
+          <div class="col-md-4">
+            <div class="card h-100 bus-card">
+              <div class="card-body">
+                <h5 class="card-title"><%= route.departureCity %> - <%= route.arrivalCity %></h5>
+                <p class="text-muted">Khoảng cách: <%= route.distance %> km</p>
+                <p class="text-muted">Thời gian: <%= route.estimatedDuration %> giờ</p>
+                <p class="card-text">Tuyến đường kết nối <%= route.departureCity %> với <%= route.arrivalCity %>.</p>
+                <div class="d-flex gap-2">
+                  <a href="/buses/search" class="btn btn-sm btn-outline-primary">Tìm Xe</a>
+                  <a href="/all-routes" class="btn btn-sm btn-outline-secondary">Xem Chi Tiết</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="col-12">
+          <div class="alert alert-info">
+            Hiện tại chưa có tuyến đường nào trong hệ thống.
           </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card h-100 bus-card">
-          <div class="card-body">
-            <h5 class="card-title">Hà Nội - Đà Nẵng</h5>
-            <p class="text-muted">Khoảng cách: 790 km</p>
-            <p class="text-muted">Thời gian: 14-16 giờ</p>
-            <p class="card-text">Tuyến đường phổ biến kết nối Hà Nội với thành phố biển đẹp Đà Nẵng.</p>
-            <a href="/buses/search" class="btn btn-sm btn-outline-primary">Xem Các Xe</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card h-100 bus-card">
-          <div class="card-body">
-            <h5 class="card-title">TP. Hồ Chí Minh - Đà Lạt</h5>
-            <p class="text-muted">Khoảng cách: 300 km</p>
-            <p class="text-muted">Thời gian: 6-8 giờ</p>
-            <p class="card-text">Tuyến đường cảnh quan đến thành phố cao nguyên đẹp với khí hậu mát mẻ.</p>
-            <a href="/buses/search" class="btn btn-sm btn-outline-primary">Xem Các Xe</a>
-          </div>
-        </div>
-      </div>
+      <% } %>
+    </div>
+    <div class="text-center mt-4">
+      <a href="/all-routes" class="btn btn-outline-primary">Xem Tất Cả Tuyến Đường <i class="fas fa-arrow-right ms-1"></i></a>
     </div>
   </section>
 

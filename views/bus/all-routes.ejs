@@ -1,0 +1,282 @@
+<div class="container py-4">
+  <div class="row mb-4">
+    <div class="col">
+      <h1 class="mb-3">Tất Cả Tuyến Đường</h1>
+      <p class="lead text-muted">Dưới đây là danh sách tất cả các tuyến đường và xe buýt hiện có. Chọn tuyến đường và xe buýt phù hợp với kế hoạch du lịch của bạn.</p>
+    </div>
+  </div>
+
+  <% if (routesWithBuses.length === 0) { %>
+    <div class="alert alert-info">
+      <p class="mb-0">Hiện tại chưa có tuyến đường nào được thêm vào hệ thống. Vui lòng quay lại sau.</p>
+    </div>
+  <% } else { %>
+    <!-- Filter accordion -->
+    <div class="accordion mb-4" id="filterAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="filterHeading">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="true" aria-controls="filterCollapse">
+            <i class="fas fa-filter me-2"></i> Bộ Lọc Tìm Kiếm
+          </button>
+        </h2>
+        <div id="filterCollapse" class="accordion-collapse collapse show" aria-labelledby="filterHeading">
+          <div class="accordion-body">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label for="filterDeparture" class="form-label">Điểm Khởi Hành</label>
+                <select class="form-select" id="filterDeparture">
+                  <option value="">Tất Cả</option>
+                  <% const departureCities = [...new Set(routesWithBuses.map(item => item.route.departureCity))]; %>
+                  <% departureCities.forEach(city => { %>
+                    <option value="<%= city %>"><%= city %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="filterArrival" class="form-label">Điểm Đến</label>
+                <select class="form-select" id="filterArrival">
+                  <option value="">Tất Cả</option>
+                  <% const arrivalCities = [...new Set(routesWithBuses.map(item => item.route.arrivalCity))]; %>
+                  <% arrivalCities.forEach(city => { %>
+                    <option value="<%= city %>"><%= city %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="filterBusType" class="form-label">Loại Xe</label>
+                <select class="form-select" id="filterBusType">
+                  <option value="">Tất Cả</option>
+                  <% const busTypes = [...new Set(routesWithBuses.flatMap(item => item.buses.map(bus => bus.type)))]; %>
+                  <% busTypes.forEach(type => { %>
+                    <option value="<%= type %>"><%= type %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button id="applyFilters" class="btn btn-primary">Áp Dụng Bộ Lọc</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Routes listing -->
+    <div id="routesContainer">
+      <% routesWithBuses.forEach(item => { %>
+        <div class="route-card mb-4" 
+             data-departure="<%= item.route.departureCity %>" 
+             data-arrival="<%= item.route.arrivalCity %>">
+          <div class="card">
+            <div class="card-header bg-primary bg-opacity-10">
+              <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">
+                  <i class="fas fa-route me-2"></i>
+                  <%= item.route.departureCity %> → <%= item.route.arrivalCity %>
+                </h5>
+                <span class="badge bg-secondary rounded-pill">
+                  <i class="fas fa-road me-1"></i> <%= item.route.distance %> km
+                </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                  <p class="mb-1 text-muted">
+                    <i class="fas fa-clock me-1"></i> Thời gian dự kiến: <%= item.route.estimatedDuration %> giờ
+                  </p>
+                  <p class="mb-0">
+                    <i class="fas fa-bus me-1"></i> <%= item.buses.length %> chuyến xe khả dụng
+                  </p>
+                </div>
+                <div>
+                  <button class="btn btn-outline-primary btn-toggle-buses" data-route-id="<%= item.route.id %>">
+                    <i class="fas fa-angle-down me-1"></i> Xem Các Chuyến Xe
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Buses for this route (collapsed by default) -->
+              <div class="buses-container collapse" id="buses-<%= item.route.id %>">
+                <hr>
+                <% if (item.buses.length === 0) { %>
+                  <div class="alert alert-warning">
+                    <p class="mb-0">Không có xe nào cho tuyến đường này. Vui lòng chọn tuyến đường khác.</p>
+                  </div>
+                <% } else { %>
+                  <% item.buses.forEach(bus => { %>
+                    <div class="card mb-3 bus-item" data-bus-type="<%= bus.type %>">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-9">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                              <h6 class="card-title mb-0"><%= bus.name %> - <%= bus.busNumber %></h6>
+                              <span class="badge <%= bus.type === 'Giường Nằm' ? 'bg-success' : bus.type === 'Máy Lạnh' ? 'bg-info' : bus.type === 'Cao Cấp' ? 'bg-primary' : 'bg-secondary' %>">
+                                <%= bus.type %>
+                              </span>
+                            </div>
+                            
+                            <div class="row mb-3">
+                              <div class="col-md-4">
+                                <div class="d-flex flex-column">
+                                  <span class="fw-bold"><%= new Date(bus.departureTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                                  <span class="text-muted small"><%= new Date(bus.departureDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></span>
+                                </div>
+                              </div>
+                              <div class="col-md-4 text-center">
+                                <div class="d-flex flex-column align-items-center">
+                                  <span class="text-muted small">
+                                    <%= Math.floor((new Date(bus.arrivalTime) - new Date(bus.departureTime)) / 3600000) %>h 
+                                    <%= Math.floor(((new Date(bus.arrivalTime) - new Date(bus.departureTime)) % 3600000) / 60000) %>m
+                                  </span>
+                                  <div class="position-relative my-1">
+                                    <hr class="w-100 m-0" style="border-top: 2px dashed;">
+                                    <i class="fas fa-bus position-absolute top-50 translate-middle" style="left: 50%;"></i>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-4 text-end">
+                                <div class="d-flex flex-column align-items-end">
+                                  <span class="fw-bold"><%= new Date(bus.arrivalTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                                  <span class="text-muted small"><%= new Date(bus.arrivalDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <!-- Amenities -->
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                              <% if (bus.amenities) { %>
+                                <% if (bus.amenities.wifi) { %>
+                                  <span class="badge bg-light text-dark">
+                                    <i class="fas fa-wifi me-1"></i> WiFi
+                                  </span>
+                                <% } %>
+                                <% if (bus.amenities.usb) { %>
+                                  <span class="badge bg-light text-dark">
+                                    <i class="fas fa-plug me-1"></i> Sạc USB
+                                  </span>
+                                <% } %>
+                                <% if (bus.amenities.food) { %>
+                                  <span class="badge bg-light text-dark">
+                                    <i class="fas fa-utensils me-1"></i> Thức ăn
+                                  </span>
+                                <% } %>
+                                <% if (bus.amenities.waterBottle) { %>
+                                  <span class="badge bg-light text-dark">
+                                    <i class="fas fa-tint me-1"></i> Nước uống
+                                  </span>
+                                <% } %>
+                                <% if (bus.amenities.blanket) { %>
+                                  <span class="badge bg-light text-dark">
+                                    <i class="fas fa-bed me-1"></i> Chăn
+                                  </span>
+                                <% } %>
+                                <% if (bus.amenities.entertainment) { %>
+                                  <span class="badge bg-light text-dark">
+                                    <i class="fas fa-tv me-1"></i> Giải trí
+                                  </span>
+                                <% } %>
+                              <% } %>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3 border-start text-center d-flex flex-column justify-content-center">
+                            <h5 class="text-primary mb-2"><%= bus.fare ? bus.fare.toLocaleString() : 0 %> VND</h5>
+                            <a href="/buses/<%= bus.id %>?date=<%= bus.departureDate %>" class="btn btn-primary btn-sm <%= user ? '' : 'disabled' %>" <%= !user ? 'data-bs-toggle="tooltip" data-bs-title="Vui lòng đăng nhập để đặt vé"' : '' %>>
+                              <i class="fas fa-chair me-1"></i> Chọn Ghế
+                            </a>
+                            <% if (!user) { %>
+                              <div class="mt-2">
+                                <small class="text-muted">Vui lòng <a href="/login">đăng nhập</a> để đặt vé</small>
+                              </div>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% }); %>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle buses for a route
+    const toggleButtons = document.querySelectorAll('.btn-toggle-buses');
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const routeId = this.getAttribute('data-route-id');
+        const busesContainer = document.getElementById(`buses-${routeId}`);
+        
+        // Toggle collapse
+        if (busesContainer.classList.contains('show')) {
+          busesContainer.classList.remove('show');
+          this.innerHTML = '<i class="fas fa-angle-down me-1"></i> Xem Các Chuyến Xe';
+        } else {
+          busesContainer.classList.add('show');
+          this.innerHTML = '<i class="fas fa-angle-up me-1"></i> Ẩn Các Chuyến Xe';
+        }
+      });
+    });
+    
+    // Apply filters
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    applyFiltersBtn.addEventListener('click', function() {
+      const departureCityFilter = document.getElementById('filterDeparture').value;
+      const arrivalCityFilter = document.getElementById('filterArrival').value;
+      const busTypeFilter = document.getElementById('filterBusType').value;
+      
+      const routeCards = document.querySelectorAll('.route-card');
+      routeCards.forEach(card => {
+        const departureCity = card.getAttribute('data-departure');
+        const arrivalCity = card.getAttribute('data-arrival');
+        const busItems = card.querySelectorAll('.bus-item');
+        
+        // Check route city filters
+        const routeMatches = (
+          (departureCityFilter === '' || departureCity === departureCityFilter) &&
+          (arrivalCityFilter === '' || arrivalCity === arrivalCityFilter)
+        );
+        
+        // For bus type filter, we need to check if any bus in this route matches
+        let hasBusTypeMatch = true;
+        if (busTypeFilter !== '' && routeMatches) {
+          hasBusTypeMatch = false;
+          
+          // Show only buses that match the filter
+          busItems.forEach(busItem => {
+            const busType = busItem.getAttribute('data-bus-type');
+            if (busType === busTypeFilter) {
+              busItem.style.display = 'block';
+              hasBusTypeMatch = true;
+            } else {
+              busItem.style.display = 'none';
+            }
+          });
+        } else if (routeMatches) {
+          // If no bus type filter, show all buses
+          busItems.forEach(busItem => {
+            busItem.style.display = 'block';
+          });
+        }
+        
+        // Show/hide route based on filters
+        if (routeMatches && hasBusTypeMatch) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+    
+    // Initialize tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+  });
+</script>

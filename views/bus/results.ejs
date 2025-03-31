@@ -111,7 +111,7 @@
                  data-wifi="<%= bus.amenities.wifi %>" 
                  data-usb="<%= bus.amenities.usb %>" 
                  data-food="<%= bus.amenities.food %>"
-                 data-price="<%= bus.price %>"
+                 data-price="<%= bus.fare %>"
                  data-departure="<%= new Date(bus.departureTime).getTime() %>"
                  data-duration="<%= (new Date(bus.arrivalTime) - new Date(bus.departureTime)) / 60000 %>">
               <div class="card-body">
@@ -197,8 +197,8 @@
                   
                   <div class="col-md-3 text-center border-start">
                     <div class="d-flex flex-column h-100 justify-content-center">
-                      <h5 class="text-primary mb-3"><%= bus.price.toLocaleString() %> VND</h5>
-                      <a href="/buses/<%= bus._id %>?date=<%= departureDate %>" class="btn btn-primary btn-sm">View Seats</a>
+                      <h5 class="text-primary mb-3"><%= bus.fare.toLocaleString() %> VND</h5>
+                      <a href="/buses/<%= bus.id %>?date=<%= departureDate %>" class="btn btn-primary btn-sm">Chọn Ghế</a>
                     </div>
                   </div>
                 </div>

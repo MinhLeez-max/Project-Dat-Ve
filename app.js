@@ -85,11 +85,30 @@ app.use("/routes", routeRoutes);
 app.use("/bookings", bookingRoutes);
 app.use("/admin", adminRoutes);
 
+// Route for all bus routes
+app.get("/all-routes", require('./controllers/busController').getAllRoutesAndBuses);
+
 // Home route
-app.get("/", (req, res) => {
-  res.render("index", {
-    title: "Vexere Clone - Bus Ticket Booking",
-  });
+app.get("/", async (req, res) => {
+  try {
+    // Get popular routes from database
+    const { Route } = require('./models/index');
+    const routes = await Route.findAll({
+      limit: 3,
+      order: [['createdAt', 'DESC']]
+    });
+    
+    res.render("index", {
+      title: "Vexere Clone - Bus Ticket Booking",
+      popularRoutes: routes
+    });
+  } catch (err) {
+    console.error(err);
+    res.render("index", {
+      title: "Vexere Clone - Bus Ticket Booking",
+      popularRoutes: []
+    });
+  }
 });
 
 // 404 handler
