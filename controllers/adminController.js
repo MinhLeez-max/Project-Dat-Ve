@@ -54,11 +54,10 @@ module.exports = {
       // Get recent bookings
       const recentBookings = await Booking.findAll({
         include: [
-          { model: User, as: 'user' },
+          { model: User },
           { 
-            model: Bus, 
-            as: 'bus',
-            include: [{ model: Route, as: 'route' }]
+            model: Bus,
+            include: [{ model: Route }]
           }
         ],
         order: [['bookingDate', 'DESC']],
