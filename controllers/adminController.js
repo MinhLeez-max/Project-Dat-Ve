@@ -1,4 +1,5 @@
 const { sequelize, Booking, Bus, User, Route } = require('../models');
+const { Op } = require('sequelize');
 
 module.exports = {
   // Get admin dashboard
@@ -24,8 +25,8 @@ module.exports = {
       const todayBookings = await Booking.count({
         where: {
           bookingDate: {
-            [sequelize.Op.gte]: today,
-            [sequelize.Op.lt]: tomorrow
+            [Op.gte]: today,
+            [Op.lt]: tomorrow
           }
         }
       });
@@ -34,7 +35,7 @@ module.exports = {
       const totalRevenue = await Booking.sum('totalAmount', {
         where: {
           status: {
-            [sequelize.Op.ne]: 'cancelled'
+            [Op.ne]: 'cancelled'
           }
         }
       });
@@ -42,10 +43,10 @@ module.exports = {
       const monthlyRevenue = await Booking.sum('totalAmount', {
         where: {
           status: {
-            [sequelize.Op.ne]: 'cancelled'
+            [Op.ne]: 'cancelled'
           },
           bookingDate: {
-            [sequelize.Op.gte]: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+            [Op.gte]: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
           }
         }
       });
