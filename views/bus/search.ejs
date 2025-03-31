@@ -3,13 +3,13 @@
     <div class="col-lg-8">
       <div class="card shadow-sm">
         <div class="card-body p-4">
-          <h2 class="text-center mb-4">Search Buses</h2>
+          <h2 class="text-center mb-4">Tìm Kiếm Xe</h2>
           
           <form action="/buses/search" method="POST" class="needs-validation" novalidate>
             <div class="row g-3">
               <div class="col-md-5">
-                <label for="departureCity" class="form-label">From</label>
-                <input type="text" class="form-control city-autocomplete" id="departureCity" name="departureCity" list="departureCities" placeholder="Departure City" required>
+                <label for="departureCity" class="form-label">Từ</label>
+                <input type="text" class="form-control city-autocomplete" id="departureCity" name="departureCity" list="departureCities" placeholder="Điểm khởi hành" required>
                 <datalist id="departureCities">
                   <% if(locals.departureCities) { %>
                     <% departureCities.forEach(city => { %>
@@ -18,13 +18,13 @@
                   <% } %>
                 </datalist>
                 <div class="invalid-feedback">
-                  Please select a departure city.
+                  Vui lòng chọn điểm khởi hành.
                 </div>
               </div>
               
               <div class="col-md-5">
-                <label for="arrivalCity" class="form-label">To</label>
-                <input type="text" class="form-control city-autocomplete" id="arrivalCity" name="arrivalCity" list="arrivalCities" placeholder="Arrival City" required>
+                <label for="arrivalCity" class="form-label">Đến</label>
+                <input type="text" class="form-control city-autocomplete" id="arrivalCity" name="arrivalCity" list="arrivalCities" placeholder="Điểm đến" required>
                 <datalist id="arrivalCities">
                   <% if(locals.arrivalCities) { %>
                     <% arrivalCities.forEach(city => { %>
@@ -33,21 +33,21 @@
                   <% } %>
                 </datalist>
                 <div class="invalid-feedback">
-                  Please select an arrival city.
+                  Vui lòng chọn điểm đến.
                 </div>
               </div>
               
               <div class="col-md-2">
-                <label for="departureDate" class="form-label">Date</label>
+                <label for="departureDate" class="form-label">Ngày</label>
                 <input type="date" class="form-control datepicker" id="departureDate" name="departureDate" required>
                 <div class="invalid-feedback">
-                  Please select a date.
+                  Vui lòng chọn ngày.
                 </div>
               </div>
             </div>
             
             <div class="text-center mt-4">
-              <button type="submit" class="btn btn-primary btn-lg">Search Buses</button>
+              <button type="submit" class="btn btn-primary btn-lg">Tìm Xe</button>
             </div>
           </form>
         </div>
@@ -55,32 +55,32 @@
       
       <!-- Popular Routes Section -->
       <div class="mt-5">
-        <h3 class="text-center mb-4">Popular Routes</h3>
+        <h3 class="text-center mb-4">Tuyến Đường Phổ Biến</h3>
         <div class="row g-4">
           <div class="col-md-4">
             <div class="card h-100">
               <div class="card-body">
-                <h5 class="card-title">Hanoi - Ho Chi Minh City</h5>
-                <p class="card-text text-muted small">Starting from 500,000 VND</p>
-                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Hanoi', 'Ho Chi Minh City')">Select</button>
+                <h5 class="card-title">Hà Nội - TP. Hồ Chí Minh</h5>
+                <p class="card-text text-muted small">Giá từ 500.000 VNĐ</p>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Hanoi', 'Ho Chi Minh City')">Chọn</button>
               </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="card h-100">
               <div class="card-body">
-                <h5 class="card-title">Hanoi - Da Nang</h5>
-                <p class="card-text text-muted small">Starting from 350,000 VND</p>
-                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Hanoi', 'Da Nang')">Select</button>
+                <h5 class="card-title">Hà Nội - Đà Nẵng</h5>
+                <p class="card-text text-muted small">Giá từ 350.000 VNĐ</p>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Hanoi', 'Da Nang')">Chọn</button>
               </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="card h-100">
               <div class="card-body">
-                <h5 class="card-title">Ho Chi Minh City - Da Lat</h5>
-                <p class="card-text text-muted small">Starting from 200,000 VND</p>
-                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Ho Chi Minh City', 'Da Lat')">Select</button>
+                <h5 class="card-title">TP. Hồ Chí Minh - Đà Lạt</h5>
+                <p class="card-text text-muted small">Giá từ 200.000 VNĐ</p>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Ho Chi Minh City', 'Da Lat')">Chọn</button>
               </div>
             </div>
           </div>

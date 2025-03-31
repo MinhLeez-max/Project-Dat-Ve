@@ -18,13 +18,13 @@ module.exports = {
       }).then(cities => cities.map(city => city.arrivalCity));
       
       res.render('bus/search', {
-        title: 'Search Buses',
+        title: 'Tìm Xe',
         departureCities,
         arrivalCities
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error loading search page');
+      req.flash('error_msg', 'Lỗi khi tải trang tìm kiếm');
       res.redirect('/');
     }
   },
@@ -36,7 +36,7 @@ module.exports = {
       
       // Validate input
       if (!departureCity || !arrivalCity || !departureDate) {
-        req.flash('error_msg', 'Please fill in all fields');
+        req.flash('error_msg', 'Vui lòng điền đầy đủ thông tin');
         return res.redirect('/buses/search');
       }
 
@@ -49,7 +49,7 @@ module.exports = {
       });
 
       if (routes.length === 0) {
-        req.flash('error_msg', 'No routes found for the selected cities');
+        req.flash('error_msg', 'Không tìm thấy tuyến đường cho các thành phố đã chọn');
         return res.redirect('/buses/search');
       }
 
@@ -73,7 +73,7 @@ module.exports = {
       });
 
       res.render('bus/results', {
-        title: 'Bus Results',
+        title: 'Kết Quả Tìm Kiếm',
         buses,
         departureCity,
         arrivalCity,
@@ -81,7 +81,7 @@ module.exports = {
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error searching buses');
+      req.flash('error_msg', 'Lỗi khi tìm kiếm xe');
       res.redirect('/buses/search');
     }
   },
@@ -98,7 +98,7 @@ module.exports = {
       });
       
       if (!bus) {
-        req.flash('error_msg', 'Bus not found');
+        req.flash('error_msg', 'Không tìm thấy xe');
         return res.redirect('/buses/search');
       }
 
@@ -131,14 +131,14 @@ module.exports = {
       });
 
       res.render('booking/select-seats', {
-        title: 'Select Seats',
+        title: 'Chọn Ghế',
         bus,
         journeyDate,
         bookedSeats
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error fetching bus details');
+      req.flash('error_msg', 'Lỗi khi tải thông tin xe');
       res.redirect('/buses/search');
     }
   },
