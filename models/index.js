@@ -167,6 +167,7 @@ const syncModels = async () => {
 };
 
 module.exports = {
+  sequelize,
   User,
   Route,
   Bus,

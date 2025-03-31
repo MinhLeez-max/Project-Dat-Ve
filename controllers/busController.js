@@ -1,16 +1,21 @@
-const Bus = require('../models/Bus');
-const Route = require('../models/Route');
-const Booking = require('../models/Booking');
+const { sequelize, Bus, Route, Booking } = require('../models/index');
+const { Op } = require('sequelize');
 
 module.exports = {
   // Get search form
   getSearchForm: async (req, res) => {
     try {
-      // Get unique departure cities
-      const departureCities = await Route.distinct('departureCity');
+      // Get unique departure cities using Sequelize
+      const departureCities = await Route.findAll({
+        attributes: [[sequelize.fn('DISTINCT', sequelize.col('departureCity')), 'departureCity']],
+        raw: true
+      }).then(cities => cities.map(city => city.departureCity));
       
-      // Get unique arrival cities
-      const arrivalCities = await Route.distinct('arrivalCity');
+      // Get unique arrival cities using Sequelize
+      const arrivalCities = await Route.findAll({
+        attributes: [[sequelize.fn('DISTINCT', sequelize.col('arrivalCity')), 'arrivalCity']],
+        raw: true
+      }).then(cities => cities.map(city => city.arrivalCity));
       
       res.render('bus/search', {
         title: 'Search Buses',
@@ -35,10 +40,12 @@ module.exports = {
         return res.redirect('/buses/search');
       }
 
-      // Find route IDs matching the search criteria
-      const routes = await Route.find({
-        departureCity,
-        arrivalCity
+      // Find route IDs matching the search criteria - using Sequelize
+      const routes = await Route.findAll({
+        where: {
+          departureCity: departureCity,
+          arrivalCity: arrivalCity
+        }
       });
 
       if (routes.length === 0) {
@@ -46,22 +53,24 @@ module.exports = {
         return res.redirect('/buses/search');
       }
 
-      const routeIds = routes.map(route => route._id);
+      const routeIds = routes.map(route => route.id);
 
       // Set date range for search
       const date = new Date(departureDate);
       const nextDay = new Date(departureDate);
       nextDay.setDate(nextDay.getDate() + 1);
 
-      // Find buses for these routes and date
-      const buses = await Bus.find({
-        routeId: { $in: routeIds },
-        departureTime: {
-          $gte: date,
-          $lt: nextDay
+      // Find buses for these routes and date - using Sequelize and associations
+      const buses = await Bus.findAll({
+        where: {
+          RouteId: routeIds,
+          departureDate: {
+            [Op.gte]: date,
+            [Op.lt]: nextDay
+          }
         },
-        available: true
-      }).populate('routeId');
+        include: [Route]
+      });
 
       res.render('bus/results', {
         title: 'Bus Results',
@@ -83,30 +92,42 @@ module.exports = {
       const busId = req.params.id;
       const journeyDate = req.query.date;
       
-      // Find bus with details
-      const bus = await Bus.findById(busId).populate('routeId');
+      // Find bus with details - using Sequelize
+      const bus = await Bus.findByPk(busId, {
+        include: [Route]
+      });
       
       if (!bus) {
         req.flash('error_msg', 'Bus not found');
         return res.redirect('/buses/search');
       }
 
-      // Find existing bookings for this bus and date to determine booked seats
-      const bookings = await Booking.find({
-        busId,
-        journeyDate: { 
-          $gte: new Date(journeyDate),
-          $lt: new Date(new Date(journeyDate).setDate(new Date(journeyDate).getDate() + 1))
-        },
-        status: { $ne: 'cancelled' }
+      // Find existing bookings for this bus and date to determine booked seats - using Sequelize
+      const journeyStart = new Date(journeyDate);
+      const journeyEnd = new Date(journeyDate);
+      journeyEnd.setDate(journeyEnd.getDate() + 1);
+      
+      const bookings = await Booking.findAll({
+        where: {
+          BusId: busId,
+          journeyDate: { 
+            [Op.gte]: journeyStart,
+            [Op.lt]: journeyEnd
+          },
+          status: { 
+            [Op.ne]: 'cancelled' 
+          }
+        }
       });
 
       // Create an array of already booked seats
       const bookedSeats = [];
       bookings.forEach(booking => {
-        booking.seats.forEach(seat => {
-          bookedSeats.push(seat.seatNumber);
-        });
+        if (booking.seatNumbers && booking.seatNumbers.length) {
+          booking.seatNumbers.forEach(seatNumber => {
+            bookedSeats.push(seatNumber);
+          });
+        }
       });
 
       res.render('booking/select-seats', {
@@ -125,9 +146,11 @@ module.exports = {
   // Admin: Get all buses
   getAllBuses: async (req, res) => {
     try {
-      const buses = await Bus.find()
-        .populate('routeId')
-        .sort({ departureTime: 1 });
+      // Using Sequelize for fetching all buses with routes
+      const buses = await Bus.findAll({
+        include: [Route],
+        order: [['departureDate', 'ASC'], ['departureTime', 'ASC']]
+      });
       
       res.render('admin/buses', {
         title: 'Manage Buses',
@@ -143,7 +166,10 @@ module.exports = {
   // Admin: Render add bus form
   getAddBus: async (req, res) => {
     try {
-      const routes = await Route.find().sort({ departureCity: 1 });
+      // Using Sequelize to fetch routes sorted by departure city
+      const routes = await Route.findAll({
+        order: [['departureCity', 'ASC']]
+      });
       
       res.render('admin/buses', {
         title: 'Add New Bus',

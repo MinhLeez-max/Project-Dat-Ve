@@ -3,6 +3,7 @@ const session = require("express-session");
 const path = require("path");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
+const expressLayouts = require('express-ejs-layouts');
 
 // Import routes
 const authRoutes = require("./routes/authRoutes");
@@ -26,6 +27,9 @@ connectDB().then(() => {
 
 // EJS Setup
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(expressLayouts);
+app.set("layout", "layouts/main");
 
 // Body parser middleware
 app.use(express.urlencoded({ extended: false }));
