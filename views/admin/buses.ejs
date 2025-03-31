@@ -4,23 +4,23 @@
       <!-- Admin Sidebar -->
       <div class="card">
         <div class="card-header">
-          <h5 class="mb-0">Admin Panel</h5>
+          <h5 class="mb-0">Bảng Điều Khiển</h5>
         </div>
         <div class="list-group list-group-flush">
           <a href="/admin/dashboard" class="list-group-item list-group-item-action">
-            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+            <i class="fas fa-tachometer-alt me-2"></i> Trang Chính
           </a>
           <a href="/admin/routes" class="list-group-item list-group-item-action">
-            <i class="fas fa-route me-2"></i> Routes
+            <i class="fas fa-route me-2"></i> Tuyến Đường
           </a>
           <a href="/admin/buses" class="list-group-item list-group-item-action active">
-            <i class="fas fa-bus me-2"></i> Buses
+            <i class="fas fa-bus me-2"></i> Xe Buýt
           </a>
           <a href="/admin/bookings" class="list-group-item list-group-item-action">
-            <i class="fas fa-ticket-alt me-2"></i> Bookings
+            <i class="fas fa-ticket-alt me-2"></i> Đặt Vé
           </a>
           <a href="/" class="list-group-item list-group-item-action">
-            <i class="fas fa-home me-2"></i> Back to Site
+            <i class="fas fa-home me-2"></i> Quay Lại Trang Chủ
           </a>
         </div>
       </div>
@@ -30,9 +30,9 @@
       <% if (locals.addBus) { %>
         <!-- Add Bus Form -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="mb-0">Add New Bus</h2>
+          <h2 class="mb-0">Thêm Xe Buýt Mới</h2>
           <a href="/admin/buses" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-1"></i> Back to Buses
+            <i class="fas fa-arrow-left me-1"></i> Quay Lại Danh Sách
           </a>
         </div>
         
@@ -40,156 +40,156 @@
           <div class="card-body">
             <form action="/admin/buses" method="POST" class="needs-validation" novalidate>
               <div class="mb-4">
-                <h5>Basic Information</h5>
+                <h5>Thông Tin Cơ Bản</h5>
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="routeId" class="form-label">Route</label>
+                    <label for="routeId" class="form-label">Tuyến Đường</label>
                     <select class="form-select" id="routeId" name="routeId" required>
-                      <option value="">Select Route</option>
+                      <option value="">Select Tuyến Đường</option>
                       <% routes.forEach(route => { %>
                         <option value="<%= route._id %>">
-                          <%= route.departureCity %> to <%= route.arrivalCity %>
+                          <%= route.departureCity %> đến <%= route.arrivalCity %>
                         </option>
                       <% }); %>
                     </select>
                     <div class="invalid-feedback">
-                      Please select a route.
+                      Vui lòng chọn tuyến đường.
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="busNumber" class="form-label">Bus Number</label>
+                    <label for="busNumber" class="form-label">Số Xe</label>
                     <input type="text" class="form-control" id="busNumber" name="busNumber" required>
                     <div class="invalid-feedback">
-                      Please enter bus number.
+                      Vui lòng nhập số xe.
                     </div>
                   </div>
                 </div>
                 
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="busName" class="form-label">Bus Name</label>
+                    <label for="busName" class="form-label">Tên Xe</label>
                     <input type="text" class="form-control" id="busName" name="busName" required>
                     <div class="invalid-feedback">
-                      Please enter bus name.
+                      Vui lòng nhập tên xe.
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="busType" class="form-label">Bus Type</label>
+                    <label for="busType" class="form-label">Loại Xe</label>
                     <select class="form-select" id="busType" name="busType" required>
-                      <option value="">Select Type</option>
-                      <option value="Regular">Regular</option>
-                      <option value="Sleeper">Sleeper</option>
-                      <option value="AC">AC</option>
-                      <option value="Deluxe">Deluxe</option>
+                      <option value="">Chọn Loại Xe</option>
+                      <option value="Thường">Thường</option>
+                      <option value="Giường Nằm">Giường Nằm</option>
+                      <option value="Máy Lạnh">Máy Lạnh</option>
+                      <option value="Cao Cấp">Cao Cấp</option>
                     </select>
                     <div class="invalid-feedback">
-                      Please select bus type.
+                      Vui lòng chọn loại xe.
                     </div>
                   </div>
                 </div>
               </div>
               
               <div class="mb-4">
-                <h5>Schedule & Pricing</h5>
+                <h5>Lịch Trình & Giá Vé</h5>
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="departureTime" class="form-label">Departure Time</label>
+                    <label for="departureTime" class="form-label">Thời Gian Khởi Hành</label>
                     <input type="datetime-local" class="form-control" id="departureTime" name="departureTime" required>
                     <div class="invalid-feedback">
-                      Please enter departure time.
+                      Vui lòng nhập thời gian khởi hành.
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="arrivalTime" class="form-label">Arrival Time</label>
+                    <label for="arrivalTime" class="form-label">Thời Gian Đến</label>
                     <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" required>
                     <div class="invalid-feedback">
-                      Please enter arrival time.
+                      Vui lòng nhập thời gian đến.
                     </div>
                   </div>
                 </div>
                 
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="price" class="form-label">Ticket Price (VND)</label>
+                    <label for="price" class="form-label">Giá Vé (VND)</label>
                     <input type="number" class="form-control" id="price" name="price" min="1" required>
                     <div class="invalid-feedback">
-                      Please enter a valid price.
+                      Vui lòng nhập giá vé hợp lệ.
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="totalSeats" class="form-label">Total Seats</label>
+                    <label for="totalSeats" class="form-label">Tổng Số Ghế</label>
                     <input type="number" class="form-control" id="totalSeats" name="totalSeats" min="1" required>
                     <div class="invalid-feedback">
-                      Please enter total seats.
+                      Vui lòng nhập tổng số ghế.
                     </div>
                   </div>
                 </div>
               </div>
               
               <div class="mb-4">
-                <h5>Seat Layout</h5>
+                <h5>Bố Trí Ghế</h5>
                 <div class="row mb-3">
                   <div class="col-md-4">
-                    <label for="rows" class="form-label">Number of Rows</label>
+                    <label for="rows" class="form-label">Số Hàng</label>
                     <input type="number" class="form-control" id="rows" name="rows" min="1" required>
                     <div class="invalid-feedback">
-                      Please enter number of rows.
+                      Vui lòng nhập số hàng.
                     </div>
                   </div>
                   <div class="col-md-4">
-                    <label for="columns" class="form-label">Number of Columns</label>
+                    <label for="columns" class="form-label">Số Cột</label>
                     <input type="number" class="form-control" id="columns" name="columns" min="1" required>
                     <div class="invalid-feedback">
-                      Please enter number of columns.
+                      Vui lòng nhập số cột.
                     </div>
                   </div>
                   <div class="col-md-4">
-                    <label for="layout" class="form-label">Layout Pattern</label>
+                    <label for="layout" class="form-label">Kiểu Bố Trí</label>
                     <select class="form-select" id="layout" name="layout" required>
-                      <option value="">Select Layout</option>
-                      <option value="2-2">2-2 (4 seats per row with aisle)</option>
-                      <option value="2-1">2-1 (3 seats per row with aisle)</option>
-                      <option value="1-1">1-1 (2 seats per row with aisle)</option>
-                      <option value="3-2">3-2 (5 seats per row with aisle)</option>
+                      <option value="">Chọn Kiểu Bố Trí</option>
+                      <option value="2-2">2-2 (4 ghế mỗi hàng với lối đi)</option>
+                      <option value="2-1">2-1 (3 ghế mỗi hàng với lối đi)</option>
+                      <option value="1-1">1-1 (2 ghế mỗi hàng với lối đi)</option>
+                      <option value="3-2">3-2 (5 ghế mỗi hàng với lối đi)</option>
                     </select>
                     <div class="invalid-feedback">
-                      Please select layout pattern.
+                      Vui lòng chọn kiểu bố trí.
                     </div>
                   </div>
                 </div>
               </div>
               
               <div class="mb-4">
-                <h5>Amenities</h5>
+                <h5>Tiện Nghi</h5>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="wifi" name="wifi">
                   <label class="form-check-label" for="wifi">WiFi</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="usb" name="usb">
-                  <label class="form-check-label" for="usb">USB Charging</label>
+                  <label class="form-check-label" for="usb">Sạc USB</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="food" name="food">
-                  <label class="form-check-label" for="food">Food</label>
+                  <label class="form-check-label" for="food">Thức Ăn</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="waterBottle" name="waterBottle">
-                  <label class="form-check-label" for="waterBottle">Water Bottle</label>
+                  <label class="form-check-label" for="waterBottle">Nước Uống</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="blanket" name="blanket">
-                  <label class="form-check-label" for="blanket">Blanket</label>
+                  <label class="form-check-label" for="blanket">Chăn</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="entertainment" name="entertainment">
-                  <label class="form-check-label" for="entertainment">Entertainment</label>
+                  <label class="form-check-label" for="entertainment">Giải Trí</label>
                 </div>
               </div>
               
               <div class="text-end">
                 <button type="submit" class="btn btn-primary">
-                  <i class="fas fa-save me-1"></i> Save Bus
+                  <i class="fas fa-save me-1"></i> Lưu Thông Tin Xe
                 </button>
               </div>
             </form>
@@ -198,9 +198,9 @@
       <% } else if (locals.editBus) { %>
         <!-- Edit Bus Form -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="mb-0">Edit Bus</h2>
+          <h2 class="mb-0">Sửa Thông Tin Xe Buýt</h2>
           <a href="/admin/buses" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-1"></i> Back to Buses
+            <i class="fas fa-arrow-left me-1"></i> Quay Lại Danh Sách
           </a>
         </div>
         
@@ -208,89 +208,89 @@
           <div class="card-body">
             <form action="/admin/buses/<%= bus._id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
               <div class="mb-4">
-                <h5>Basic Information</h5>
+                <h5>Thông Tin Cơ Bản</h5>
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="routeId" class="form-label">Route</label>
+                    <label for="routeId" class="form-label">Tuyến Đường</label>
                     <select class="form-select" id="routeId" name="routeId" required>
-                      <option value="">Select Route</option>
+                      <option value="">Select Tuyến Đường</option>
                       <% routes.forEach(route => { %>
                         <option value="<%= route._id %>" <%= bus.routeId.toString() === route._id.toString() ? 'selected' : '' %>>
-                          <%= route.departureCity %> to <%= route.arrivalCity %>
+                          <%= route.departureCity %> đến <%= route.arrivalCity %>
                         </option>
                       <% }); %>
                     </select>
                     <div class="invalid-feedback">
-                      Please select a route.
+                      Vui lòng chọn tuyến đường.
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="busNumber" class="form-label">Bus Number</label>
+                    <label for="busNumber" class="form-label">Số Xe</label>
                     <input type="text" class="form-control" id="busNumber" name="busNumber" value="<%= bus.busNumber %>" required>
                     <div class="invalid-feedback">
-                      Please enter bus number.
+                      Vui lòng nhập số xe.
                     </div>
                   </div>
                 </div>
                 
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="busName" class="form-label">Bus Name</label>
+                    <label for="busName" class="form-label">Tên Xe</label>
                     <input type="text" class="form-control" id="busName" name="busName" value="<%= bus.busName %>" required>
                     <div class="invalid-feedback">
-                      Please enter bus name.
+                      Vui lòng nhập tên xe.
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="busType" class="form-label">Bus Type</label>
+                    <label for="busType" class="form-label">Loại Xe</label>
                     <select class="form-select" id="busType" name="busType" required>
-                      <option value="">Select Type</option>
-                      <option value="Regular" <%= bus.busType === 'Regular' ? 'selected' : '' %>>Regular</option>
-                      <option value="Sleeper" <%= bus.busType === 'Sleeper' ? 'selected' : '' %>>Sleeper</option>
-                      <option value="AC" <%= bus.busType === 'AC' ? 'selected' : '' %>>AC</option>
-                      <option value="Deluxe" <%= bus.busType === 'Deluxe' ? 'selected' : '' %>>Deluxe</option>
+                      <option value="">Chọn Loại Xe</option>
+                      <option value="Thường" <%= bus.busType === 'Thường' ? 'selected' : '' %>>Thường</option>
+                      <option value="Giường Nằm" <%= bus.busType === 'Giường Nằm' ? 'selected' : '' %>>Giường Nằm</option>
+                      <option value="Máy Lạnh" <%= bus.busType === 'Máy Lạnh' ? 'selected' : '' %>>Máy Lạnh</option>
+                      <option value="Cao Cấp" <%= bus.busType === 'Cao Cấp' ? 'selected' : '' %>>Cao Cấp</option>
                     </select>
                     <div class="invalid-feedback">
-                      Please select bus type.
+                      Vui lòng chọn loại xe.
                     </div>
                   </div>
                 </div>
               </div>
               
               <div class="mb-4">
-                <h5>Schedule & Pricing</h5>
+                <h5>Lịch Trình & Giá Vé</h5>
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="departureTime" class="form-label">Departure Time</label>
+                    <label for="departureTime" class="form-label">Thời Gian Khởi Hành</label>
                     <input type="datetime-local" class="form-control" id="departureTime" name="departureTime" 
                            value="<%= new Date(bus.departureTime).toISOString().slice(0, 16) %>" required>
                     <div class="invalid-feedback">
-                      Please enter departure time.
+                      Vui lòng nhập thời gian khởi hành.
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="arrivalTime" class="form-label">Arrival Time</label>
+                    <label for="arrivalTime" class="form-label">Thời Gian Đến</label>
                     <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" 
                            value="<%= new Date(bus.arrivalTime).toISOString().slice(0, 16) %>" required>
                     <div class="invalid-feedback">
-                      Please enter arrival time.
+                      Vui lòng nhập thời gian đến.
                     </div>
                   </div>
                 </div>
                 
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="price" class="form-label">Ticket Price (VND)</label>
+                    <label for="price" class="form-label">Giá Vé (VND)</label>
                     <input type="number" class="form-control" id="price" name="price" value="<%= bus.price %>" min="1" required>
                     <div class="invalid-feedback">
-                      Please enter a valid price.
+                      Vui lòng nhập giá vé hợp lệ.
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="totalSeats" class="form-label">Total Seats</label>
+                    <label for="totalSeats" class="form-label">Tổng Số Ghế</label>
                     <input type="number" class="form-control" id="totalSeats" name="totalSeats" value="<%= bus.totalSeats %>" min="1" required>
                     <div class="invalid-feedback">
-                      Please enter total seats.
+                      Vui lòng nhập tổng số ghế.
                     </div>
                   </div>
                 </div>
@@ -298,75 +298,75 @@
                 <div class="form-check mb-3">
                   <input class="form-check-input" type="checkbox" id="available" name="available" <%= bus.available ? 'checked' : '' %>>
                   <label class="form-check-label" for="available">
-                    Bus Available for Booking
+                    Xe có sẵn để đặt vé
                   </label>
                 </div>
               </div>
               
               <div class="mb-4">
-                <h5>Seat Layout</h5>
+                <h5>Bố Trí Ghế</h5>
                 <div class="row mb-3">
                   <div class="col-md-4">
-                    <label for="rows" class="form-label">Number of Rows</label>
+                    <label for="rows" class="form-label">Số Hàng</label>
                     <input type="number" class="form-control" id="rows" name="rows" value="<%= bus.seatLayout.rows %>" min="1" required>
                     <div class="invalid-feedback">
-                      Please enter number of rows.
+                      Vui lòng nhập số hàng.
                     </div>
                   </div>
                   <div class="col-md-4">
-                    <label for="columns" class="form-label">Number of Columns</label>
+                    <label for="columns" class="form-label">Số Cột</label>
                     <input type="number" class="form-control" id="columns" name="columns" value="<%= bus.seatLayout.columns %>" min="1" required>
                     <div class="invalid-feedback">
-                      Please enter number of columns.
+                      Vui lòng nhập số cột.
                     </div>
                   </div>
                   <div class="col-md-4">
-                    <label for="layout" class="form-label">Layout Pattern</label>
+                    <label for="layout" class="form-label">Kiểu Bố Trí</label>
                     <select class="form-select" id="layout" name="layout" required>
-                      <option value="">Select Layout</option>
-                      <option value="2-2" <%= bus.seatLayout.layout === '2-2' ? 'selected' : '' %>>2-2 (4 seats per row with aisle)</option>
-                      <option value="2-1" <%= bus.seatLayout.layout === '2-1' ? 'selected' : '' %>>2-1 (3 seats per row with aisle)</option>
-                      <option value="1-1" <%= bus.seatLayout.layout === '1-1' ? 'selected' : '' %>>1-1 (2 seats per row with aisle)</option>
-                      <option value="3-2" <%= bus.seatLayout.layout === '3-2' ? 'selected' : '' %>>3-2 (5 seats per row with aisle)</option>
+                      <option value="">Chọn Kiểu Bố Trí</option>
+                      <option value="2-2" <%= bus.seatLayout.layout === '2-2' ? 'selected' : '' %>>2-2 (4 ghế mỗi hàng với lối đi)</option>
+                      <option value="2-1" <%= bus.seatLayout.layout === '2-1' ? 'selected' : '' %>>2-1 (3 ghế mỗi hàng với lối đi)</option>
+                      <option value="1-1" <%= bus.seatLayout.layout === '1-1' ? 'selected' : '' %>>1-1 (2 ghế mỗi hàng với lối đi)</option>
+                      <option value="3-2" <%= bus.seatLayout.layout === '3-2' ? 'selected' : '' %>>3-2 (5 ghế mỗi hàng với lối đi)</option>
                     </select>
                     <div class="invalid-feedback">
-                      Please select layout pattern.
+                      Vui lòng chọn kiểu bố trí.
                     </div>
                   </div>
                 </div>
               </div>
               
               <div class="mb-4">
-                <h5>Amenities</h5>
+                <h5>Tiện Nghi</h5>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="wifi" name="wifi" <%= bus.amenities.wifi ? 'checked' : '' %>>
                   <label class="form-check-label" for="wifi">WiFi</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="usb" name="usb" <%= bus.amenities.usb ? 'checked' : '' %>>
-                  <label class="form-check-label" for="usb">USB Charging</label>
+                  <label class="form-check-label" for="usb">Sạc USB</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="food" name="food" <%= bus.amenities.food ? 'checked' : '' %>>
-                  <label class="form-check-label" for="food">Food</label>
+                  <label class="form-check-label" for="food">Thức Ăn</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="waterBottle" name="waterBottle" <%= bus.amenities.waterBottle ? 'checked' : '' %>>
-                  <label class="form-check-label" for="waterBottle">Water Bottle</label>
+                  <label class="form-check-label" for="waterBottle">Nước Uống</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="blanket" name="blanket" <%= bus.amenities.blanket ? 'checked' : '' %>>
-                  <label class="form-check-label" for="blanket">Blanket</label>
+                  <label class="form-check-label" for="blanket">Chăn</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="entertainment" name="entertainment" <%= bus.amenities.entertainment ? 'checked' : '' %>>
-                  <label class="form-check-label" for="entertainment">Entertainment</label>
+                  <label class="form-check-label" for="entertainment">Giải Trí</label>
                 </div>
               </div>
               
               <div class="text-end">
                 <button type="submit" class="btn btn-primary">
-                  <i class="fas fa-save me-1"></i> Update Bus
+                  <i class="fas fa-save me-1"></i> Cập Nhật Thông Tin
                 </button>
               </div>
             </form>
@@ -375,9 +375,9 @@
       <% } else { %>
         <!-- Buses List -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="mb-0">Manage Buses</h2>
+          <h2 class="mb-0">Quản Lý Xe Buýt</h2>
           <a href="/admin/buses/add" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Add New Bus
+            <i class="fas fa-plus me-1"></i> Thêm Xe Buýt Mới
           </a>
         </div>
         
@@ -385,22 +385,22 @@
           <div class="card-body">
             <% if (buses.length === 0) { %>
               <div class="text-center py-4">
-                <p class="mb-0">No buses found. Please add a new bus.</p>
+                <p class="mb-0">Không tìm thấy xe buýt nào. Vui lòng thêm xe buýt mới.</p>
               </div>
             <% } else { %>
               <div class="table-responsive">
                 <table class="table table-hover align-middle">
                   <thead>
                     <tr>
-                      <th>Bus Number</th>
-                      <th>Bus Name</th>
-                      <th>Route</th>
-                      <th>Type</th>
-                      <th>Departure</th>
-                      <th>Arrival</th>
-                      <th>Price</th>
-                      <th>Status</th>
-                      <th class="text-end">Actions</th>
+                      <th>Số Xe</th>
+                      <th>Tên Xe</th>
+                      <th>Tuyến Đường</th>
+                      <th>Loại Xe</th>
+                      <th>Khởi Hành</th>
+                      <th>Đến</th>
+                      <th>Giá Vé</th>
+                      <th>Trạng Thái</th>
+                      <th class="text-end">Thao Tác</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -408,7 +408,7 @@
                       <tr>
                         <td><%= bus.busNumber %></td>
                         <td><%= bus.busName %></td>
-                        <td><%= bus.routeId.departureCity %> to <%= bus.routeId.arrivalCity %></td>
+                        <td><%= bus.routeId.departureCity %> đến <%= bus.routeId.arrivalCity %></td>
                         <td><%= bus.busType %></td>
                         <td><%= new Date(bus.departureTime).toLocaleString('en-US', { 
                           hour: '2-digit', 
@@ -427,7 +427,7 @@
                         <td><%= bus.price.toLocaleString() %> VND</td>
                         <td>
                           <span class="badge bg-<%= bus.available ? 'success' : 'danger' %>">
-                            <%= bus.available ? 'Active' : 'Inactive' %>
+                            <%= bus.available ? 'Hoạt Động' : 'Không Hoạt Động' %>
                           </span>
                         </td>
                         <td class="text-end">
@@ -435,7 +435,7 @@
                             <i class="fas fa-edit"></i>
                           </a>
                           <form action="/admin/buses/<%= bus._id %>?_method=DELETE" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this bus?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa xe buýt này không?')">
                               <i class="fas fa-trash"></i>
                             </button>
                           </form>
