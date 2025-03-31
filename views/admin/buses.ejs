@@ -47,7 +47,7 @@
                     <select class="form-select" id="routeId" name="routeId" required>
                       <option value="">Select Tuyến Đường</option>
                       <% routes.forEach(route => { %>
-                        <option value="<%= route._id %>">
+                        <option value="<%= route.id %>">
                           <%= route.departureCity %> đến <%= route.arrivalCity %>
                         </option>
                       <% }); %>
@@ -206,7 +206,7 @@
         
         <div class="card">
           <div class="card-body">
-            <form action="/admin/buses/<%= bus._id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
+            <form action="/admin/buses/<%= bus.id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
               <div class="mb-4">
                 <h5>Thông Tin Cơ Bản</h5>
                 <div class="row mb-3">
@@ -215,7 +215,7 @@
                     <select class="form-select" id="routeId" name="routeId" required>
                       <option value="">Select Tuyến Đường</option>
                       <% routes.forEach(route => { %>
-                        <option value="<%= route._id %>" <%= bus.routeId.toString() === route._id.toString() ? 'selected' : '' %>>
+                        <option value="<%= route.id %>" <%= bus.routeId.toString() === route.id.toString() ? 'selected' : '' %>>
                           <%= route.departureCity %> đến <%= route.arrivalCity %>
                         </option>
                       <% }); %>
@@ -431,10 +431,10 @@
                           </span>
                         </td>
                         <td class="text-end">
-                          <a href="/admin/buses/<%= bus._id %>" class="btn btn-sm btn-outline-primary me-1">
+                          <a href="/admin/buses/<%= bus.id %>" class="btn btn-sm btn-outline-primary me-1">
                             <i class="fas fa-edit"></i>
                           </a>
-                          <form action="/admin/buses/<%= bus._id %>?_method=DELETE" method="POST" class="d-inline">
+                          <form action="/admin/buses/<%= bus.id %>?_method=DELETE" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa xe buýt này không?')">
                               <i class="fas fa-trash"></i>
                             </button>
