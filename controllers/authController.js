@@ -1,5 +1,6 @@
-const User = require('../models/User');
+const { User } = require('../models/index');
 const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
 
 module.exports = {
   // Render register page
@@ -46,7 +47,9 @@ module.exports = {
       }
 
       // Check if user exists
-      const existingUser = await User.findOne({ email });
+      const existingUser = await User.findOne({ 
+        where: { email } 
+      });
 
       if (existingUser) {
         errors.push({ msg: 'Email is already registered' });
@@ -59,16 +62,17 @@ module.exports = {
         });
       }
 
+      // Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
       // Create new user
-      const newUser = new User({
+      await User.create({
         name,
         email,
         phone,
-        password
+        password: hashedPassword
       });
-
-      // Save user to DB
-      await newUser.save();
 
       req.flash('success_msg', 'You are now registered and can log in');
       res.redirect('/login');
@@ -98,7 +102,9 @@ module.exports = {
       }
 
       // Find user
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ 
+        where: { email } 
+      });
       
       if (!user) {
         req.flash('error_msg', 'Invalid email or password');
@@ -106,7 +112,7 @@ module.exports = {
       }
 
       // Match password
-      const isMatch = await user.matchPassword(password);
+      const isMatch = await bcrypt.compare(password, user.password);
       
       if (!isMatch) {
         req.flash('error_msg', 'Invalid email or password');
@@ -115,14 +121,14 @@ module.exports = {
 
       // Set session
       req.session.user = {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         phone: user.phone
       };
       
       // Check if admin
-      if (user.role === 'admin') {
+      if (user.isAdmin) {
         req.session.isAdmin = true;
         return res.redirect('/admin/dashboard');
       }
