@@ -1,0 +1,175 @@
+<!-- Hero Section -->
+<section class="hero-section text-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h1 class="mb-4">Find and Book Bus Tickets</h1>
+        <p class="lead mb-5">Travel anywhere in the country with comfortable buses and affordable prices.</p>
+        <a href="/buses/search" class="btn btn-primary btn-lg">Search Buses</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Quick Search Section -->
+  <section class="mb-5">
+    <div class="card search-form">
+      <div class="card-body">
+        <h3 class="mb-4 text-center">Quick Search</h3>
+        <form action="/buses/search" method="POST">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="departureCity" class="form-label">From</label>
+              <input type="text" class="form-control city-autocomplete" id="departureCity" name="departureCity" list="departureCities" placeholder="Departure City" required>
+              <datalist id="departureCities"></datalist>
+            </div>
+            <div class="col-md-4">
+              <label for="arrivalCity" class="form-label">To</label>
+              <input type="text" class="form-control city-autocomplete" id="arrivalCity" name="arrivalCity" list="arrivalCities" placeholder="Arrival City" required>
+              <datalist id="arrivalCities"></datalist>
+            </div>
+            <div class="col-md-4">
+              <label for="departureDate" class="form-label">Date</label>
+              <input type="date" class="form-control datepicker" id="departureDate" name="departureDate" required>
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Search Buses</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="mb-5">
+    <h2 class="text-center mb-4">Why Choose Us</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="mb-3">
+              <i class="fas fa-ticket-alt fa-3x text-primary"></i>
+            </div>
+            <h4>Easy Booking</h4>
+            <p class="text-muted">Book your bus tickets online in just a few clicks with our simple and intuitive interface.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="mb-3">
+              <i class="fas fa-bus fa-3x text-primary"></i>
+            </div>
+            <h4>Wide Selection</h4>
+            <p class="text-muted">Choose from hundreds of buses covering routes across the country with various amenities.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="mb-3">
+              <i class="fas fa-money-bill-wave fa-3x text-primary"></i>
+            </div>
+            <h4>Secure Payment</h4>
+            <p class="text-muted">Multiple secure payment options available to make your booking process seamless.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Routes Section -->
+  <section class="mb-5">
+    <h2 class="text-center mb-4">Popular Routes</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 bus-card">
+          <div class="card-body">
+            <h5 class="card-title">Hanoi - Ho Chi Minh City</h5>
+            <p class="text-muted">Distance: 1,600 km</p>
+            <p class="text-muted">Duration: 35-40 hours</p>
+            <p class="card-text">The longest route connecting the northern and southern parts of Vietnam.</p>
+            <a href="/buses/search" class="btn btn-sm btn-outline-primary">View Buses</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 bus-card">
+          <div class="card-body">
+            <h5 class="card-title">Hanoi - Da Nang</h5>
+            <p class="text-muted">Distance: 790 km</p>
+            <p class="text-muted">Duration: 14-16 hours</p>
+            <p class="card-text">Popular route connecting Hanoi with the beautiful coastal city of Da Nang.</p>
+            <a href="/buses/search" class="btn btn-sm btn-outline-primary">View Buses</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 bus-card">
+          <div class="card-body">
+            <h5 class="card-title">Ho Chi Minh City - Da Lat</h5>
+            <p class="text-muted">Distance: 300 km</p>
+            <p class="text-muted">Duration: 6-8 hours</p>
+            <p class="card-text">Scenic route to the beautiful highland city known for its cool climate.</p>
+            <a href="/buses/search" class="btn btn-sm btn-outline-primary">View Buses</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="mb-5">
+    <h2 class="text-center mb-4">How It Works</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+              <i class="fas fa-search text-white fa-lg"></i>
+            </div>
+            <h5>Search</h5>
+            <p class="text-muted small">Enter your departure and destination cities along with the travel date.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+              <i class="fas fa-bus text-white fa-lg"></i>
+            </div>
+            <h5>Select</h5>
+            <p class="text-muted small">Compare options and choose the best bus for your journey.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+              <i class="fas fa-credit-card text-white fa-lg"></i>
+            </div>
+            <h5>Pay</h5>
+            <p class="text-muted small">Make a secure payment using your preferred payment method.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+              <i class="fas fa-ticket-alt text-white fa-lg"></i>
+            </div>
+            <h5>Travel</h5>
+            <p class="text-muted small">Receive your e-ticket and get ready for your journey.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

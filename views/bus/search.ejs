@@ -1,0 +1,105 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4">Search Buses</h2>
+          
+          <form action="/buses/search" method="POST" class="needs-validation" novalidate>
+            <div class="row g-3">
+              <div class="col-md-5">
+                <label for="departureCity" class="form-label">From</label>
+                <input type="text" class="form-control city-autocomplete" id="departureCity" name="departureCity" list="departureCities" placeholder="Departure City" required>
+                <datalist id="departureCities">
+                  <% if(locals.departureCities) { %>
+                    <% departureCities.forEach(city => { %>
+                      <option value="<%= city %>">
+                    <% }); %>
+                  <% } %>
+                </datalist>
+                <div class="invalid-feedback">
+                  Please select a departure city.
+                </div>
+              </div>
+              
+              <div class="col-md-5">
+                <label for="arrivalCity" class="form-label">To</label>
+                <input type="text" class="form-control city-autocomplete" id="arrivalCity" name="arrivalCity" list="arrivalCities" placeholder="Arrival City" required>
+                <datalist id="arrivalCities">
+                  <% if(locals.arrivalCities) { %>
+                    <% arrivalCities.forEach(city => { %>
+                      <option value="<%= city %>">
+                    <% }); %>
+                  <% } %>
+                </datalist>
+                <div class="invalid-feedback">
+                  Please select an arrival city.
+                </div>
+              </div>
+              
+              <div class="col-md-2">
+                <label for="departureDate" class="form-label">Date</label>
+                <input type="date" class="form-control datepicker" id="departureDate" name="departureDate" required>
+                <div class="invalid-feedback">
+                  Please select a date.
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary btn-lg">Search Buses</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Popular Routes Section -->
+      <div class="mt-5">
+        <h3 class="text-center mb-4">Popular Routes</h3>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Hanoi - Ho Chi Minh City</h5>
+                <p class="card-text text-muted small">Starting from 500,000 VND</p>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Hanoi', 'Ho Chi Minh City')">Select</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Hanoi - Da Nang</h5>
+                <p class="card-text text-muted small">Starting from 350,000 VND</p>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Hanoi', 'Da Nang')">Select</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Ho Chi Minh City - Da Lat</h5>
+                <p class="card-text text-muted small">Starting from 200,000 VND</p>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="selectRoute('Ho Chi Minh City', 'Da Lat')">Select</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function selectRoute(departure, arrival) {
+    document.getElementById('departureCity').value = departure;
+    document.getElementById('arrivalCity').value = arrival;
+    
+    // Set date to today if not already set
+    const dateInput = document.getElementById('departureDate');
+    if (!dateInput.value) {
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.value = today;
+    }
+  }
+</script>

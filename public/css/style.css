@@ -1,0 +1,171 @@
+/* Custom styles for Vexere clone */
+
+/* General Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-wrapper {
+  flex: 1;
+}
+
+/* Header Styles */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 5rem 0;
+  margin-bottom: 2rem;
+}
+
+/* Search Form */
+.search-form {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Bus Cards */
+.bus-card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+.bus-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.bus-details {
+  padding: 1.5rem;
+}
+
+.amenities-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+/* Seats Selection */
+.seat-map {
+  display: grid;
+  gap: 10px;
+  margin: 2rem 0;
+}
+
+.seat {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.seat.available {
+  background-color: var(--bs-info);
+  color: white;
+}
+
+.seat.selected {
+  background-color: var(--bs-success);
+  color: white;
+}
+
+.seat.booked {
+  background-color: var(--bs-danger);
+  color: white;
+  cursor: not-allowed;
+}
+
+.seat.empty {
+  background-color: transparent;
+  border: none;
+  cursor: default;
+}
+
+/* Booking Steps */
+.booking-steps {
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+.booking-step {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.booking-step::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 50%;
+  height: 2px;
+  background-color: var(--bs-gray-400);
+  transform: translateY(-50%);
+}
+
+.booking-step:last-child::after {
+  display: none;
+}
+
+.booking-step.active {
+  color: var(--bs-primary);
+  font-weight: bold;
+}
+
+.booking-step.completed {
+  color: var(--bs-success);
+}
+
+/* Admin Dashboard */
+.dashboard-card {
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .search-form {
+    padding: 1.5rem;
+  }
+  
+  .booking-steps {
+    flex-direction: column;
+  }
+  
+  .booking-step::after {
+    display: none;
+  }
+  
+  .seat {
+    width: 35px;
+    height: 35px;
+    font-size: 0.8rem;
+  }
+}

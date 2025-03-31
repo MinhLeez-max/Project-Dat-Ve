@@ -1,0 +1,304 @@
+<div class="container py-4">
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h4><%= departureCity %> to <%= arrivalCity %></h4>
+          <p class="mb-0 text-muted"><%= new Date(departureDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <a href="/buses/search" class="btn btn-outline-primary">Modify Search</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if (buses.length === 0) { %>
+    <div class="alert alert-info">
+      No buses found for this route on the selected date. Please try another date or route.
+    </div>
+    <div class="text-center mt-4">
+      <a href="/buses/search" class="btn btn-primary">Search Again</a>
+    </div>
+  <% } else { %>
+    <div class="row">
+      <div class="col-lg-3 mb-4">
+        <!-- Filters -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Filters</h5>
+          </div>
+          <div class="card-body">
+            <h6>Bus Type</h6>
+            <div class="form-check">
+              <input class="form-check-input filter-checkbox" type="checkbox" value="AC" id="filterAC" checked>
+              <label class="form-check-label" for="filterAC">AC</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input filter-checkbox" type="checkbox" value="Sleeper" id="filterSleeper" checked>
+              <label class="form-check-label" for="filterSleeper">Sleeper</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input filter-checkbox" type="checkbox" value="Deluxe" id="filterDeluxe" checked>
+              <label class="form-check-label" for="filterDeluxe">Deluxe</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input filter-checkbox" type="checkbox" value="Regular" id="filterRegular" checked>
+              <label class="form-check-label" for="filterRegular">Regular</label>
+            </div>
+            
+            <hr>
+            
+            <h6>Departure Time</h6>
+            <div class="form-check">
+              <input class="form-check-input time-filter" type="checkbox" value="morning" id="filterMorning" checked>
+              <label class="form-check-label" for="filterMorning">Morning (06:00 - 12:00)</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input time-filter" type="checkbox" value="afternoon" id="filterAfternoon" checked>
+              <label class="form-check-label" for="filterAfternoon">Afternoon (12:00 - 18:00)</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input time-filter" type="checkbox" value="evening" id="filterEvening" checked>
+              <label class="form-check-label" for="filterEvening">Evening (18:00 - 24:00)</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input time-filter" type="checkbox" value="night" id="filterNight" checked>
+              <label class="form-check-label" for="filterNight">Night (00:00 - 06:00)</label>
+            </div>
+            
+            <hr>
+            
+            <h6>Amenities</h6>
+            <div class="form-check">
+              <input class="form-check-input amenity-filter" type="checkbox" value="wifi" id="filterWifi">
+              <label class="form-check-label" for="filterWifi">WiFi</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input amenity-filter" type="checkbox" value="usb" id="filterUsb">
+              <label class="form-check-label" for="filterUsb">USB Charging</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input amenity-filter" type="checkbox" value="food" id="filterFood">
+              <label class="form-check-label" for="filterFood">Food</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4><%= buses.length %> Buses Found</h4>
+          
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              Sort By
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+              <li><a class="dropdown-item sort-option" href="#" data-sort="departure">Departure Time</a></li>
+              <li><a class="dropdown-item sort-option" href="#" data-sort="duration">Duration</a></li>
+              <li><a class="dropdown-item sort-option" href="#" data-sort="price">Price (Low to High)</a></li>
+              <li><a class="dropdown-item sort-option" href="#" data-sort="price-desc">Price (High to Low)</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div id="busResults">
+          <% buses.forEach(bus => { %>
+            <div class="card mb-4 bus-card" 
+                 data-bus-type="<%= bus.busType %>" 
+                 data-departure-hour="<%= new Date(bus.departureTime).getHours() %>" 
+                 data-wifi="<%= bus.amenities.wifi %>" 
+                 data-usb="<%= bus.amenities.usb %>" 
+                 data-food="<%= bus.amenities.food %>"
+                 data-price="<%= bus.price %>"
+                 data-departure="<%= new Date(bus.departureTime).getTime() %>"
+                 data-duration="<%= (new Date(bus.arrivalTime) - new Date(bus.departureTime)) / 60000 %>">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-9">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                      <h5 class="mb-0"><%= bus.busName %></h5>
+                      <span class="badge <%= bus.busType === 'Sleeper' ? 'bg-success' : bus.busType === 'AC' ? 'bg-info' : bus.busType === 'Deluxe' ? 'bg-primary' : 'bg-secondary' %>">
+                        <%= bus.busType %>
+                      </span>
+                    </div>
+                    
+                    <div class="row mb-3">
+                      <div class="col-md-4">
+                        <div class="d-flex flex-column">
+                          <span class="fw-bold"><%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                          <span class="text-muted small"><%= bus.routeId.departureCity %></span>
+                        </div>
+                      </div>
+                      <div class="col-md-4 text-center">
+                        <div class="d-flex flex-column align-items-center">
+                          <span class="text-muted small">
+                            <%= Math.floor((new Date(bus.arrivalTime) - new Date(bus.departureTime)) / 3600000) %>h 
+                            <%= Math.floor(((new Date(bus.arrivalTime) - new Date(bus.departureTime)) % 3600000) / 60000) %>m
+                          </span>
+                          <div class="position-relative my-1">
+                            <hr class="w-100" style="border-top: 2px dashed;">
+                            <i class="fas fa-bus position-absolute top-50 translate-middle-y" style="left: 50%;"></i>
+                          </div>
+                          <span class="text-muted small"><%= bus.routeId.distance %> km</span>
+                        </div>
+                      </div>
+                      <div class="col-md-4 text-end">
+                        <div class="d-flex flex-column align-items-end">
+                          <span class="fw-bold"><%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                          <span class="text-muted small"><%= bus.routeId.arrivalCity %></span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="d-flex gap-3 mb-3">
+                      <% if (bus.amenities.wifi) { %>
+                        <div class="d-flex align-items-center" data-bs-toggle="tooltip" title="WiFi">
+                          <i class="fas fa-wifi me-1 text-muted"></i>
+                          <span class="text-muted small">WiFi</span>
+                        </div>
+                      <% } %>
+                      
+                      <% if (bus.amenities.usb) { %>
+                        <div class="d-flex align-items-center" data-bs-toggle="tooltip" title="USB Charging">
+                          <i class="fas fa-plug me-1 text-muted"></i>
+                          <span class="text-muted small">USB</span>
+                        </div>
+                      <% } %>
+                      
+                      <% if (bus.amenities.food) { %>
+                        <div class="d-flex align-items-center" data-bs-toggle="tooltip" title="Food Included">
+                          <i class="fas fa-utensils me-1 text-muted"></i>
+                          <span class="text-muted small">Food</span>
+                        </div>
+                      <% } %>
+                      
+                      <% if (bus.amenities.waterBottle) { %>
+                        <div class="d-flex align-items-center" data-bs-toggle="tooltip" title="Water Bottle">
+                          <i class="fas fa-tint me-1 text-muted"></i>
+                          <span class="text-muted small">Water</span>
+                        </div>
+                      <% } %>
+                      
+                      <% if (bus.amenities.blanket) { %>
+                        <div class="d-flex align-items-center" data-bs-toggle="tooltip" title="Blanket">
+                          <i class="fas fa-bed me-1 text-muted"></i>
+                          <span class="text-muted small">Blanket</span>
+                        </div>
+                      <% } %>
+                    </div>
+                    
+                    <div class="text-muted small">
+                      <span class="me-3"><i class="fas fa-bus me-1"></i> <%= bus.busNumber %></span>
+                      <span><i class="fas fa-couch me-1"></i> <%= bus.totalSeats %> seats</span>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 text-center border-start">
+                    <div class="d-flex flex-column h-100 justify-content-center">
+                      <h5 class="text-primary mb-3"><%= bus.price.toLocaleString() %> VND</h5>
+                      <a href="/buses/<%= bus._id %>?date=<%= departureDate %>" class="btn btn-primary btn-sm">View Seats</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Filter buses based on selection
+    function filterBuses() {
+      const busCards = document.querySelectorAll('.bus-card');
+      
+      // Get selected bus types
+      const selectedBusTypes = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(checkbox => checkbox.value);
+      
+      // Get selected time ranges
+      const selectedTimeRanges = Array.from(document.querySelectorAll('.time-filter:checked')).map(checkbox => checkbox.value);
+      
+      // Get selected amenities
+      const selectedAmenities = Array.from(document.querySelectorAll('.amenity-filter:checked')).map(checkbox => checkbox.value);
+      
+      busCards.forEach(card => {
+        const busType = card.getAttribute('data-bus-type');
+        const departureHour = parseInt(card.getAttribute('data-departure-hour'));
+        
+        // Check bus type
+        const busTypeMatch = selectedBusTypes.includes(busType);
+        
+        // Check time range
+        let timeRangeMatch = false;
+        if (selectedTimeRanges.includes('morning') && departureHour >= 6 && departureHour < 12) {
+          timeRangeMatch = true;
+        } else if (selectedTimeRanges.includes('afternoon') && departureHour >= 12 && departureHour < 18) {
+          timeRangeMatch = true;
+        } else if (selectedTimeRanges.includes('evening') && departureHour >= 18 && departureHour < 24) {
+          timeRangeMatch = true;
+        } else if (selectedTimeRanges.includes('night') && (departureHour >= 0 && departureHour < 6)) {
+          timeRangeMatch = true;
+        }
+        
+        // Check amenities
+        let amenitiesMatch = true;
+        if (selectedAmenities.length > 0) {
+          amenitiesMatch = selectedAmenities.every(amenity => {
+            return card.getAttribute(`data-${amenity}`) === 'true';
+          });
+        }
+        
+        // Show/hide card based on filter matches
+        if (busTypeMatch && timeRangeMatch && amenitiesMatch) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+    
+    // Sort buses based on selection
+    function sortBuses(sortBy) {
+      const busResults = document.getElementById('busResults');
+      const busCards = Array.from(busResults.querySelectorAll('.bus-card'));
+      
+      busCards.sort((a, b) => {
+        if (sortBy === 'departure') {
+          return parseInt(a.getAttribute('data-departure')) - parseInt(b.getAttribute('data-departure'));
+        } else if (sortBy === 'duration') {
+          return parseInt(a.getAttribute('data-duration')) - parseInt(b.getAttribute('data-duration'));
+        } else if (sortBy === 'price') {
+          return parseInt(a.getAttribute('data-price')) - parseInt(b.getAttribute('data-price'));
+        } else if (sortBy === 'price-desc') {
+          return parseInt(b.getAttribute('data-price')) - parseInt(a.getAttribute('data-price'));
+        }
+        return 0;
+      });
+      
+      // Remove existing cards
+      busCards.forEach(card => card.remove());
+      
+      // Append sorted cards
+      busCards.forEach(card => busResults.appendChild(card));
+    }
+    
+    // Add event listeners for filters
+    document.querySelectorAll('.filter-checkbox, .time-filter, .amenity-filter').forEach(checkbox => {
+      checkbox.addEventListener('change', filterBuses);
+    });
+    
+    // Add event listeners for sorting
+    document.querySelectorAll('.sort-option').forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.preventDefault();
+        const sortBy = this.getAttribute('data-sort');
+        sortBuses(sortBy);
+      });
+    });
+  });
+</script>

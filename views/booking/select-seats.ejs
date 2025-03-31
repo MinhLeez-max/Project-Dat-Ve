@@ -1,0 +1,200 @@
+<div class="container py-4">
+  <!-- Booking Steps -->
+  <div class="booking-steps mb-4">
+    <div class="booking-step active">
+      <i class="fas fa-chair"></i>
+      <div>Select Seats</div>
+    </div>
+    <div class="booking-step">
+      <i class="fas fa-user"></i>
+      <div>Passenger Details</div>
+    </div>
+    <div class="booking-step">
+      <i class="fas fa-credit-card"></i>
+      <div>Payment</div>
+    </div>
+    <div class="booking-step">
+      <i class="fas fa-check-circle"></i>
+      <div>Confirmation</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Select Your Seats</h4>
+        </div>
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h5><%= bus.busName %> (<%= bus.busType %>)</h5>
+              <p class="mb-1">
+                <strong>From:</strong> <%= bus.routeId.departureCity %>
+              </p>
+              <p class="mb-1">
+                <strong>To:</strong> <%= bus.routeId.arrivalCity %>
+              </p>
+              <p class="mb-1">
+                <strong>Date:</strong> <%= new Date(journeyDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+              </p>
+              <p class="mb-1">
+                <strong>Departure:</strong> <%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+              </p>
+              <p class="mb-0">
+                <strong>Arrival:</strong> <%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <div class="seat-legend text-end mb-3">
+                <div class="d-inline-block me-3">
+                  <span class="seat available d-inline-block" style="width:20px;height:20px;"></span>
+                  <span class="ms-1">Available</span>
+                </div>
+                <div class="d-inline-block me-3">
+                  <span class="seat selected d-inline-block" style="width:20px;height:20px;"></span>
+                  <span class="ms-1">Selected</span>
+                </div>
+                <div class="d-inline-block">
+                  <span class="seat booked d-inline-block" style="width:20px;height:20px;"></span>
+                  <span class="ms-1">Booked</span>
+                </div>
+              </div>
+              <p class="text-end mb-1">
+                <strong>Price per seat:</strong> <%= bus.price.toLocaleString() %> VND
+              </p>
+            </div>
+          </div>
+
+          <div class="text-center mb-4">
+            <div class="bus-front mb-2">
+              <i class="fas fa-bus-alt fa-2x"></i>
+              <div class="small text-muted">Front</div>
+            </div>
+          </div>
+
+          <!-- Seat Map -->
+          <div class="seat-map-container">
+            <% 
+              const rows = bus.seatLayout.rows;
+              const cols = bus.seatLayout.columns;
+              const layout = bus.seatLayout.layout;
+              let seatNumber = 1;
+            %>
+
+            <div class="seat-map" style="grid-template-columns: repeat(<%= cols %>, 1fr);">
+              <% for(let i = 0; i < rows; i++) { %>
+                <% for(let j = 0; j < cols; j++) { %>
+                  <% 
+                    let seatClass = 'seat';
+                    let seatContent = seatNumber;
+                    
+                    // Check bus layout to determine if the seat is an aisle or not
+                    let isAisle = false;
+                    
+                    if(layout === '2-2' && j === 1) {
+                      isAisle = true;
+                    } else if(layout === '2-1' && j === 1) {
+                      isAisle = true;
+                    } else if(layout === '3-2' && j === 2) {
+                      isAisle = true;
+                    }
+                    
+                    if(isAisle) {
+                      seatClass += ' empty';
+                      seatContent = '';
+                    } else {
+                      let seatId = seatNumber.toString().padStart(2, '0');
+                      
+                      if(bookedSeats.includes(seatId)) {
+                        seatClass += ' booked';
+                      } else {
+                        seatClass += ' available';
+                      }
+                      
+                      seatNumber++;
+                    }
+                  %>
+                  
+                  <div class="<%= seatClass %>" data-seat="<%= seatContent.toString().padStart(2, '0') %>">
+                    <%= seatContent %>
+                  </div>
+                <% } %>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card mb-4 position-sticky" style="top: 20px;">
+        <div class="card-header">
+          <h5 class="mb-0">Booking Summary</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-3">
+            <span>Selected Seats:</span>
+            <span id="selectedSeatsDisplay">None</span>
+          </div>
+          <div class="d-flex justify-content-between mb-4">
+            <span>Total Amount:</span>
+            <span id="totalAmount">0 VND</span>
+          </div>
+
+          <form action="/bookings/select-seats" method="POST">
+            <input type="hidden" name="busId" value="<%= bus._id %>">
+            <input type="hidden" name="journeyDate" value="<%= journeyDate %>">
+            <input type="hidden" name="selectedSeats" id="selectedSeats">
+            <input type="hidden" id="pricePerSeat" value="<%= bus.price %>">
+            <button type="submit" id="continueBtn" class="btn btn-primary w-100" disabled>Continue</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const seatMap = document.querySelector('.seat-map');
+    const selectedSeatsInput = document.getElementById('selectedSeats');
+    const selectedSeatsDisplay = document.getElementById('selectedSeatsDisplay');
+    const totalAmountDisplay = document.getElementById('totalAmount');
+    const pricePerSeat = document.getElementById('pricePerSeat');
+    const continueBtn = document.getElementById('continueBtn');
+    
+    if (seatMap) {
+      const seats = seatMap.querySelectorAll('.seat.available');
+      let selectedSeats = [];
+      
+      seats.forEach(seat => {
+        seat.addEventListener('click', function() {
+          const seatNumber = this.getAttribute('data-seat');
+          
+          if (this.classList.contains('selected')) {
+            // Deselect seat
+            this.classList.remove('selected');
+            selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+          } else {
+            // Select seat
+            this.classList.add('selected');
+            selectedSeats.push(seatNumber);
+          }
+          
+          // Update selected seats input and display
+          selectedSeatsInput.value = selectedSeats;
+          selectedSeatsDisplay.textContent = selectedSeats.join(', ') || 'None';
+          
+          // Update total amount
+          const price = parseFloat(pricePerSeat.value);
+          const total = price * selectedSeats.length;
+          totalAmountDisplay.textContent = `${total.toLocaleString()} VND`;
+          
+          // Enable/disable continue button
+          continueBtn.disabled = selectedSeats.length === 0;
+        });
+      });
+    }
+  });
+</script>

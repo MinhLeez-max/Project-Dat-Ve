@@ -1,0 +1,313 @@
+<div class="container py-4">
+  <!-- Booking Steps -->
+  <div class="booking-steps mb-4">
+    <div class="booking-step completed">
+      <i class="fas fa-chair"></i>
+      <div>Select Seats</div>
+    </div>
+    <div class="booking-step completed">
+      <i class="fas fa-user"></i>
+      <div>Passenger Details</div>
+    </div>
+    <div class="booking-step active">
+      <i class="fas fa-credit-card"></i>
+      <div>Payment</div>
+    </div>
+    <div class="booking-step">
+      <i class="fas fa-check-circle"></i>
+      <div>Confirmation</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Payment Information</h4>
+        </div>
+        <div class="card-body">
+          <form id="paymentForm" action="/bookings/payment" method="POST" class="needs-validation" novalidate>
+            <div class="mb-4">
+              <h5>Select Payment Method</h5>
+              <div class="row mt-3">
+                <div class="col-md-3 mb-3">
+                  <div class="form-check payment-method">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="credit_card" checked>
+                    <label class="form-check-label" for="creditCard">
+                      <i class="far fa-credit-card me-2"></i> Credit Card
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                  <div class="form-check payment-method">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="debitCard" value="debit_card">
+                    <label class="form-check-label" for="debitCard">
+                      <i class="fas fa-credit-card me-2"></i> Debit Card
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                  <div class="form-check payment-method">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="banking" value="banking">
+                    <label class="form-check-label" for="banking">
+                      <i class="fas fa-university me-2"></i> Banking
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                  <div class="form-check payment-method">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="eWallet" value="e-wallet">
+                    <label class="form-check-label" for="eWallet">
+                      <i class="fas fa-wallet me-2"></i> E-Wallet
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="credit_cardDetails" class="payment-details">
+              <h5>Credit Card Details</h5>
+              <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                This is a demo application. No actual payment will be processed.
+              </div>
+              <div class="mb-3">
+                <label for="ccName" class="form-label">Name on Card</label>
+                <input type="text" class="form-control" id="ccName">
+              </div>
+              <div class="mb-3">
+                <label for="ccNumber" class="form-label">Card Number</label>
+                <input type="text" class="form-control" id="ccNumber" placeholder="XXXX XXXX XXXX XXXX">
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="ccExpiry" class="form-label">Expiration Date</label>
+                  <input type="text" class="form-control" id="ccExpiry" placeholder="MM/YY">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="ccCVV" class="form-label">CVV</label>
+                  <input type="text" class="form-control" id="ccCVV" placeholder="XXX">
+                </div>
+              </div>
+            </div>
+
+            <div id="debit_cardDetails" class="payment-details d-none">
+              <h5>Debit Card Details</h5>
+              <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                This is a demo application. No actual payment will be processed.
+              </div>
+              <div class="mb-3">
+                <label for="dcName" class="form-label">Name on Card</label>
+                <input type="text" class="form-control" id="dcName">
+              </div>
+              <div class="mb-3">
+                <label for="dcNumber" class="form-label">Card Number</label>
+                <input type="text" class="form-control" id="dcNumber" placeholder="XXXX XXXX XXXX XXXX">
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="dcExpiry" class="form-label">Expiration Date</label>
+                  <input type="text" class="form-control" id="dcExpiry" placeholder="MM/YY">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="dcCVV" class="form-label">CVV</label>
+                  <input type="text" class="form-control" id="dcCVV" placeholder="XXX">
+                </div>
+              </div>
+            </div>
+
+            <div id="bankingDetails" class="payment-details d-none">
+              <h5>Banking Details</h5>
+              <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                This is a demo application. No actual payment will be processed.
+              </div>
+              <div class="mb-3">
+                <label for="bankName" class="form-label">Bank Name</label>
+                <select class="form-select" id="bankName">
+                  <option value="">Select Bank</option>
+                  <option value="vietcombank">Vietcombank</option>
+                  <option value="techcombank">Techcombank</option>
+                  <option value="vietinbank">Vietinbank</option>
+                  <option value="bidv">BIDV</option>
+                  <option value="tpbank">TPBank</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="accountNumber" class="form-label">Account Number</label>
+                <input type="text" class="form-control" id="accountNumber">
+              </div>
+              <div class="mb-3">
+                <label for="accountName" class="form-label">Account Holder Name</label>
+                <input type="text" class="form-control" id="accountName">
+              </div>
+            </div>
+
+            <div id="e-walletDetails" class="payment-details d-none">
+              <h5>E-Wallet Details</h5>
+              <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                This is a demo application. No actual payment will be processed.
+              </div>
+              <div class="mb-3">
+                <label for="walletType" class="form-label">E-Wallet Provider</label>
+                <select class="form-select" id="walletType">
+                  <option value="">Select E-Wallet</option>
+                  <option value="momo">MoMo</option>
+                  <option value="zalopay">ZaloPay</option>
+                  <option value="vnpay">VNPay</option>
+                  <option value="shopeepay">ShopeePay</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="walletPhone" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="walletPhone" placeholder="Enter the phone number linked to your wallet">
+              </div>
+            </div>
+
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+              <label class="form-check-label" for="agreeTerms">
+                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a>
+              </label>
+              <div class="invalid-feedback">
+                You must agree to the terms and conditions.
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back
+              </a>
+              <button type="submit" class="btn btn-primary">
+                Pay Now <i class="fas fa-arrow-right ms-1"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card mb-4 position-sticky" style="top: 20px;">
+        <div class="card-header">
+          <h5 class="mb-0">Booking Summary</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <h6>Journey Details</h6>
+            <p class="mb-1 small">
+              <strong>From:</strong> <%= bookingData.bus.departureCity %>
+            </p>
+            <p class="mb-1 small">
+              <strong>To:</strong> <%= bookingData.bus.arrivalCity %>
+            </p>
+            <p class="mb-1 small">
+              <strong>Date:</strong> <%= new Date(bookingData.journeyDate).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
+            </p>
+            <p class="mb-1 small">
+              <strong>Bus:</strong> <%= bookingData.bus.busName %> (<%= bookingData.bus.busNumber %>)
+            </p>
+            <p class="mb-1 small">
+              <strong>Departure:</strong> <%= new Date(bookingData.bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+            </p>
+            <p class="mb-0 small">
+              <strong>Arrival:</strong> <%= new Date(bookingData.bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+            </p>
+          </div>
+          <hr>
+          <div class="mb-3">
+            <h6>Passengers</h6>
+            <% bookingData.seats.forEach((seat, index) => { %>
+              <p class="mb-1 small">
+                <strong>Seat <%= seat.seatNumber %>:</strong> <%= seat.passengerName %> (<%= seat.passengerGender %>, <%= seat.passengerAge %> yrs)
+              </p>
+            <% }); %>
+          </div>
+          <hr>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Seat Price:</span>
+              <span><%= bookingData.bus.price.toLocaleString() %> VND</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Number of Seats:</span>
+              <span><%= bookingData.seats.length %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-0">
+              <span>Service Fee:</span>
+              <span>0 VND</span>
+            </div>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between fw-bold">
+            <span>Total Amount:</span>
+            <span><%= bookingData.totalAmount.toLocaleString() %> VND</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h6>1. Booking Terms</h6>
+        <p>By making a booking with us, you agree to these terms and conditions.</p>
+        
+        <h6>2. Payment</h6>
+        <p>All payments are processed securely. Once payment is completed, a confirmation will be sent to your email.</p>
+        
+        <h6>3. Cancellation Policy</h6>
+        <p>Cancellations made at least 24 hours before departure will receive a full refund. Cancellations made less than 24 hours before departure are not eligible for a refund.</p>
+        
+        <h6>4. Refund Policy</h6>
+        <p>Refunds will be processed within 7-14 business days and will be returned to the original payment method.</p>
+        
+        <h6>5. Identification</h6>
+        <p>Passengers must carry valid identification matching the details provided during booking.</p>
+        
+        <h6>6. Baggage Policy</h6>
+        <p>Each passenger is allowed one piece of luggage up to 20kg and one carry-on bag.</p>
+        
+        <h6>7. Service Modifications</h6>
+        <p>The company reserves the right to modify services, routes, or schedules if necessary.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const paymentMethodInputs = document.querySelectorAll('input[name="paymentMethod"]');
+    const paymentDetailsContainers = document.querySelectorAll('.payment-details');
+    
+    paymentMethodInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        // Hide all payment detail containers
+        paymentDetailsContainers.forEach(container => {
+          container.classList.add('d-none');
+        });
+        
+        // Show the selected payment method details
+        const selectedMethod = this.value;
+        const selectedContainer = document.getElementById(`${selectedMethod}Details`);
+        
+        if (selectedContainer) {
+          selectedContainer.classList.remove('d-none');
+        }
+      });
+    });
+  });
+</script>

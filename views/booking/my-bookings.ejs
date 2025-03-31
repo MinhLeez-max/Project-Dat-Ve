@@ -1,0 +1,322 @@
+<div class="container py-4">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">My Bookings</h2>
+        <a href="/buses/search" class="btn btn-primary">
+          <i class="fas fa-plus me-1"></i> Book New Ticket
+        </a>
+      </div>
+
+      <% if (bookings.length === 0) { %>
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+            <h4>No Bookings Found</h4>
+            <p class="text-muted">You haven't made any bookings yet.</p>
+            <a href="/buses/search" class="btn btn-primary mt-2">Book a Ticket Now</a>
+          </div>
+        </div>
+      <% } else { %>
+        <!-- Booking Tabs -->
+        <ul class="nav nav-tabs mb-4" id="bookingTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">
+              Upcoming
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab" aria-controls="completed" aria-selected="false">
+              Completed
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab" aria-controls="cancelled" aria-selected="false">
+              Cancelled
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="bookingTabsContent">
+          <!-- Upcoming Bookings -->
+          <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+            <% 
+              const upcomingBookings = bookings.filter(booking => 
+                new Date(booking.journeyDate) >= new Date() && booking.status !== 'cancelled'
+              );
+              
+              if (upcomingBookings.length === 0) { 
+            %>
+              <div class="card">
+                <div class="card-body text-center py-4">
+                  <p class="mb-0">No upcoming bookings found.</p>
+                </div>
+              </div>
+            <% } else { %>
+              <% upcomingBookings.forEach(booking => { %>
+                <div class="card mb-3 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <div class="d-flex justify-content-between mb-3">
+                          <h5 class="mb-0"><%= booking.route.departureCity %> to <%= booking.route.arrivalCity %></h5>
+                          <span class="badge bg-<%= booking.status === 'confirmed' ? 'success' : 'warning' %>">
+                            <%= booking.status.toUpperCase() %>
+                          </span>
+                        </div>
+                        
+                        <div class="row mb-3">
+                          <div class="col-md-4">
+                            <div class="d-flex flex-column">
+                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="text-muted small"><%= booking.route.departureCity %></span>
+                            </div>
+                          </div>
+                          <div class="col-md-4 text-center">
+                            <div class="d-flex flex-column align-items-center">
+                              <span class="text-muted small">
+                                <%= Math.floor((new Date(booking.busId.arrivalTime) - new Date(booking.busId.departureTime)) / 3600000) %>h 
+                                <%= Math.floor(((new Date(booking.busId.arrivalTime) - new Date(booking.busId.departureTime)) % 3600000) / 60000) %>m
+                              </span>
+                              <div class="position-relative my-1">
+                                <hr class="w-100" style="border-top: 2px dashed;">
+                                <i class="fas fa-bus position-absolute top-50 translate-middle-y" style="left: 50%;"></i>
+                              </div>
+                              <span class="text-muted small"><%= booking.route.distance %> km</span>
+                            </div>
+                          </div>
+                          <div class="col-md-4 text-end">
+                            <div class="d-flex flex-column align-items-end">
+                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="text-muted small"><%= booking.route.arrivalCity %></span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                          <span class="me-3 text-muted small">
+                            <i class="fas fa-bus me-1"></i> <%= booking.busId.busName %> (<%= booking.busId.busType %>)
+                          </span>
+                          <span class="me-3 text-muted small">
+                            <i class="fas fa-ticket-alt me-1"></i> <%= booking.seats.map(s => s.seatNumber).join(', ') %>
+                          </span>
+                          <span class="text-muted small">
+                            <i class="fas fa-tag me-1"></i> <%= booking.totalAmount.toLocaleString() %> VND
+                          </span>
+                        </div>
+                        
+                        <div class="text-muted small">
+                          <span class="me-3">
+                            <i class="fas fa-bookmark me-1"></i> <%= booking.bookingReference %>
+                          </span>
+                          <span>
+                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-3 border-start d-flex flex-column justify-content-center align-items-center">
+                        <a href="/bookings/<%= booking._id %>/confirmation" class="btn btn-outline-primary btn-sm mb-2 w-100">
+                          <i class="fas fa-eye me-1"></i> View Details
+                        </a>
+                        
+                        <% if (booking.status !== 'cancelled') { %>
+                          <form action="/bookings/<%= booking._id %>/cancel" method="POST" class="w-100">
+                            <button type="submit" class="btn btn-outline-danger btn-sm w-100" onclick="return confirm('Are you sure you want to cancel this booking?')">
+                              <i class="fas fa-times me-1"></i> Cancel Booking
+                            </button>
+                          </form>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            <% } %>
+          </div>
+          
+          <!-- Completed Bookings -->
+          <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+            <% 
+              const completedBookings = bookings.filter(booking => 
+                new Date(booking.journeyDate) < new Date() && booking.status !== 'cancelled'
+              );
+              
+              if (completedBookings.length === 0) { 
+            %>
+              <div class="card">
+                <div class="card-body text-center py-4">
+                  <p class="mb-0">No completed bookings found.</p>
+                </div>
+              </div>
+            <% } else { %>
+              <% completedBookings.forEach(booking => { %>
+                <div class="card mb-3 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <div class="d-flex justify-content-between mb-3">
+                          <h5 class="mb-0"><%= booking.route.departureCity %> to <%= booking.route.arrivalCity %></h5>
+                          <span class="badge bg-secondary">COMPLETED</span>
+                        </div>
+                        
+                        <div class="row mb-3">
+                          <div class="col-md-4">
+                            <div class="d-flex flex-column">
+                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="text-muted small"><%= booking.route.departureCity %></span>
+                            </div>
+                          </div>
+                          <div class="col-md-4 text-center">
+                            <div class="d-flex flex-column align-items-center">
+                              <span class="text-muted small">
+                                <%= Math.floor((new Date(booking.busId.arrivalTime) - new Date(booking.busId.departureTime)) / 3600000) %>h 
+                                <%= Math.floor(((new Date(booking.busId.arrivalTime) - new Date(booking.busId.departureTime)) % 3600000) / 60000) %>m
+                              </span>
+                              <div class="position-relative my-1">
+                                <hr class="w-100" style="border-top: 2px dashed;">
+                                <i class="fas fa-bus position-absolute top-50 translate-middle-y" style="left: 50%;"></i>
+                              </div>
+                              <span class="text-muted small"><%= booking.route.distance %> km</span>
+                            </div>
+                          </div>
+                          <div class="col-md-4 text-end">
+                            <div class="d-flex flex-column align-items-end">
+                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="text-muted small"><%= booking.route.arrivalCity %></span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                          <span class="me-3 text-muted small">
+                            <i class="fas fa-bus me-1"></i> <%= booking.busId.busName %> (<%= booking.busId.busType %>)
+                          </span>
+                          <span class="me-3 text-muted small">
+                            <i class="fas fa-ticket-alt me-1"></i> <%= booking.seats.map(s => s.seatNumber).join(', ') %>
+                          </span>
+                          <span class="text-muted small">
+                            <i class="fas fa-tag me-1"></i> <%= booking.totalAmount.toLocaleString() %> VND
+                          </span>
+                        </div>
+                        
+                        <div class="text-muted small">
+                          <span class="me-3">
+                            <i class="fas fa-bookmark me-1"></i> <%= booking.bookingReference %>
+                          </span>
+                          <span>
+                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-3 border-start d-flex flex-column justify-content-center align-items-center">
+                        <a href="/bookings/<%= booking._id %>/confirmation" class="btn btn-outline-primary btn-sm w-100">
+                          <i class="fas fa-eye me-1"></i> View Details
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            <% } %>
+          </div>
+          
+          <!-- Cancelled Bookings -->
+          <div class="tab-pane fade" id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
+            <% 
+              const cancelledBookings = bookings.filter(booking => booking.status === 'cancelled');
+              
+              if (cancelledBookings.length === 0) { 
+            %>
+              <div class="card">
+                <div class="card-body text-center py-4">
+                  <p class="mb-0">No cancelled bookings found.</p>
+                </div>
+              </div>
+            <% } else { %>
+              <% cancelledBookings.forEach(booking => { %>
+                <div class="card mb-3 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <div class="d-flex justify-content-between mb-3">
+                          <h5 class="mb-0"><%= booking.route.departureCity %> to <%= booking.route.arrivalCity %></h5>
+                          <span class="badge bg-danger">CANCELLED</span>
+                        </div>
+                        
+                        <div class="row mb-3">
+                          <div class="col-md-4">
+                            <div class="d-flex flex-column">
+                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="text-muted small"><%= booking.route.departureCity %></span>
+                            </div>
+                          </div>
+                          <div class="col-md-4 text-center">
+                            <div class="d-flex flex-column align-items-center">
+                              <span class="text-muted small">
+                                <%= Math.floor((new Date(booking.busId.arrivalTime) - new Date(booking.busId.departureTime)) / 3600000) %>h 
+                                <%= Math.floor(((new Date(booking.busId.arrivalTime) - new Date(booking.busId.departureTime)) % 3600000) / 60000) %>m
+                              </span>
+                              <div class="position-relative my-1">
+                                <hr class="w-100" style="border-top: 2px dashed;">
+                                <i class="fas fa-bus position-absolute top-50 translate-middle-y" style="left: 50%;"></i>
+                              </div>
+                              <span class="text-muted small"><%= booking.route.distance %> km</span>
+                            </div>
+                          </div>
+                          <div class="col-md-4 text-end">
+                            <div class="d-flex flex-column align-items-end">
+                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="text-muted small"><%= booking.route.arrivalCity %></span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                          <span class="me-3 text-muted small">
+                            <i class="fas fa-bus me-1"></i> <%= booking.busId.busName %> (<%= booking.busId.busType %>)
+                          </span>
+                          <span class="me-3 text-muted small">
+                            <i class="fas fa-ticket-alt me-1"></i> <%= booking.seats.map(s => s.seatNumber).join(', ') %>
+                          </span>
+                          <span class="text-muted small">
+                            <i class="fas fa-tag me-1"></i> <%= booking.totalAmount.toLocaleString() %> VND
+                          </span>
+                        </div>
+                        
+                        <div class="text-muted small">
+                          <span class="me-3">
+                            <i class="fas fa-bookmark me-1"></i> <%= booking.bookingReference %>
+                          </span>
+                          <span class="me-3">
+                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                          </span>
+                          <% if (booking.paymentStatus === 'refunded') { %>
+                            <span class="badge bg-info">REFUNDED</span>
+                          <% } %>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-3 border-start d-flex flex-column justify-content-center align-items-center">
+                        <a href="/bookings/<%= booking._id %>/confirmation" class="btn btn-outline-primary btn-sm w-100">
+                          <i class="fas fa-eye me-1"></i> View Details
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
