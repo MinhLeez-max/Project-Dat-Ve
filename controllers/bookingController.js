@@ -1,6 +1,4 @@
-const Booking = require('../models/Booking');
-const Bus = require('../models/Bus');
-const User = require('../models/User');
+const { sequelize, Booking, Bus, User, Route } = require('../models');
 
 module.exports = {
   // Process selected seats and render passenger details form
@@ -18,7 +16,9 @@ module.exports = {
       const seats = Array.isArray(selectedSeats) ? selectedSeats : [selectedSeats];
       
       // Get bus details
-      const bus = await Bus.findById(busId).populate('routeId');
+      const bus = await Bus.findByPk(busId, {
+        include: [{ model: Route, as: 'route' }]
+      });
       
       if (!bus) {
         req.flash('error_msg', 'Bus not found');
@@ -141,7 +141,7 @@ module.exports = {
       }
 
       // Create new booking
-      const newBooking = new Booking({
+      const newBooking = await Booking.create({
         userId: req.session.user.id,
         busId: bookingData.busId,
         seats: bookingData.seats,
@@ -149,10 +149,9 @@ module.exports = {
         journeyDate: new Date(bookingData.journeyDate),
         paymentMethod,
         status: 'confirmed',
-        paymentStatus: 'completed'
+        paymentStatus: 'completed',
+        bookingDate: new Date()
       });
-
-      await newBooking.save();
       
       // Clear booking data from session
       delete req.session.bookingData;
@@ -172,9 +171,16 @@ module.exports = {
   // Get booking confirmation
   getBookingConfirmation: async (req, res) => {
     try {
-      const booking = await Booking.findById(req.params.id)
-        .populate('busId')
-        .populate('userId');
+      const booking = await Booking.findByPk(req.params.id, {
+        include: [
+          { model: User, as: 'user' },
+          { 
+            model: Bus, 
+            as: 'bus',
+            include: [{ model: Route, as: 'route' }]
+          }
+        ]
+      });
       
       if (!booking) {
         req.flash('error_msg', 'Booking not found');
@@ -182,18 +188,16 @@ module.exports = {
       }
 
       // Check if booking belongs to logged in user
-      if (booking.userId._id.toString() !== req.session.user.id) {
+      if (booking.userId !== req.session.user.id) {
         req.flash('error_msg', 'Unauthorized access');
         return res.redirect('/');
       }
       
-      // Get bus route details
-      const bus = await Bus.findById(booking.busId._id).populate('routeId');
+      // Bus and route details are already included through the associations
       
       res.render('booking/confirmation', {
         title: 'Booking Confirmation',
-        booking,
-        bus
+        booking
       });
     } catch (err) {
       console.error(err);
@@ -205,15 +209,17 @@ module.exports = {
   // Get my bookings
   getMyBookings: async (req, res) => {
     try {
-      const bookings = await Booking.find({ userId: req.session.user.id })
-        .populate('busId')
-        .sort({ bookingDate: -1 });
-      
-      // Get bus route details for each booking
-      for (let i = 0; i < bookings.length; i++) {
-        const bus = await Bus.findById(bookings[i].busId._id).populate('routeId');
-        bookings[i].route = bus.routeId;
-      }
+      const bookings = await Booking.findAll({
+        where: { userId: req.session.user.id },
+        include: [
+          { 
+            model: Bus, 
+            as: 'bus',
+            include: [{ model: Route, as: 'route' }]
+          }
+        ],
+        order: [['bookingDate', 'DESC']]
+      });
       
       res.render('booking/my-bookings', {
         title: 'My Bookings',
@@ -229,7 +235,7 @@ module.exports = {
   // Cancel booking
   cancelBooking: async (req, res) => {
     try {
-      const booking = await Booking.findById(req.params.id);
+      const booking = await Booking.findByPk(req.params.id);
       
       if (!booking) {
         req.flash('error_msg', 'Booking not found');
@@ -237,7 +243,7 @@ module.exports = {
       }
 
       // Check if booking belongs to logged in user
-      if (booking.userId.toString() !== req.session.user.id) {
+      if (booking.userId !== req.session.user.id) {
         req.flash('error_msg', 'Unauthorized access');
         return res.redirect('/bookings/my-bookings');
       }
@@ -275,27 +281,29 @@ module.exports = {
       const skip = (page - 1) * limit;
       
       // Filtering
-      const filter = {};
+      const where = {};
       if (req.query.status) {
-        filter.status = req.query.status;
+        where.status = req.query.status;
       }
       
       // Get total count for pagination
-      const totalBookings = await Booking.countDocuments(filter);
+      const totalBookings = await Booking.count({ where });
       
       // Get bookings
-      const bookings = await Booking.find(filter)
-        .populate('busId')
-        .populate('userId')
-        .sort({ bookingDate: -1 })
-        .skip(skip)
-        .limit(limit);
-      
-      // Get bus route details for each booking
-      for (let i = 0; i < bookings.length; i++) {
-        const bus = await Bus.findById(bookings[i].busId._id).populate('routeId');
-        bookings[i].route = bus.routeId;
-      }
+      const bookings = await Booking.findAll({
+        where,
+        include: [
+          { model: User, as: 'user' },
+          { 
+            model: Bus, 
+            as: 'bus',
+            include: [{ model: Route, as: 'route' }]
+          }
+        ],
+        order: [['bookingDate', 'DESC']],
+        offset: skip,
+        limit
+      });
       
       res.render('admin/bookings', {
         title: 'Manage Bookings',
@@ -324,7 +332,7 @@ module.exports = {
       }
 
       // Find and update booking
-      const booking = await Booking.findById(req.params.id);
+      const booking = await Booking.findByPk(req.params.id);
       
       if (!booking) {
         req.flash('error_msg', 'Booking not found');

@@ -48,6 +48,10 @@ const Route = sequelize.define('Route', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  estimatedDuration: {
+    type: DataTypes.INTEGER, // Thời gian di chuyển (tính bằng phút)
+    allowNull: false
+  },
   createdAt: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW

@@ -201,23 +201,27 @@ module.exports = {
       }
 
       // Check if bus number already exists
-      const existingBus = await Bus.findOne({ busNumber });
+      const existingBus = await Bus.findOne({ 
+        where: { busNumber }
+      });
       
       if (existingBus) {
-        req.flash('error_msg', 'A bus with this number already exists');
+        req.flash('error_msg', 'Xe buýt với số hiệu này đã tồn tại');
         return res.redirect('/admin/buses/add');
       }
 
-      // Create new bus
-      const newBus = new Bus({
-        routeId,
+      // Create new bus using Sequelize
+      await Bus.create({
+        RouteId: routeId,
         busNumber,
-        busName,
-        busType,
-        totalSeats,
+        name: busName,
+        type: busType,
+        capacity: totalSeats,
         departureTime,
         arrivalTime,
-        price,
+        fare: price,
+        departureDate: new Date(), // Mặc định ngày hiện tại, cần cập nhật sau
+        arrivalDate: new Date(),   // Mặc định ngày hiện tại, cần cập nhật sau
         amenities: {
           wifi: wifi === 'on',
           usb: usb === 'on',
@@ -232,8 +236,6 @@ module.exports = {
           layout
         }
       });
-
-      await newBus.save();
       
       req.flash('success_msg', 'New bus added successfully');
       res.redirect('/admin/buses');
@@ -247,23 +249,25 @@ module.exports = {
   // Admin: Get bus by ID
   getBus: async (req, res) => {
     try {
-      const bus = await Bus.findById(req.params.id);
-      const routes = await Route.find().sort({ departureCity: 1 });
+      const bus = await Bus.findByPk(req.params.id);
+      const routes = await Route.findAll({
+        order: [['departureCity', 'ASC']]
+      });
       
       if (!bus) {
-        req.flash('error_msg', 'Bus not found');
+        req.flash('error_msg', 'Không tìm thấy xe');
         return res.redirect('/admin/buses');
       }
       
       res.render('admin/buses', {
-        title: 'Edit Bus',
+        title: 'Chỉnh sửa thông tin xe',
         bus,
         routes,
         editBus: true
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error fetching bus');
+      req.flash('error_msg', 'Lỗi khi tải thông tin xe');
       res.redirect('/admin/buses');
     }
   },
@@ -281,59 +285,60 @@ module.exports = {
       // Validate input
       if (!routeId || !busNumber || !busName || !busType || !totalSeats || 
           !departureTime || !arrivalTime || !price || !rows || !columns || !layout) {
-        req.flash('error_msg', 'Please fill in all required fields');
+        req.flash('error_msg', 'Vui lòng điền đầy đủ thông tin');
         return res.redirect(`/admin/buses/${req.params.id}`);
       }
 
       // Find bus
-      const bus = await Bus.findById(req.params.id);
+      const bus = await Bus.findByPk(req.params.id);
       
       if (!bus) {
-        req.flash('error_msg', 'Bus not found');
+        req.flash('error_msg', 'Không tìm thấy xe');
         return res.redirect('/admin/buses');
       }
       
       // Check if bus number already exists (except for this bus)
       if (busNumber !== bus.busNumber) {
-        const existingBus = await Bus.findOne({ busNumber });
+        const existingBus = await Bus.findOne({ 
+          where: { busNumber } 
+        });
         
         if (existingBus) {
-          req.flash('error_msg', 'A bus with this number already exists');
+          req.flash('error_msg', 'Xe buýt với số hiệu này đã tồn tại');
           return res.redirect(`/admin/buses/${req.params.id}`);
         }
       }
 
-      // Update bus
-      bus.routeId = routeId;
-      bus.busNumber = busNumber;
-      bus.busName = busName;
-      bus.busType = busType;
-      bus.totalSeats = totalSeats;
-      bus.departureTime = departureTime;
-      bus.arrivalTime = arrivalTime;
-      bus.price = price;
-      bus.available = available === 'on';
-      bus.amenities = {
-        wifi: wifi === 'on',
-        usb: usb === 'on',
-        food: food === 'on',
-        waterBottle: waterBottle === 'on',
-        blanket: blanket === 'on',
-        entertainment: entertainment === 'on'
-      };
-      bus.seatLayout = {
-        rows,
-        columns,
-        layout
-      };
+      // Update bus with Sequelize
+      await bus.update({
+        RouteId: routeId,
+        busNumber,
+        name: busName,
+        type: busType,
+        capacity: totalSeats,
+        departureTime,
+        arrivalTime,
+        fare: price,
+        amenities: {
+          wifi: wifi === 'on',
+          usb: usb === 'on',
+          food: food === 'on',
+          waterBottle: waterBottle === 'on',
+          blanket: blanket === 'on',
+          entertainment: entertainment === 'on'
+        },
+        seatLayout: {
+          rows,
+          columns,
+          layout
+        }
+      });
       
-      await bus.save();
-      
-      req.flash('success_msg', 'Bus updated successfully');
+      req.flash('success_msg', 'Cập nhật thông tin xe thành công');
       res.redirect('/admin/buses');
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error updating bus');
+      req.flash('error_msg', 'Lỗi khi cập nhật thông tin xe');
       res.redirect('/admin/buses');
     }
   },
@@ -342,25 +347,34 @@ module.exports = {
   deleteBus: async (req, res) => {
     try {
       // Check if bus has any active bookings
-      const bookings = await Booking.find({ 
-        busId: req.params.id,
-        status: { $ne: 'cancelled' },
-        journeyDate: { $gte: new Date() }
+      const bookings = await Booking.findAll({ 
+        where: {
+          BusId: req.params.id,
+          status: { [Op.ne]: 'cancelled' },
+          journeyDate: { [Op.gte]: new Date() }
+        }
       });
       
       if (bookings.length > 0) {
-        req.flash('error_msg', 'Cannot delete bus with active bookings');
+        req.flash('error_msg', 'Không thể xóa xe có các đặt chỗ đang hoạt động');
         return res.redirect('/admin/buses');
       }
       
       // Find and delete bus
-      await Bus.findByIdAndDelete(req.params.id);
+      const bus = await Bus.findByPk(req.params.id);
       
-      req.flash('success_msg', 'Bus deleted successfully');
+      if (!bus) {
+        req.flash('error_msg', 'Không tìm thấy xe');
+        return res.redirect('/admin/buses');
+      }
+      
+      await bus.destroy();
+      
+      req.flash('success_msg', 'Xóa xe thành công');
       res.redirect('/admin/buses');
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error deleting bus');
+      req.flash('error_msg', 'Lỗi khi xóa xe');
       res.redirect('/admin/buses');
     }
   }
