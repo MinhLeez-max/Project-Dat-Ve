@@ -8,7 +8,7 @@ module.exports = {
       
       // Validate input
       if (!busId || !journeyDate || !selectedSeats) {
-        req.flash('error_msg', 'Please select at least one seat');
+        req.flash('error_msg', 'Vui lòng chọn ít nhất một ghế');
         return res.redirect(`/buses/${busId}?date=${journeyDate}`);
       }
 
@@ -17,16 +17,16 @@ module.exports = {
       
       // Get bus details
       const bus = await Bus.findByPk(busId, {
-        include: [{ model: Route, as: 'route' }]
+        include: [Route]
       });
       
       if (!bus) {
-        req.flash('error_msg', 'Bus not found');
+        req.flash('error_msg', 'Không tìm thấy xe');
         return res.redirect('/buses/search');
       }
 
       // Calculate total amount
-      const totalAmount = bus.price * seats.length;
+      const totalAmount = bus.fare * seats.length;
       
       // Store booking data in session for the next step
       req.session.bookingData = {
@@ -35,18 +35,18 @@ module.exports = {
         selectedSeats: seats,
         totalAmount,
         bus: {
-          busName: bus.busName,
+          name: bus.name,
           busNumber: bus.busNumber,
-          departureCity: bus.routeId.departureCity,
-          arrivalCity: bus.routeId.arrivalCity,
+          departureCity: bus.Route.departureCity,
+          arrivalCity: bus.Route.arrivalCity,
           departureTime: bus.departureTime,
           arrivalTime: bus.arrivalTime,
-          price: bus.price
+          fare: bus.fare
         }
       };
       
       res.render('booking/passenger-details', {
-        title: 'Passenger Details',
+        title: 'Thông Tin Hành Khách',
         seats,
         bus,
         journeyDate,
@@ -54,7 +54,7 @@ module.exports = {
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error processing selected seats');
+      req.flash('error_msg', 'Lỗi khi xử lý ghế đã chọn');
       res.redirect('/buses/search');
     }
   },
@@ -68,22 +68,22 @@ module.exports = {
       const bookingData = req.session.bookingData;
       
       if (!bookingData) {
-        req.flash('error_msg', 'Booking session expired');
+        req.flash('error_msg', 'Phiên đặt vé đã hết hạn');
         return res.redirect('/buses/search');
       }
 
       // Validate input
       if (!passengerName || !passengerAge || !passengerGender) {
-        req.flash('error_msg', 'Please fill in all passenger details');
+        req.flash('error_msg', 'Vui lòng điền đầy đủ thông tin hành khách');
         return res.redirect('/bookings/passenger-details');
       }
 
       // Process passenger data - handle both array and single values
-      const seats = [];
+      const passengers = [];
       
       // If only one seat is selected
       if (!Array.isArray(passengerName)) {
-        seats.push({
+        passengers.push({
           seatNumber: bookingData.selectedSeats[0],
           passengerName,
           passengerAge,
@@ -92,7 +92,7 @@ module.exports = {
       } else {
         // If multiple seats are selected
         for (let i = 0; i < passengerName.length; i++) {
-          seats.push({
+          passengers.push({
             seatNumber: bookingData.selectedSeats[i],
             passengerName: passengerName[i],
             passengerAge: passengerAge[i],
@@ -102,15 +102,15 @@ module.exports = {
       }
       
       // Update booking data in session
-      req.session.bookingData.seats = seats;
+      req.session.bookingData.passengerDetails = passengers;
       
       res.render('booking/payment', {
-        title: 'Payment',
+        title: 'Thanh Toán',
         bookingData: req.session.bookingData
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error processing passenger details');
+      req.flash('error_msg', 'Lỗi khi xử lý thông tin hành khách');
       res.redirect('/buses/search');
     }
   },
@@ -124,29 +124,30 @@ module.exports = {
       const bookingData = req.session.bookingData;
       
       if (!bookingData) {
-        req.flash('error_msg', 'Booking session expired');
+        req.flash('error_msg', 'Phiên đặt vé đã hết hạn');
         return res.redirect('/buses/search');
       }
 
       // Validate input
       if (!paymentMethod) {
-        req.flash('error_msg', 'Please select a payment method');
+        req.flash('error_msg', 'Vui lòng chọn phương thức thanh toán');
         return res.redirect('/bookings/payment');
       }
 
       // Ensure user is logged in
       if (!req.session.user) {
-        req.flash('error_msg', 'Please log in to complete booking');
+        req.flash('error_msg', 'Vui lòng đăng nhập để hoàn tất đặt vé');
         return res.redirect('/login');
       }
 
       // Create new booking
       const newBooking = await Booking.create({
-        userId: req.session.user.id,
-        busId: bookingData.busId,
-        seats: bookingData.seats,
+        UserId: req.session.user.id,
+        BusId: bookingData.busId,
+        seatNumbers: bookingData.selectedSeats,
         totalAmount: bookingData.totalAmount,
         journeyDate: new Date(bookingData.journeyDate),
+        passengerDetails: bookingData.passengerDetails,
         paymentMethod,
         status: 'confirmed',
         paymentStatus: 'completed',
@@ -159,11 +160,11 @@ module.exports = {
       // Send confirmation email (mock for now)
       // emailService.sendBookingConfirmation(newBooking);
       
-      req.flash('success_msg', 'Booking confirmed successfully');
-      res.redirect(`/bookings/${newBooking._id}/confirmation`);
+      req.flash('success_msg', 'Đặt vé thành công');
+      res.redirect(`/bookings/${newBooking.id}/confirmation`);
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error processing payment');
+      req.flash('error_msg', 'Lỗi khi xử lý thanh toán');
       res.redirect('/bookings/payment');
     }
   },
@@ -173,35 +174,34 @@ module.exports = {
     try {
       const booking = await Booking.findByPk(req.params.id, {
         include: [
-          { model: User, as: 'user' },
+          { model: User },
           { 
-            model: Bus, 
-            as: 'bus',
-            include: [{ model: Route, as: 'route' }]
+            model: Bus,
+            include: [Route]
           }
         ]
       });
       
       if (!booking) {
-        req.flash('error_msg', 'Booking not found');
+        req.flash('error_msg', 'Không tìm thấy đặt vé');
         return res.redirect('/');
       }
 
       // Check if booking belongs to logged in user
-      if (booking.userId !== req.session.user.id) {
-        req.flash('error_msg', 'Unauthorized access');
+      if (booking.UserId !== req.session.user.id) {
+        req.flash('error_msg', 'Bạn không có quyền truy cập');
         return res.redirect('/');
       }
       
       // Bus and route details are already included through the associations
       
       res.render('booking/confirmation', {
-        title: 'Booking Confirmation',
+        title: 'Xác Nhận Đặt Vé',
         booking
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error fetching booking confirmation');
+      req.flash('error_msg', 'Lỗi khi tải thông tin đặt vé');
       res.redirect('/');
     }
   },
@@ -210,24 +210,23 @@ module.exports = {
   getMyBookings: async (req, res) => {
     try {
       const bookings = await Booking.findAll({
-        where: { userId: req.session.user.id },
+        where: { UserId: req.session.user.id },
         include: [
           { 
-            model: Bus, 
-            as: 'bus',
-            include: [{ model: Route, as: 'route' }]
+            model: Bus,
+            include: [Route]
           }
         ],
         order: [['bookingDate', 'DESC']]
       });
       
       res.render('booking/my-bookings', {
-        title: 'My Bookings',
+        title: 'Vé Của Tôi',
         bookings
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error fetching your bookings');
+      req.flash('error_msg', 'Lỗi khi tải danh sách vé');
       res.redirect('/');
     }
   },
@@ -238,13 +237,13 @@ module.exports = {
       const booking = await Booking.findByPk(req.params.id);
       
       if (!booking) {
-        req.flash('error_msg', 'Booking not found');
+        req.flash('error_msg', 'Không tìm thấy đặt vé');
         return res.redirect('/bookings/my-bookings');
       }
 
       // Check if booking belongs to logged in user
-      if (booking.userId !== req.session.user.id) {
-        req.flash('error_msg', 'Unauthorized access');
+      if (booking.UserId !== req.session.user.id) {
+        req.flash('error_msg', 'Bạn không có quyền truy cập');
         return res.redirect('/bookings/my-bookings');
       }
 
@@ -253,7 +252,7 @@ module.exports = {
       const currentDate = new Date();
       
       if (journeyDate < currentDate) {
-        req.flash('error_msg', 'Cannot cancel past bookings');
+        req.flash('error_msg', 'Không thể hủy vé cho chuyến đã qua');
         return res.redirect('/bookings/my-bookings');
       }
 
@@ -263,11 +262,11 @@ module.exports = {
       
       await booking.save();
       
-      req.flash('success_msg', 'Booking cancelled successfully');
+      req.flash('success_msg', 'Hủy vé thành công');
       res.redirect('/bookings/my-bookings');
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error cancelling booking');
+      req.flash('error_msg', 'Lỗi khi hủy vé');
       res.redirect('/bookings/my-bookings');
     }
   },
@@ -278,7 +277,7 @@ module.exports = {
       // Pagination
       const page = parseInt(req.query.page) || 1;
       const limit = 20;
-      const skip = (page - 1) * limit;
+      const offset = (page - 1) * limit;
       
       // Filtering
       const where = {};
@@ -293,20 +292,19 @@ module.exports = {
       const bookings = await Booking.findAll({
         where,
         include: [
-          { model: User, as: 'user' },
+          { model: User },
           { 
-            model: Bus, 
-            as: 'bus',
-            include: [{ model: Route, as: 'route' }]
+            model: Bus,
+            include: [Route]
           }
         ],
         order: [['bookingDate', 'DESC']],
-        offset: skip,
+        offset,
         limit
       });
       
       res.render('admin/bookings', {
-        title: 'Manage Bookings',
+        title: 'Quản Lý Đặt Vé',
         bookings,
         currentPage: page,
         totalPages: Math.ceil(totalBookings / limit),
@@ -315,7 +313,7 @@ module.exports = {
       });
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error fetching bookings');
+      req.flash('error_msg', 'Lỗi khi tải danh sách đặt vé');
       res.redirect('/admin/dashboard');
     }
   },
@@ -327,7 +325,7 @@ module.exports = {
       
       // Validate input
       if (!status || !paymentStatus) {
-        req.flash('error_msg', 'Please select both status and payment status');
+        req.flash('error_msg', 'Vui lòng chọn cả trạng thái và trạng thái thanh toán');
         return res.redirect(`/admin/bookings/${req.params.id}`);
       }
 
@@ -335,7 +333,7 @@ module.exports = {
       const booking = await Booking.findByPk(req.params.id);
       
       if (!booking) {
-        req.flash('error_msg', 'Booking not found');
+        req.flash('error_msg', 'Không tìm thấy đặt vé');
         return res.redirect('/admin/bookings');
       }
       
@@ -344,11 +342,11 @@ module.exports = {
       
       await booking.save();
       
-      req.flash('success_msg', 'Booking status updated successfully');
+      req.flash('success_msg', 'Cập nhật trạng thái đặt vé thành công');
       res.redirect('/admin/bookings');
     } catch (err) {
       console.error(err);
-      req.flash('error_msg', 'Error updating booking status');
+      req.flash('error_msg', 'Lỗi khi cập nhật trạng thái đặt vé');
       res.redirect('/admin/bookings');
     }
   }
