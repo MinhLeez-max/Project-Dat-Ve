@@ -134,12 +134,7 @@ module.exports = {
         return res.redirect('/buses/search');
       }
 
-      // Find existing bookings for this bus and date to determine booked seats - using Sequelize
-      const journeyStart = new Date(journeyDate);
-      const journeyEnd = new Date(journeyDate);
-      journeyEnd.setDate(journeyEnd.getDate() + 1);
-      
-      // Chúng ta sẽ dùng truy vấn SQL thuần vì journeyDate mới được thêm vào
+      // Find existing bookings for this bus
       const bookings = await Booking.findAll({
         where: {
           BusId: busId,
@@ -149,16 +144,9 @@ module.exports = {
         }
       });
 
-      // Lọc booking theo journeyDate
-      const filteredBookings = bookings.filter(booking => {
-        if (!booking.journeyDate) return false;
-        const bookingDate = new Date(booking.journeyDate);
-        return bookingDate >= journeyStart && bookingDate < journeyEnd;
-      });
-
       // Create an array of already booked seats
       const bookedSeats = [];
-      filteredBookings.forEach(booking => {
+      bookings.forEach(booking => {
         if (booking.seatNumbers && booking.seatNumbers.length) {
           booking.seatNumbers.forEach(seatNumber => {
             bookedSeats.push(seatNumber);
@@ -390,15 +378,7 @@ module.exports = {
         }
       });
       
-      // Lọc booking theo ngày hiện tại
-      const currentDate = new Date();
-      const activeBookings = bookings.filter(booking => {
-        if (!booking.journeyDate) return false;
-        const journeyDate = new Date(booking.journeyDate);
-        return journeyDate >= currentDate;
-      });
-      
-      if (activeBookings.length > 0) {
+      if (bookings.length > 0) {
         req.flash('error_msg', 'Không thể xóa xe có các đặt chỗ đang hoạt động');
         return res.redirect('/admin/buses');
       }

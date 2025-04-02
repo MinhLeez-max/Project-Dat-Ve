@@ -31,7 +31,6 @@ module.exports = {
       // Store booking data in session for the next step
       req.session.bookingData = {
         busId,
-        journeyDate,
         selectedSeats: seats,
         totalAmount,
         bus: {
@@ -146,7 +145,6 @@ module.exports = {
         BusId: bookingData.busId,
         seatNumbers: bookingData.selectedSeats,
         totalAmount: bookingData.totalAmount,
-        journeyDate: new Date(bookingData.journeyDate),
         passengerDetails: bookingData.passengerDetails,
         paymentMethod,
         status: 'confirmed',
@@ -234,7 +232,9 @@ module.exports = {
   // Cancel booking
   cancelBooking: async (req, res) => {
     try {
-      const booking = await Booking.findByPk(req.params.id);
+      const booking = await Booking.findByPk(req.params.id, {
+        include: [{ model: Bus }]
+      });
       
       if (!booking) {
         req.flash('error_msg', 'Không tìm thấy đặt vé');
@@ -247,11 +247,11 @@ module.exports = {
         return res.redirect('/bookings/my-bookings');
       }
 
-      // Check if booking can be cancelled (not past journey date)
-      const journeyDate = new Date(booking.journeyDate);
+      // Check if booking can be cancelled (not past departure date)
+      const departureDate = new Date(booking.Bus.departureDate);
       const currentDate = new Date();
       
-      if (journeyDate < currentDate) {
+      if (departureDate < currentDate) {
         req.flash('error_msg', 'Không thể hủy vé cho chuyến đã qua');
         return res.redirect('/bookings/my-bookings');
       }

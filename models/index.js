@@ -128,10 +128,6 @@ const Booking = sequelize.define('Booking', {
     type: DataTypes.STRING, // "confirmed", "cancelled", "pending"
     defaultValue: 'pending'
   },
-  journeyDate: {
-    type: DataTypes.DATE,
-    allowNull: false
-  },
   bookingDate: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
