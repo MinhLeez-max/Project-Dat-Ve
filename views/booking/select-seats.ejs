@@ -3,19 +3,19 @@
   <div class="booking-steps mb-4">
     <div class="booking-step active">
       <i class="fas fa-chair"></i>
-      <div>Select Seats</div>
+      <div>Chọn Chỗ Ngồi</div>
     </div>
     <div class="booking-step">
       <i class="fas fa-user"></i>
-      <div>Passenger Details</div>
+      <div>Chi Tiết</div>
     </div>
     <div class="booking-step">
       <i class="fas fa-credit-card"></i>
-      <div>Payment</div>
+      <div>Thanh Toán</div>
     </div>
     <div class="booking-step">
       <i class="fas fa-check-circle"></i>
-      <div>Confirmation</div>
+      <div>Xác Nhận</div>
     </div>
   </div>
 
@@ -23,45 +23,50 @@
     <div class="col-lg-8">
       <div class="card mb-4">
         <div class="card-header">
-          <h4 class="mb-0">Select Your Seats</h4>
+          <h4 class="mb-0">Chọn chỗ ngồi của bạn</h4>
         </div>
         <div class="card-body">
           <div class="row mb-4">
             <div class="col-md-6">
-              <h5><%= bus.busName %> (<%= bus.busType %>)</h5>
+              <!-- <h5><%= bus.busName %> (<%= bus.busType %>)</h5> -->
               <p class="mb-1">
-                <strong>From:</strong> <%= bus.routeId.departureCity %>
+                <strong>Từ:</strong> <%= bus.route.departureCity %>
               </p>
               <p class="mb-1">
-                <strong>To:</strong> <%= bus.routeId.arrivalCity %>
+                <strong>Đến:</strong> <%= bus.route.arrivalCity %>
               </p>
               <p class="mb-1">
-                <strong>Date:</strong> <%= new Date(journeyDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+                <strong>Ngày:</strong> <%= new Date(bus.departureDate).toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                }) %>                
               </p>
               <p class="mb-1">
-                <strong>Departure:</strong> <%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+                <strong>Khởi hành lúc:</strong> <%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
               </p>
               <p class="mb-0">
-                <strong>Arrival:</strong> <%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+                <strong>Đến nơi:</strong> <%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
               </p>
             </div>
             <div class="col-md-6">
               <div class="seat-legend text-end mb-3">
                 <div class="d-inline-block me-3">
                   <span class="seat available d-inline-block" style="width:20px;height:20px;"></span>
-                  <span class="ms-1">Available</span>
+                  <span class="ms-1">Còn Trống</span>
                 </div>
                 <div class="d-inline-block me-3">
                   <span class="seat selected d-inline-block" style="width:20px;height:20px;"></span>
-                  <span class="ms-1">Selected</span>
+                  <span class="ms-1">Đã Chọn</span>
                 </div>
                 <div class="d-inline-block">
                   <span class="seat booked d-inline-block" style="width:20px;height:20px;"></span>
-                  <span class="ms-1">Booked</span>
+                  <span class="ms-1">Đã Đặt</span>
                 </div>
               </div>
               <p class="text-end mb-1">
-                <strong>Price per seat:</strong> <%= bus.price.toLocaleString() %> VND
+                <strong>Giá mỗi chỗ ngồi:</strong> <%= bus.fare.toLocaleString() %> VND
               </p>
             </div>
           </div>
@@ -69,7 +74,7 @@
           <div class="text-center mb-4">
             <div class="bus-front mb-2">
               <i class="fas fa-bus-alt fa-2x"></i>
-              <div class="small text-muted">Front</div>
+              <div class="small text-muted">Tài Xế</div>
             </div>
           </div>
 
@@ -130,24 +135,24 @@
     <div class="col-lg-4">
       <div class="card mb-4 position-sticky" style="top: 20px;">
         <div class="card-header">
-          <h5 class="mb-0">Booking Summary</h5>
+          <h5 class="mb-0">Tóm Tắt Đặt Chỗ</h5>
         </div>
         <div class="card-body">
           <div class="d-flex justify-content-between mb-3">
-            <span>Selected Seats:</span>
+            <span>Ghế Được Chọn:</span>
             <span id="selectedSeatsDisplay">None</span>
           </div>
           <div class="d-flex justify-content-between mb-4">
-            <span>Total Amount:</span>
+            <span>Tổng Tiền:</span>
             <span id="totalAmount">0 VND</span>
           </div>
 
           <form action="/bookings/select-seats" method="POST">
             <input type="hidden" name="busId" value="<%= bus._id %>">
-            <input type="hidden" name="journeyDate" value="<%= journeyDate %>">
+            <input type="hidden" name="journeyDate" value="<%= bus.departureDate ? bus.departureDate.toISOString().slice(0, 10) : '' %>">
             <input type="hidden" name="selectedSeats" id="selectedSeats">
-            <input type="hidden" id="pricePerSeat" value="<%= bus.price %>">
-            <button type="submit" id="continueBtn" class="btn btn-primary w-100" disabled>Continue</button>
+            <input type="hidden" id="pricePerSeat" value="<%= bus.fare %>">
+            <button type="submit" id="continueBtn" class="btn btn-primary w-100" disabled>Tiếp Tục</button>
           </form>
         </div>
       </div>

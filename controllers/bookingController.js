@@ -1,24 +1,22 @@
-const { sequelize, Booking, Bus, User, Route } = require('../models');
+const { Booking, Bus, User, Route } = require('../models');
 
 module.exports = {
   // Process selected seats and render passenger details form
   processSelectedSeats: async (req, res) => {
     try {
-      const { busId, journeyDate, selectedSeats } = req.body;
+      const { busId, selectedSeats } = req.body;
       
       // Validate input
-      if (!busId || !journeyDate || !selectedSeats) {
+      if (!busId || !selectedSeats) {
         req.flash('error_msg', 'Vui lòng chọn ít nhất một ghế');
-        return res.redirect(`/buses/${busId}?date=${journeyDate}`);
+        return res.redirect(`/buses/${busId}`);
       }
 
       // Convert selectedSeats to array if it's a string (single seat selected)
       const seats = Array.isArray(selectedSeats) ? selectedSeats : [selectedSeats];
       
       // Get bus details
-      const bus = await Bus.findByPk(busId, {
-        include: [Route]
-      });
+      const bus = await Bus.findById(busId).populate('route');
       
       if (!bus) {
         req.flash('error_msg', 'Không tìm thấy xe');
@@ -36,8 +34,8 @@ module.exports = {
         bus: {
           name: bus.name,
           busNumber: bus.busNumber,
-          departureCity: bus.Route.departureCity,
-          arrivalCity: bus.Route.arrivalCity,
+          departureCity: bus.route.departureCity,
+          arrivalCity: bus.route.arrivalCity,
           departureTime: bus.departureTime,
           arrivalTime: bus.arrivalTime,
           fare: bus.fare
@@ -48,8 +46,8 @@ module.exports = {
         title: 'Thông Tin Hành Khách',
         seats,
         bus,
-        journeyDate,
-        totalAmount
+        totalAmount,
+        journeyDate: req.body.journeyDate
       });
     } catch (err) {
       console.error(err);
@@ -121,6 +119,7 @@ module.exports = {
       
       // Get booking data from session
       const bookingData = req.session.bookingData;
+
       
       if (!bookingData) {
         req.flash('error_msg', 'Phiên đặt vé đã hết hạn');
@@ -139,18 +138,19 @@ module.exports = {
         return res.redirect('/login');
       }
 
-      // Create new booking
-      const newBooking = await Booking.create({
-        UserId: req.session.user.id,
-        BusId: bookingData.busId,
+      // Create new booking 
+      const newBooking = new Booking({
+        user: req.session.user.id,
+        bus: bookingData.busId,
         seatNumbers: bookingData.selectedSeats,
         totalAmount: bookingData.totalAmount,
         passengerDetails: bookingData.passengerDetails,
         paymentMethod,
         status: 'confirmed',
-        paymentStatus: 'completed',
-        bookingDate: new Date()
+        paymentStatus: 'paid'
       });
+      
+      await newBooking.save();
       
       // Clear booking data from session
       delete req.session.bookingData;
@@ -159,7 +159,7 @@ module.exports = {
       // emailService.sendBookingConfirmation(newBooking);
       
       req.flash('success_msg', 'Đặt vé thành công');
-      res.redirect(`/bookings/${newBooking.id}/confirmation`);
+      res.redirect(`/bookings/${newBooking._id}/confirmation`);
     } catch (err) {
       console.error(err);
       req.flash('error_msg', 'Lỗi khi xử lý thanh toán');
@@ -170,15 +170,14 @@ module.exports = {
   // Get booking confirmation
   getBookingConfirmation: async (req, res) => {
     try {
-      const booking = await Booking.findByPk(req.params.id, {
-        include: [
-          { model: User },
-          { 
-            model: Bus,
-            include: [Route]
+      const booking = await Booking.findById(req.params.id)
+        .populate('user')
+        .populate({
+          path: 'bus',
+          populate: {
+            path: 'route'
           }
-        ]
-      });
+        });
       
       if (!booking) {
         req.flash('error_msg', 'Không tìm thấy đặt vé');
@@ -186,12 +185,12 @@ module.exports = {
       }
 
       // Check if booking belongs to logged in user
-      if (booking.UserId !== req.session.user.id) {
+      if (booking.user._id.toString() !== req.session.user.id) {
         req.flash('error_msg', 'Bạn không có quyền truy cập');
         return res.redirect('/');
       }
       
-      // Bus and route details are already included through the associations
+      // Bus and route details are already included through the populations
       
       res.render('booking/confirmation', {
         title: 'Xác Nhận Đặt Vé',
@@ -207,16 +206,14 @@ module.exports = {
   // Get my bookings
   getMyBookings: async (req, res) => {
     try {
-      const bookings = await Booking.findAll({
-        where: { UserId: req.session.user.id },
-        include: [
-          { 
-            model: Bus,
-            include: [Route]
+      const bookings = await Booking.find({ user: req.session.user.id })
+        .populate({
+          path: 'bus',
+          populate: {
+            path: 'route'
           }
-        ],
-        order: [['bookingDate', 'DESC']]
-      });
+        })
+        .sort({ bookingDate: -1 });
       
       res.render('booking/my-bookings', {
         title: 'Vé Của Tôi',
@@ -232,9 +229,7 @@ module.exports = {
   // Cancel booking
   cancelBooking: async (req, res) => {
     try {
-      const booking = await Booking.findByPk(req.params.id, {
-        include: [{ model: Bus }]
-      });
+      const booking = await Booking.findById(req.params.id).populate('bus');
       
       if (!booking) {
         req.flash('error_msg', 'Không tìm thấy đặt vé');
@@ -242,13 +237,13 @@ module.exports = {
       }
 
       // Check if booking belongs to logged in user
-      if (booking.UserId !== req.session.user.id) {
+      if (booking.user.toString() !== req.session.user.id) {
         req.flash('error_msg', 'Bạn không có quyền truy cập');
         return res.redirect('/bookings/my-bookings');
       }
 
       // Check if booking can be cancelled (not past departure date)
-      const departureDate = new Date(booking.Bus.departureDate);
+      const departureDate = new Date(booking.bus.departureDate);
       const currentDate = new Date();
       
       if (departureDate < currentDate) {
@@ -277,31 +272,29 @@ module.exports = {
       // Pagination
       const page = parseInt(req.query.page) || 1;
       const limit = 20;
-      const offset = (page - 1) * limit;
+      const skip = (page - 1) * limit;
       
       // Filtering
-      const where = {};
+      const filter = {};
       if (req.query.status) {
-        where.status = req.query.status;
+        filter.status = req.query.status;
       }
       
       // Get total count for pagination
-      const totalBookings = await Booking.count({ where });
+      const totalBookings = await Booking.countDocuments(filter);
       
       // Get bookings
-      const bookings = await Booking.findAll({
-        where,
-        include: [
-          { model: User },
-          { 
-            model: Bus,
-            include: [Route]
+      const bookings = await Booking.find(filter)
+        .populate('user')
+        .populate({
+          path: 'bus',
+          populate: {
+            path: 'route'
           }
-        ],
-        order: [['bookingDate', 'DESC']],
-        offset,
-        limit
-      });
+        })
+        .sort({ bookingDate: -1 })
+        .skip(skip)
+        .limit(limit);
       
       res.render('admin/bookings', {
         title: 'Quản Lý Đặt Vé',
@@ -330,7 +323,7 @@ module.exports = {
       }
 
       // Find and update booking
-      const booking = await Booking.findByPk(req.params.id);
+      const booking = await Booking.findById(req.params.id);
       
       if (!booking) {
         req.flash('error_msg', 'Không tìm thấy đặt vé');

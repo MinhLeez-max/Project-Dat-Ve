@@ -3,19 +3,19 @@
   <div class="booking-steps mb-4">
     <div class="booking-step completed">
       <i class="fas fa-chair"></i>
-      <div>Select Seats</div>
+      <div>Chọn Chỗ Ngồi</div>
     </div>
     <div class="booking-step completed">
       <i class="fas fa-user"></i>
-      <div>Passenger Details</div>
+      <div>Chi Tiết</div>
     </div>
     <div class="booking-step active">
       <i class="fas fa-credit-card"></i>
-      <div>Payment</div>
+      <div>Thanh Toán</div>
     </div>
     <div class="booking-step">
       <i class="fas fa-check-circle"></i>
-      <div>Confirmation</div>
+      <div>Xác Nhận</div>
     </div>
   </div>
 
@@ -23,18 +23,18 @@
     <div class="col-lg-8">
       <div class="card mb-4">
         <div class="card-header">
-          <h4 class="mb-0">Payment Information</h4>
+          <h4 class="mb-0">Thông tin thanh toán</h4>
         </div>
         <div class="card-body">
           <form id="paymentForm" action="/bookings/payment" method="POST" class="needs-validation" novalidate>
             <div class="mb-4">
-              <h5>Select Payment Method</h5>
+              <h5>Chọn phương thức thanh toán</h5>
               <div class="row mt-3">
                 <div class="col-md-3 mb-3">
                   <div class="form-check payment-method">
                     <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="credit_card" checked>
                     <label class="form-check-label" for="creditCard">
-                      <i class="far fa-credit-card me-2"></i> Credit Card
+                      <i class="far fa-credit-card me-2"></i> Thẻ tín dụng
                     </label>
                   </div>
                 </div>
@@ -42,7 +42,7 @@
                   <div class="form-check payment-method">
                     <input class="form-check-input" type="radio" name="paymentMethod" id="debitCard" value="debit_card">
                     <label class="form-check-label" for="debitCard">
-                      <i class="fas fa-credit-card me-2"></i> Debit Card
+                      <i class="fas fa-credit-card me-2"></i> Thẻ ghi nợ
                     </label>
                   </div>
                 </div>
@@ -58,7 +58,7 @@
                   <div class="form-check payment-method">
                     <input class="form-check-input" type="radio" name="paymentMethod" id="eWallet" value="e-wallet">
                     <label class="form-check-label" for="eWallet">
-                      <i class="fas fa-wallet me-2"></i> E-Wallet
+                      <i class="fas fa-wallet me-2"></i> Ví Điện tử
                     </label>
                   </div>
                 </div>
@@ -66,22 +66,22 @@
             </div>
 
             <div id="credit_cardDetails" class="payment-details">
-              <h5>Credit Card Details</h5>
+              <h5>Chi tiết thẻ tín dụng</h5>
               <div class="alert alert-info mb-4">
                 <i class="fas fa-info-circle me-2"></i>
-                This is a demo application. No actual payment will be processed.
+                Đây là một ứng dụng demo. Không có khoản thanh toán thực tế sẽ được xử lý.
               </div>
               <div class="mb-3">
-                <label for="ccName" class="form-label">Name on Card</label>
+                <label for="ccName" class="form-label">Tên Chủ Thẻ</label>
                 <input type="text" class="form-control" id="ccName">
               </div>
               <div class="mb-3">
-                <label for="ccNumber" class="form-label">Card Number</label>
+                <label for="ccNumber" class="form-label">Số Thẻ</label>
                 <input type="text" class="form-control" id="ccNumber" placeholder="XXXX XXXX XXXX XXXX">
               </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="ccExpiry" class="form-label">Expiration Date</label>
+                  <label for="ccExpiry" class="form-label">Ngày Hết Hạn</label>
                   <input type="text" class="form-control" id="ccExpiry" placeholder="MM/YY">
                 </div>
                 <div class="col-md-6 mb-3">
@@ -95,19 +95,19 @@
               <h5>Debit Card Details</h5>
               <div class="alert alert-info mb-4">
                 <i class="fas fa-info-circle me-2"></i>
-                This is a demo application. No actual payment will be processed.
+                Đây là một ứng dụng demo. Không có khoản thanh toán thực tế sẽ được xử lý.
               </div>
               <div class="mb-3">
-                <label for="dcName" class="form-label">Name on Card</label>
+                <label for="dcName" class="form-label">Tên Chủ Thẻ</label>
                 <input type="text" class="form-control" id="dcName">
               </div>
               <div class="mb-3">
-                <label for="dcNumber" class="form-label">Card Number</label>
+                <label for="dcNumber" class="form-label">Số Thẻ</label>
                 <input type="text" class="form-control" id="dcNumber" placeholder="XXXX XXXX XXXX XXXX">
               </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="dcExpiry" class="form-label">Expiration Date</label>
+                  <label for="dcExpiry" class="form-label">Ngày Hết Hạn</label>
                   <input type="text" class="form-control" id="dcExpiry" placeholder="MM/YY">
                 </div>
                 <div class="col-md-6 mb-3">
@@ -121,7 +121,7 @@
               <h5>Banking Details</h5>
               <div class="alert alert-info mb-4">
                 <i class="fas fa-info-circle me-2"></i>
-                This is a demo application. No actual payment will be processed.
+                Đây là một ứng dụng demo. Không có khoản thanh toán thực tế sẽ được xử lý.
               </div>
               <div class="mb-3">
                 <label for="bankName" class="form-label">Bank Name</label>
@@ -148,7 +148,7 @@
               <h5>E-Wallet Details</h5>
               <div class="alert alert-info mb-4">
                 <i class="fas fa-info-circle me-2"></i>
-                This is a demo application. No actual payment will be processed.
+                Đây là một ứng dụng demo. Không có khoản thanh toán thực tế sẽ được xử lý.
               </div>
               <div class="mb-3">
                 <label for="walletType" class="form-label">E-Wallet Provider</label>
@@ -169,7 +169,7 @@
             <div class="form-check mb-4">
               <input class="form-check-input" type="checkbox" id="agreeTerms" required>
               <label class="form-check-label" for="agreeTerms">
-                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a>
+                Tôi đồng ý với <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản và điều kiện</a>
               </label>
               <div class="invalid-feedback">
                 You must agree to the terms and conditions.
@@ -178,10 +178,10 @@
 
             <div class="d-flex justify-content-between mt-4">
               <a href="javascript:history.back()" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-1"></i> Back
+                <i class="fas fa-arrow-left me-1"></i> Quay lại
               </a>
               <button type="submit" class="btn btn-primary">
-                Pay Now <i class="fas fa-arrow-right ms-1"></i>
+                Thanh Toán Ngay Bây Giờ <i class="fas fa-arrow-right ms-1"></i>
               </button>
             </div>
           </form>
@@ -196,44 +196,40 @@
         </div>
         <div class="card-body">
           <div class="mb-3">
-            <h6>Journey Details</h6>
+            <h6>Chi tiết hành trình</h6>
             <p class="mb-1 small">
-              <strong>From:</strong> <%= bookingData.bus.departureCity %>
+              <strong>TừTừ:</strong> <%= bookingData.bus.departureCity %>
             </p>
             <p class="mb-1 small">
-              <strong>To:</strong> <%= bookingData.bus.arrivalCity %>
+              <strong>Đến:</strong> <%= bookingData.bus.arrivalCity %>
             </p>
             <p class="mb-1 small">
               <strong>Date:</strong> <%= new Date(bookingData.journeyDate).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
             </p>
             <p class="mb-1 small">
-              <strong>Bus:</strong> <%= bookingData.bus.busName %> (<%= bookingData.bus.busNumber %>)
+              <strong>Số Xe:</strong> <%= bookingData.bus.busName %> (<%= bookingData.bus.busNumber %>)
             </p>
             <p class="mb-1 small">
-              <strong>Departure:</strong> <%= new Date(bookingData.bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+              <strong>Khởi Hành:</strong> <%= new Date(bookingData.bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
             </p>
             <p class="mb-0 small">
-              <strong>Arrival:</strong> <%= new Date(bookingData.bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+              <strong>Đến Nơi:</strong> <%= new Date(bookingData.bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
             </p>
           </div>
           <hr>
           <div class="mb-3">
             <h6>Passengers</h6>
-            <% bookingData.seats.forEach((seat, index) => { %>
-              <p class="mb-1 small">
-                <strong>Seat <%= seat.seatNumber %>:</strong> <%= seat.passengerName %> (<%= seat.passengerGender %>, <%= seat.passengerAge %> yrs)
-              </p>
-            <% }); %>
+            <span><%= bookingData.bus.fare ? bookingData.bus.fare.toLocaleString('vi-VN') : '0' %> VND</span>
           </div>
           <hr>
           <div class="mb-3">
             <div class="d-flex justify-content-between mb-2">
-              <span>Seat Price:</span>
-              <span><%= bookingData.bus.price.toLocaleString() %> VND</span>
+              <span>Giá Ghế:</span>
+              <span><%= bookingData.bus.fare.toLocaleString() %> VND</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
-              <span>Number of Seats:</span>
-              <span><%= bookingData.seats.length %></span>
+              <span>Số lượng ghế:</span>
+              <span><%= bookingData && bookingData.seats ? bookingData.seats.length : 0 %></span>
             </div>
             <div class="d-flex justify-content-between mb-0">
               <span>Service Fee:</span>
@@ -242,7 +238,7 @@
           </div>
           <hr>
           <div class="d-flex justify-content-between fw-bold">
-            <span>Total Amount:</span>
+            <span>Tổng số tiền:</span>
             <span><%= bookingData.totalAmount.toLocaleString() %> VND</span>
           </div>
         </div>
@@ -256,33 +252,34 @@
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+        <h5 class="modal-title" id="termsModalLabel">Điều khoản và điều kiện</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <h6>1. Booking Terms</h6>
-        <p>By making a booking with us, you agree to these terms and conditions.</p>
+        <h6>1. Điều khoản đặt vé</h6>
+        <p>Bằng cách đặt vé với chúng tôi, bạn đồng ý với các điều khoản và điều kiện này.
+        </p>
         
-        <h6>2. Payment</h6>
-        <p>All payments are processed securely. Once payment is completed, a confirmation will be sent to your email.</p>
+        <h6>2. Thanh toán</h6>
+        <p>Tất cả các khoản thanh toán được xử lý an toàn. Sau khi thanh toán được hoàn thành, một xác nhận sẽ được gửi đến email của bạn.</p>
         
-        <h6>3. Cancellation Policy</h6>
-        <p>Cancellations made at least 24 hours before departure will receive a full refund. Cancellations made less than 24 hours before departure are not eligible for a refund.</p>
+        <h6>3. Chính sách hủy bỏ</h6>
+        <p>Việc hủy bỏ ít nhất 24 giờ trước khi khởi hành sẽ được hoàn lại tiền đầy đủ. Việc hủy bỏ ít hơn 24 giờ trước khi khởi hành không đủ điều kiện để hoàn lại tiền.</p>
         
-        <h6>4. Refund Policy</h6>
-        <p>Refunds will be processed within 7-14 business days and will be returned to the original payment method.</p>
+        <h6>4. Chính sách hoàn tiền</h6>
+        <p>Hoàn lại tiền sẽ được xử lý trong vòng 7-14 ngày làm việc và sẽ được trả lại cho phương thức thanh toán ban đầu.</p>
         
-        <h6>5. Identification</h6>
-        <p>Passengers must carry valid identification matching the details provided during booking.</p>
+        <h6>5. Nhận dạng</h6>
+        <p>ành khách phải mang nhận dạng hợp lệ phù hợp với các chi tiết được cung cấp trong quá trình đặt phòng.</p>
         
-        <h6>6. Baggage Policy</h6>
-        <p>Each passenger is allowed one piece of luggage up to 20kg and one carry-on bag.</p>
+        <h6>6. Chính sách hành lý</h6>
+        <p>Mỗi hành khách được phép một mảnh hành lý lên đến 20kg và một túi mang theo.</p>
         
-        <h6>7. Service Modifications</h6>
-        <p>The company reserves the right to modify services, routes, or schedules if necessary.</p>
+        <h6>7. Sửa đổi dịch vụ</h6>
+        <p>Công ty có quyền sửa đổi các dịch vụ, tuyến đường hoặc lịch trình nếu cần thiết.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tôi hiểu</button>
       </div>
     </div>
   </div>

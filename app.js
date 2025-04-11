@@ -1,9 +1,12 @@
+require('dotenv').config();
 const express = require("express");
 const session = require("express-session");
 const path = require("path");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const expressLayouts = require('express-ejs-layouts');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 
 // Import routes
 const authRoutes = require("./routes/authRoutes");
@@ -13,17 +16,21 @@ const bookingRoutes = require("./routes/bookingRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 
 // Import DB Config
-const { connectDB } = require("./config/database");
-const { syncModels } = require("./models/index");
+const connectDB = require("./config/database");
 
 // Initialize app
 const app = express();
 
-// Connect to PostgreSQL
-connectDB().then(() => {
-  // Sync models with database
-  syncModels();
-});
+// Connect to MongoDB
+(async () => {
+  try {
+    await connectDB();
+    console.log("MongoDB connected successfully.");
+  } catch (err) {
+    console.error("Failed to connect to MongoDB:", err.message);
+    process.exit(1); // Dừng ứng dụng nếu không kết nối được
+  }
+})();
 
 // EJS Setup
 app.set("view engine", "ejs");
@@ -41,28 +48,20 @@ app.use(methodOverride("_method"));
 // Static folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Initialize session storage
-const pgSession = require('connect-pg-simple')(session);
-const { pool, initSessionTable } = require('./session-init');
-
-// Create session table
-initSessionTable();
-
-// Session middleware
+// Session middleware with MongoDB
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "vexeresecretsession",
+    secret: process.env.SESSION_SECRET || "doandatvesecretsession",
     resave: false,
     saveUninitialized: false,
-    store: new pgSession({
-      pool,
-      tableName: 'session',    // Use a separate table for sessions
-      createTableIfMissing: true
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/doandatve',
+      collectionName: 'sessions'
     }),
     cookie: {
-      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days in milliseconds
+      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 ngày
     },
-  }),
+  })
 );
 
 // Flash messages
@@ -93,10 +92,7 @@ app.get("/", async (req, res) => {
   try {
     // Get popular routes from database
     const { Route } = require('./models/index');
-    const routes = await Route.findAll({
-      limit: 3,
-      order: [['createdAt', 'DESC']]
-    });
+    const routes = await Route.find().sort({ createdAt: -1 }).limit(3);
     
     res.render("index", {
       title: "Vexere Clone - Bus Ticket Booking",
@@ -127,7 +123,14 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
+}).on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Please use a different port.`);
+    process.exit(1);
+  } else {
+    console.error(err);
+  }
 });

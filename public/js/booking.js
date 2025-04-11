@@ -58,9 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const div = document.createElement('div');
         div.className = 'mb-4 p-3 border rounded';
         div.innerHTML = `
-          <h5>Passenger ${i + 1} - Seat ${selectedSeatsArray[i]}</h5>
+          <h5>Hành Khách ${i + 1} - Seat ${selectedSeatsArray[i]}</h5>
           <div class="mb-3">
-            <label for="passengerName${i}" class="form-label">Full Name</label>
+            <label for="passengerName${i}" class="form-label">Họ và Tên</label>
             <input type="text" class="form-control" id="passengerName${i}" name="passengerName" required>
           </div>
           <div class="row">

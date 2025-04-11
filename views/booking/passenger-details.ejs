@@ -3,19 +3,19 @@
   <div class="booking-steps mb-4">
     <div class="booking-step completed">
       <i class="fas fa-chair"></i>
-      <div>Select Seats</div>
+      <div>Chọn Chỗ Ngồi</div>
     </div>
     <div class="booking-step active">
       <i class="fas fa-user"></i>
-      <div>Passenger Details</div>
+      <div>Chi Tiết</div>
     </div>
     <div class="booking-step">
       <i class="fas fa-credit-card"></i>
-      <div>Payment</div>
+      <div>Thanh Toán</div>
     </div>
     <div class="booking-step">
       <i class="fas fa-check-circle"></i>
-      <div>Confirmation</div>
+      <div>Xác Nhận</div>
     </div>
   </div>
 
@@ -23,32 +23,32 @@
     <div class="col-lg-8">
       <div class="card mb-4">
         <div class="card-header">
-          <h4 class="mb-0">Passenger Information</h4>
+          <h4 class="mb-0">Thông tin hành khách</h4>
         </div>
         <div class="card-body">
           <div class="mb-4">
-            <h5>Journey Details</h5>
+            <h5>Chi tiết hành trình</h5>
             <div class="row">
               <div class="col-md-6">
                 <p class="mb-1">
-                  <strong>From:</strong> <%= bus.departureCity %>
+                  <strong>Từ:</strong> <%= bus.departureCity %>
                 </p>
                 <p class="mb-1">
-                  <strong>To:</strong> <%= bus.arrivalCity %>
+                  <strong>Đến:</strong> <%= bus.arrivalCity %>
                 </p>
                 <p class="mb-1">
-                  <strong>Date:</strong> <%= new Date(journeyDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+                  <strong>Ngày:</strong> <%= new Date(journeyDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
                 </p>
               </div>
               <div class="col-md-6">
                 <p class="mb-1">
-                  <strong>Bus:</strong> <%= bus.busName %> (<%= bus.busNumber %>)
+                  <strong>Số Xe:</strong> <%= bus.busName %> (<%= bus.busNumber %>)
                 </p>
                 <p class="mb-1">
-                  <strong>Departure:</strong> <%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+                  <strong>Khởi Hành:</strong> <%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
                 </p>
                 <p class="mb-1">
-                  <strong>Arrival:</strong> <%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
+                  <strong>Đến Nơi::</strong> <%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
                 </p>
               </div>
             </div>
@@ -57,18 +57,18 @@
           <form id="passengerDetailsForm" action="/bookings/passenger-details" method="POST" class="needs-validation" novalidate>
             <input type="hidden" id="selectedSeatsInput" value="<%= seats.join(',') %>">
             
-            <h5>Passenger Details</h5>
+            <h5>Chi tiết hành khách</h5>
             <div class="alert alert-info">
               <i class="fas fa-info-circle me-2"></i>
-              Please enter details for each passenger. These details will be used for identification during the journey.
+              Vui lòng nhập chi tiết cho mỗi hành khách. Những chi tiết này sẽ được sử dụng để nhận dạng trong suốt hành trình.
             </div>
             
             <div id="passengerContainer">
               <% seats.forEach((seat, index) => { %>
                 <div class="mb-4 p-3 border rounded">
-                  <h5>Passenger <%= index + 1 %> - Seat <%= seat %></h5>
+                  <h5>Hành Khách <%= index + 1 %> - Ghế <%= seat %></h5>
                   <div class="mb-3">
-                    <label for="passengerName<%= index %>" class="form-label">Full Name</label>
+                    <label for="passengerName<%= index %>" class="form-label">Họ và Tên</label>
                     <input type="text" class="form-control" id="passengerName<%= index %>" name="passengerName<%= seats.length > 1 ? '[]' : '' %>" required>
                     <div class="invalid-feedback">
                       Please enter passenger name.
@@ -76,19 +76,19 @@
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="passengerAge<%= index %>" class="form-label">Age</label>
+                      <label for="passengerAge<%= index %>" class="form-label">Tuổi</label>
                       <input type="number" class="form-control" id="passengerAge<%= index %>" name="passengerAge<%= seats.length > 1 ? '[]' : '' %>" min="1" max="120" required>
                       <div class="invalid-feedback">
                         Please enter a valid age (1-120).
                       </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="passengerGender<%= index %>" class="form-label">Gender</label>
+                      <label for="passengerGender<%= index %>" class="form-label">Giới Tính</label>
                       <select class="form-select" id="passengerGender<%= index %>" name="passengerGender<%= seats.length > 1 ? '[]' : '' %>" required>
-                        <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
+                        <option value="">Chọn Giới Tính</option>
+                        <option value="Male">Nam</option>
+                        <option value="Female">Nữ</option>
+                        <option value="Other">Khác</option>
                       </select>
                       <div class="invalid-feedback">
                         Please select gender.
@@ -101,10 +101,10 @@
 
             <div class="d-flex justify-content-between mt-4">
               <a href="javascript:history.back()" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-1"></i> Back
+                <i class="fas fa-arrow-left me-1"></i> Quay lại
               </a>
               <button type="submit" class="btn btn-primary">
-                Continue <i class="fas fa-arrow-right ms-1"></i>
+                Tiếp tục <i class="fas fa-arrow-right ms-1"></i>
               </button>
             </div>
           </form>
@@ -115,24 +115,24 @@
     <div class="col-lg-4">
       <div class="card mb-4 position-sticky" style="top: 20px;">
         <div class="card-header">
-          <h5 class="mb-0">Booking Summary</h5>
+          <h5 class="mb-0">Tóm Tắt Đặt Chỗ</h5>
         </div>
         <div class="card-body">
           <div class="d-flex justify-content-between mb-3">
-            <span>Selected Seats:</span>
+            <span>Ghế được chọn:</span>
             <span><%= seats.join(', ') %></span>
           </div>
           <div class="d-flex justify-content-between mb-3">
-            <span>Seat Price:</span>
-            <span><%= bus.price.toLocaleString() %> VND</span>
+            <span>Giá Ghế:</span>
+            <span><%= bus.fare.toLocaleString() %> VND</span>
           </div>
           <div class="d-flex justify-content-between mb-3">
-            <span>Number of Seats:</span>
+            <span>Số lượng ghế:</span>
             <span><%= seats.length %></span>
           </div>
           <hr>
           <div class="d-flex justify-content-between fw-bold">
-            <span>Total Amount:</span>
+            <span>Tổng số tiền:</span>
             <span><%= totalAmount.toLocaleString() %> VND</span>
           </div>
         </div>

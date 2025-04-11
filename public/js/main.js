@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const bsAlert = new bootstrap.Alert(alert);
         bsAlert.close();
       });
-    }, 5000);
+    }, 8000);
   }
   
   // Form validation

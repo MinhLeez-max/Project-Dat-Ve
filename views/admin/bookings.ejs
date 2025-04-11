@@ -81,10 +81,13 @@
                   <% bookings.forEach(booking => { %>
                     <tr>
                       <td><span class="badge bg-secondary"><%= booking.bookingReference %></span></td>
-                      <td><%= booking.userId.name %></td>
-                      <td><%= booking.route.departureCity %> to <%= booking.route.arrivalCity %></td>
+                      <td><%= booking.user.name %></td>
+                      <td><%= booking.bus.route.departureCity %> - <%= booking.bus.route.arrivalCity %></td>
                       <td><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
-                      <td><%= booking.seats.length %> (<%= booking.seats.map(s => s.seatNumber).join(', ') %>)</td>
+                      <td>
+                        <%= booking.seats && booking.seats.length ? booking.seats.length : 0 %>
+                        (<%= booking.seats && booking.seats.length ? booking.seats.map(s => s.seatNumber).join(', ') : 'N/A' %>)
+                      </td>                      
                       <td><%= booking.totalAmount.toLocaleString() %> VND</td>
                       <td>
                         <span class="badge bg-<%= booking.status === 'confirmed' ? 'success' : booking.status === 'cancelled' ? 'danger' : 'warning' %>">

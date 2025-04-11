@@ -37,7 +37,7 @@
               <div class="d-flex justify-content-between">
                 <div>
                   <h6 class="text-white-50">Tổng Số Đặt Vé</h6>
-                  <div class="stat-number"><%= stats.bookings %></div>
+                  <div class="stat-number"><%= stats.bookins %></div>
                 </div>
                 <div>
                   <i class="fas fa-ticket-alt fa-3x text-white-50"></i>
@@ -137,10 +137,10 @@
                   <% recentBookings.forEach(booking => { %>
                     <tr>
                       <td><span class="badge bg-secondary"><%= booking.bookingReference %></span></td>
-                      <td><%= booking.userId.name %></td>
-                      <td><%= booking.route.departureCity %> to <%= booking.route.arrivalCity %></td>
+                      <td><%= booking.user.name %></td>
+                      <td><%= booking.bus.route.departureCity %> - <%= booking.bus.route.arrivalCity %></td>
                       <td><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
-                      <td><%= booking.seats.length %></td>
+                      <td><%= booking.seats ? booking.seats.length : 0 %></td>
                       <td><%= booking.totalAmount.toLocaleString() %> VND</td>
                       <td>
                         <span class="badge bg-<%= booking.status === 'confirmed' ? 'success' : booking.status === 'cancelled' ? 'danger' : 'warning' %>">

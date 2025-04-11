@@ -13,7 +13,7 @@ router.get('/passenger-details', ensureAuthenticated, (req, res) => {
     return res.redirect('/buses/search');
   }
   res.render('booking/passenger-details', {
-    title: 'Passenger Details',
+    title: 'Chi tiết hành khách',
     seats: req.session.bookingData.selectedSeats,
     bus: req.session.bookingData.bus,
     journeyDate: req.session.bookingData.journeyDate,

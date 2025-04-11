@@ -3,19 +3,19 @@
   <div class="booking-steps mb-4">
     <div class="booking-step completed">
       <i class="fas fa-chair"></i>
-      <div>Select Seats</div>
+      <div>Chọn Chỗ Ngồi</div>
     </div>
     <div class="booking-step completed">
       <i class="fas fa-user"></i>
-      <div>Passenger Details</div>
+      <div>Chi Tiết</div>
     </div>
     <div class="booking-step completed">
       <i class="fas fa-credit-card"></i>
-      <div>Payment</div>
+      <div>Thanh Toán</div>
     </div>
     <div class="booking-step active">
       <i class="fas fa-check-circle"></i>
-      <div>Confirmation</div>
+      <div>Xác Nhận</div>
     </div>
   </div>
 
@@ -50,26 +50,26 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6 mb-4">
-              <h5>Journey Details</h5>
+              <h5>Chi tiết hành trình</h5>
               <table class="table table-borderless table-sm">
                 <tr>
-                  <td><strong>From:</strong></td>
-                  <td><%= bus.routeId.departureCity %></td>
+                  <td><strong>Từ:</strong></td>
+                  <td><%= bus.route.departureCity %></td>
                 </tr>
                 <tr>
-                  <td><strong>To:</strong></td>
-                  <td><%= bus.routeId.arrivalCity %></td>
+                  <td><strong>Đến:</strong></td>
+                  <td><%= bus.route.arrivalCity %></td>
                 </tr>
                 <tr>
                   <td><strong>Date:</strong></td>
                   <td><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></td>
                 </tr>
                 <tr>
-                  <td><strong>Departure:</strong></td>
+                  <td><strong>Khởi Hành:</strong></td>
                   <td><%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></td>
                 </tr>
                 <tr>
-                  <td><strong>Arrival:</strong></td>
+                  <td><strong>Đến Nơi:</strong></td>
                   <td><%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></td>
                 </tr>
                 <tr>
@@ -114,7 +114,7 @@
           <hr>
 
           <div class="mb-4">
-            <h5>Passenger Information</h5>
+            <h5>Thông tin hành khách</h5>
             <div class="table-responsive">
               <table class="table table-striped">
                 <thead>
@@ -143,7 +143,7 @@
 
           <div class="row">
             <div class="col-md-6 mb-4">
-              <h5>Payment Information</h5>
+              <h5>Thông tin thanh toán</h5>
               <table class="table table-borderless table-sm">
                 <tr>
                   <td><strong>Payment Method:</strong></td>
@@ -175,7 +175,7 @@
                   <td>0 VND</td>
                 </tr>
                 <tr class="fw-bold">
-                  <td><strong>Total Amount:</strong></td>
+                  <td><strong>Tổng số tiền:</strong></td>
                   <td><%= booking.totalAmount.toLocaleString() %> VND</td>
                 </tr>
               </table>

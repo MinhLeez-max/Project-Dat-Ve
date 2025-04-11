@@ -1,6 +1,5 @@
 const { User } = require('../models/index');
 const bcrypt = require('bcryptjs');
-const { Op } = require('sequelize');
 
 module.exports = {
   // Render register page
@@ -47,9 +46,7 @@ module.exports = {
       }
 
       // Check if user exists
-      const existingUser = await User.findOne({ 
-        where: { email } 
-      });
+      const existingUser = await User.findOne({ email });
 
       if (existingUser) {
         errors.push({ msg: 'Email này đã được đăng ký' });
@@ -62,17 +59,15 @@ module.exports = {
         });
       }
 
-      // Hash password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-
-      // Create new user
-      await User.create({
+      // Create new user - password hashed by mongoose middleware
+      const newUser = new User({
         name,
         email,
         phone,
-        password: hashedPassword
+        password
       });
+      
+      await newUser.save();
 
       req.flash('success_msg', 'Bạn đã đăng ký thành công và có thể đăng nhập ngay bây giờ');
       res.redirect('/login');
@@ -102,9 +97,7 @@ module.exports = {
       }
 
       // Find user
-      const user = await User.findOne({ 
-        where: { email } 
-      });
+      const user = await User.findOne({ email });
       
       if (!user) {
         req.flash('error_msg', 'Email hoặc mật khẩu không chính xác');
@@ -112,8 +105,12 @@ module.exports = {
       }
 
       // Match password
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await user.matchPassword(password);
       
+      console.log('Email:', email);
+      console.log('User:', user);
+      console.log('Password match:', isMatch);
+
       if (!isMatch) {
         req.flash('error_msg', 'Email hoặc mật khẩu không chính xác');
         return res.redirect('/login');
@@ -121,7 +118,7 @@ module.exports = {
 
       // Set session
       req.session.user = {
-        id: user.id,
+        id: user._id,
         name: user.name,
         email: user.email,
         phone: user.phone

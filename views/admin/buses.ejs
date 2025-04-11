@@ -94,14 +94,26 @@
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <label for="departureTime" class="form-label">Thời Gian Khởi Hành</label>
-                    <input type="datetime-local" class="form-control" id="departureTime" name="departureTime" required>
+                    <%
+  let departureValue = '';
+  if (bus && bus.departureTime && !isNaN(new Date(bus.departureTime))) {
+    departureValue = new Date(bus.departureTime).toISOString().slice(0, 16);
+  }
+%>
+<input type="datetime-local" class="form-control" id="departureTime" name="departureTime" value="<%= departureValue %>" required>
                     <div class="invalid-feedback">
                       Vui lòng nhập thời gian khởi hành.
                     </div>
                   </div>
                   <div class="col-md-6">
                     <label for="arrivalTime" class="form-label">Thời Gian Đến</label>
-                    <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" required>
+                    <%
+  let arrivalValue = '';
+  if (bus && bus.arrivalTime && !isNaN(new Date(bus.arrivalTime))) {
+    arrivalValue = new Date(bus.arrivalTime).toISOString().slice(0, 16);
+  }
+%>
+<input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" value="<%= arrivalValue %>" required>
                     <div class="invalid-feedback">
                       Vui lòng nhập thời gian đến.
                     </div>
@@ -215,9 +227,9 @@
                     <select class="form-select" id="routeId" name="routeId" required>
                       <option value="">Select Tuyến Đường</option>
                       <% routes.forEach(route => { %>
-                        <option value="<%= route.id %>" <%= bus.RouteId.toString() === route.id.toString() ? 'selected' : '' %>>
+                        <option value="<%= route._id %>" <%= bus && bus.route && bus.route.toString() === route._id.toString() ? 'selected' : '' %>>
                           <%= route.departureCity %> đến <%= route.arrivalCity %>
-                        </option>
+                        </option>                        
                       <% }); %>
                     </select>
                     <div class="invalid-feedback">
@@ -235,10 +247,10 @@
                 
                 <div class="row mb-3">
                   <div class="col-md-6">
-                    <label for="busName" class="form-label">Tên Xe</label>
+                    <label for="busName" class="form-label">Nhà Xe</label>
                     <input type="text" class="form-control" id="busName" name="busName" value="<%= bus.busName %>" required>
                     <div class="invalid-feedback">
-                      Vui lòng nhập tên xe.
+                      Vui lòng nhập nhà xe.
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -247,8 +259,7 @@
                       <option value="">Chọn Loại Xe</option>
                       <option value="Thường" <%= bus.busType === 'Thường' ? 'selected' : '' %>>Thường</option>
                       <option value="Giường Nằm" <%= bus.busType === 'Giường Nằm' ? 'selected' : '' %>>Giường Nằm</option>
-                      <option value="Máy Lạnh" <%= bus.busType === 'Máy Lạnh' ? 'selected' : '' %>>Máy Lạnh</option>
-                      <option value="Cao Cấp" <%= bus.busType === 'Cao Cấp' ? 'selected' : '' %>>Cao Cấp</option>
+                      <option value="Cao Cấp" <%= bus.busType === 'Cao Cấp' ? 'selected' : '' %>>Limousine</option>
                     </select>
                     <div class="invalid-feedback">
                       Vui lòng chọn loại xe.
@@ -262,16 +273,26 @@
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <label for="departureTime" class="form-label">Thời Gian Khởi Hành</label>
-                    <input type="datetime-local" class="form-control" id="departureTime" name="departureTime" 
-                           value="<%= new Date(bus.departureTime).toISOString().slice(0, 16) %>" required>
+                    <%
+  let departureValue = '';
+  if (bus && bus.departureTime && !isNaN(new Date(bus.departureTime))) {
+    departureValue = new Date(bus.departureTime).toISOString().slice(0, 16);
+  }
+%>
+<input type="datetime-local" class="form-control" id="departureTime" name="departureTime" value="<%= departureValue %>" required>
                     <div class="invalid-feedback">
                       Vui lòng nhập thời gian khởi hành.
                     </div>
                   </div>
                   <div class="col-md-6">
                     <label for="arrivalTime" class="form-label">Thời Gian Đến</label>
-                    <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" 
-                           value="<%= new Date(bus.arrivalTime).toISOString().slice(0, 16) %>" required>
+                    <%
+  let arrivalValue = '';
+  if (bus && bus.arrivalTime && !isNaN(new Date(bus.arrivalTime))) {
+    arrivalValue = new Date(bus.arrivalTime).toISOString().slice(0, 16);
+  }
+%>
+<input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" value="<%= arrivalValue %>" required>
                     <div class="invalid-feedback">
                       Vui lòng nhập thời gian đến.
                     </div>
@@ -392,52 +413,48 @@
                 <table class="table table-hover align-middle">
                   <thead>
                     <tr>
+                      <th>Thứ Tự</th>
                       <th>Số Xe</th>
-                      <th>Tên Xe</th>
-                      <th>Tuyến Đường</th>
-                      <th>Loại Xe</th>
+                      <th>Nhà Xe</th>
+                      <th>Tuyến</th>
+                      <th>Loại Phòng</th>
                       <th>Khởi Hành</th>
-                      <th>Đến</th>
-                      <th>Giá Vé</th>
-                      <th>Trạng Thái</th>
+                      <th>Kết Thúc</th>
+                      <th>Giá</th>
                       <th class="text-end">Thao Tác</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <% buses.forEach(bus => { %>
+                    <% buses.forEach((bus, index) => { %>
                       <tr>
+                        <td><%= index + 1 %></td>
                         <td><%= bus.busNumber %></td>
-                        <td><%= bus.busName %></td>
-                        <td><%= bus.Route.departureCity %> đến <%= bus.Route.arrivalCity %></td>
-                        <td><%= bus.busType %></td>
-                        <td><%= new Date(bus.departureTime).toLocaleString('en-US', { 
-                          hour: '2-digit', 
-                          minute: '2-digit',
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
-                        }) %></td>
-                        <td><%= new Date(bus.arrivalTime).toLocaleString('en-US', { 
-                          hour: '2-digit', 
-                          minute: '2-digit',
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
-                        }) %></td>
-                        <td><%= bus.fare.toLocaleString() %> VND</td>
+                        <td><%= bus.name %></td>
                         <td>
-                          <span class="badge bg-<%= bus.available ? 'success' : 'danger' %>">
-                            <%= bus.available ? 'Hoạt Động' : 'Không Hoạt Động' %>
-                          </span>
+                          <% if (bus.route) { %>
+                            <%= bus.route.departureCity %> đến <%= bus.route.arrivalCity %>
+                          <% } else { %>
+                            <em>Không xác định</em>
+                          <% } %>
                         </td>
-                        <td class="text-end">
-                          <a href="/admin/buses/<%= bus.id %>" class="btn btn-sm btn-outline-primary me-1">
-                            <i class="fas fa-edit"></i>
-                          </a>
-                          <form action="/admin/buses/<%= bus.id %>?_method=DELETE" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa xe buýt này không?')">
-                              <i class="fas fa-trash"></i>
-                            </button>
+                        <td><%= bus.type %></td>
+                        <td>
+                          <%= new Date(bus.departureTime).toLocaleString('vi-VN', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          }) %>
+                        </td>
+                        <td>
+                          <%= new Date(bus.arrivalTime).toLocaleString('vi-VN', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          }) %>
+                        </td>
+                        <td><%= bus.fare.toLocaleString('vi-VN') %> đ</td>
+                        <td>
+                          <a href="/admin/buses/<%= bus._id %>" class="btn btn-sm btn-primary">Sửa</a>
+                          <form action="/admin/buses/<%= bus._id %>?_method=DELETE" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn chắc chắn muốn xóa xe này?')">Xóa</button>
                           </form>
                         </td>
                       </tr>

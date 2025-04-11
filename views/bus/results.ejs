@@ -128,7 +128,7 @@
                       <div class="col-md-4">
                         <div class="d-flex flex-column">
                           <span class="fw-bold"><%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
-                          <span class="text-muted small"><%= bus.routeId.departureCity %></span>
+                          <span class="text-muted small"><%= bus.route.departureCity %></span>
                         </div>
                       </div>
                       <div class="col-md-4 text-center">
@@ -141,13 +141,13 @@
                             <hr class="w-100" style="border-top: 2px dashed;">
                             <i class="fas fa-bus position-absolute top-50 translate-middle-y" style="left: 50%;"></i>
                           </div>
-                          <span class="text-muted small"><%= bus.routeId.distance %> km</span>
+                          <span class="text-muted small"><%= bus.route.distance %> km</span>
                         </div>
                       </div>
                       <div class="col-md-4 text-end">
                         <div class="d-flex flex-column align-items-end">
                           <span class="fw-bold"><%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
-                          <span class="text-muted small"><%= bus.routeId.arrivalCity %></span>
+                          <span class="text-muted small"><%= bus.route.arrivalCity %></span>
                         </div>
                       </div>
                     </div>
