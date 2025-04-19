@@ -1,4 +1,4 @@
-/* Custom styles for Vexere clone */
+
 
 /* General Styles */
 body {
@@ -30,7 +30,12 @@ body {
 
 /* Search Form */
 .search-form {
-  background-color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 2rem;
+
   border-radius: 10px;
   padding: 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -38,6 +43,14 @@ body {
 
 /* Bus Cards */
 .bus-card {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  
   border-radius: 10px;
   overflow: hidden;
   transition: transform 0.3s ease;

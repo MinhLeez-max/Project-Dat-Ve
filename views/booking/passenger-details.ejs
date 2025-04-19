@@ -23,36 +23,6 @@
     <div class="col-lg-8">
       <div class="card mb-4">
         <div class="card-header">
-          <h4 class="mb-0">Thông tin hành khách</h4>
-        </div>
-        <div class="card-body">
-          <div class="mb-4">
-            <h5>Chi tiết hành trình</h5>
-            <div class="row">
-              <div class="col-md-6">
-                <p class="mb-1">
-                  <strong>Từ:</strong> <%= bus.departureCity %>
-                </p>
-                <p class="mb-1">
-                  <strong>Đến:</strong> <%= bus.arrivalCity %>
-                </p>
-                <p class="mb-1">
-                  <strong>Ngày:</strong> <%= new Date(journeyDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
-                </p>
-              </div>
-              <div class="col-md-6">
-                <p class="mb-1">
-                  <strong>Số Xe:</strong> <%= bus.busName %> (<%= bus.busNumber %>)
-                </p>
-                <p class="mb-1">
-                  <strong>Khởi Hành:</strong> <%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
-                </p>
-                <p class="mb-1">
-                  <strong>Đến Nơi::</strong> <%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
-                </p>
-              </div>
-            </div>
-          </div>
 
           <form id="passengerDetailsForm" action="/bookings/passenger-details" method="POST" class="needs-validation" novalidate>
             <input type="hidden" id="selectedSeatsInput" value="<%= seats.join(',') %>">
@@ -71,7 +41,7 @@
                     <label for="passengerName<%= index %>" class="form-label">Họ và Tên</label>
                     <input type="text" class="form-control" id="passengerName<%= index %>" name="passengerName<%= seats.length > 1 ? '[]' : '' %>" required>
                     <div class="invalid-feedback">
-                      Please enter passenger name.
+                      Vui lòng nhập tên hành khách.
                     </div>
                   </div>
                   <div class="row">
@@ -79,7 +49,7 @@
                       <label for="passengerAge<%= index %>" class="form-label">Tuổi</label>
                       <input type="number" class="form-control" id="passengerAge<%= index %>" name="passengerAge<%= seats.length > 1 ? '[]' : '' %>" min="1" max="120" required>
                       <div class="invalid-feedback">
-                        Please enter a valid age (1-120).
+                       Vui long nhập tuổi hành khách.
                       </div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -91,7 +61,7 @@
                         <option value="Other">Khác</option>
                       </select>
                       <div class="invalid-feedback">
-                        Please select gender.
+                        Vui lòng chọn giới tính hành khách.
                       </div>
                     </div>
                   </div>
@@ -125,10 +95,6 @@
           <div class="d-flex justify-content-between mb-3">
             <span>Giá Ghế:</span>
             <span><%= bus.fare.toLocaleString() %> VND</span>
-          </div>
-          <div class="d-flex justify-content-between mb-3">
-            <span>Số lượng ghế:</span>
-            <span><%= seats.length %></span>
           </div>
           <hr>
           <div class="d-flex justify-content-between fw-bold">

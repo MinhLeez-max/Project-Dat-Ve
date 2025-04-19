@@ -2,7 +2,7 @@
   <div class="row mb-4">
     <div class="col">
       <h1 class="mb-3">Tất Cả Tuyến Đường</h1>
-      <p class="lead text-muted">Dưới đây là danh sách tất cả các tuyến đường và xe buýt hiện có. Chọn tuyến đường và xe buýt phù hợp với kế hoạch du lịch của bạn.</p>
+      <p class="lead text-muted">Dưới đây là danh sách tất cả các tuyến đường và xe hiện có. Chọn tuyến đường và xe phù hợp với kế hoạch du lịch của bạn.</p>
     </div>
   </div>
 
@@ -83,7 +83,7 @@
               <div class="d-flex align-items-center justify-content-between mb-3">
                 <div>
                   <p class="mb-1 text-muted">
-                    <i class="fas fa-clock me-1"></i> Thời gian dự kiến: <%= item.route.estimatedDuration %> giờ
+                    <i class="fas fa-clock me-1"></i> Thời gian dự kiến: <%= item.route.estimatedDuration %>
                   </p>
                   <p class="mb-0">
                     <i class="fas fa-bus me-1"></i> <%= item.buses.length %> chuyến xe khả dụng
@@ -119,16 +119,13 @@
                             <div class="row mb-3">
                               <div class="col-md-4">
                                 <div class="d-flex flex-column">
-                                  <span class="fw-bold"><%= new Date(bus.departureTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                                  
                                   <span class="text-muted small"><%= new Date(bus.departureDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></span>
                                 </div>
                               </div>
                               <div class="col-md-4 text-center">
                                 <div class="d-flex flex-column align-items-center">
-                                  <span class="text-muted small">
-                                    <%= Math.floor((new Date(bus.arrivalTime) - new Date(bus.departureTime)) / 3600000) %>h 
-                                    <%= Math.floor(((new Date(bus.arrivalTime) - new Date(bus.departureTime)) % 3600000) / 60000) %>m
-                                  </span>
+                                 
                                   <div class="position-relative my-1">
                                     <hr class="w-100 m-0" style="border-top: 2px dashed;">
                                     <i class="fas fa-bus position-absolute top-50 translate-middle" style="left: 50%;"></i>
@@ -137,7 +134,7 @@
                               </div>
                               <div class="col-md-4 text-end">
                                 <div class="d-flex flex-column align-items-end">
-                                  <span class="fw-bold"><%= new Date(bus.arrivalTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                                  
                                   <span class="text-muted small"><%= new Date(bus.arrivalDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></span>
                                 </div>
                               </div>

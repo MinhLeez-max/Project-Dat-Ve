@@ -2,35 +2,35 @@ const { User } = require('../models/index');
 const bcrypt = require('bcryptjs');
 
 module.exports = {
-  // Render register page
+  // Hiển thị trang đăng ký
   getRegister: (req, res) => {
     res.render('auth/register', {
       title: 'Đăng Ký'
     });
   },
 
-  // Handle user registration
+  // Xử lý đăng ký người dùng
   register: async (req, res) => {
     try {
       const { name, email, phone, password, password2 } = req.body;
       const errors = [];
 
-      // Check required fields
+      // Kiểm tra các trường bắt buộc
       if (!name || !email || !phone || !password || !password2) {
         errors.push({ msg: 'Vui lòng điền đầy đủ thông tin' });
       }
 
-      // Check passwords match
+      // Kiểm tra mật khẩu khớp
       if (password !== password2) {
         errors.push({ msg: 'Mật khẩu không khớp' });
       }
 
-      // Check password length
+      // Kiểm tra độ dài mật khẩu
       if (password.length < 6) {
         errors.push({ msg: 'Mật khẩu phải có ít nhất 6 ký tự' });
       }
 
-      // Valid phone number
+      // Kiểm tra số điện thoại hợp lệ
       if (!/^\d{10,11}$/.test(phone)) {
         errors.push({ msg: 'Vui lòng nhập số điện thoại hợp lệ' });
       }
@@ -45,7 +45,7 @@ module.exports = {
         });
       }
 
-      // Check if user exists
+      // Kiểm tra email đã tồn tại
       const existingUser = await User.findOne({ email });
 
       if (existingUser) {
@@ -59,7 +59,7 @@ module.exports = {
         });
       }
 
-      // Create new user - password hashed by mongoose middleware
+      // Tạo người dùng mới - mật khẩu được mã hóa bởi middleware của mongoose
       const newUser = new User({
         name,
         email,
@@ -78,25 +78,25 @@ module.exports = {
     }
   },
 
-  // Render login page
+  // Hiển thị trang đăng nhập
   getLogin: (req, res) => {
     res.render('auth/login', {
       title: 'Đăng Nhập'
     });
   },
 
-  // Handle user login
+  // Xử lý đăng nhập người dùng
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
       
-      // Validate inputs
+      // Kiểm tra đầu vào
       if (!email || !password) {
         req.flash('error_msg', 'Vui lòng nhập email và mật khẩu');
         return res.redirect('/login');
       }
 
-      // Find user
+      // Tìm người dùng
       const user = await User.findOne({ email });
       
       if (!user) {
@@ -104,7 +104,7 @@ module.exports = {
         return res.redirect('/login');
       }
 
-      // Match password
+      // Kiểm tra mật khẩu
       const isMatch = await user.matchPassword(password);
       
       console.log('Email:', email);
@@ -116,7 +116,7 @@ module.exports = {
         return res.redirect('/login');
       }
 
-      // Set session
+      // Thiết lập phiên đăng nhập
       req.session.user = {
         id: user._id,
         name: user.name,
@@ -124,7 +124,7 @@ module.exports = {
         phone: user.phone
       };
       
-      // Check if admin
+      // Kiểm tra nếu là admin
       if (user.isAdmin) {
         req.session.isAdmin = true;
         return res.redirect('/admin/dashboard');
@@ -139,7 +139,7 @@ module.exports = {
     }
   },
 
-  // Handle user logout
+  // Xử lý đăng xuất người dùng
   logout: (req, res) => {
     req.session.destroy((err) => {
       if (err) {

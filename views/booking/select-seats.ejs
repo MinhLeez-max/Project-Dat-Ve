@@ -36,7 +36,7 @@
                 <strong>Đến:</strong> <%= bus.route.arrivalCity %>
               </p>
               <p class="mb-1">
-                <strong>Ngày:</strong> <%= new Date(bus.departureDate).toLocaleDateString('en-US', {
+                <strong>Ngày:</strong> <%= new Date(bus.departureDate).toLocaleDateString('vi-VN', {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
@@ -44,11 +44,10 @@
                 }) %>                
               </p>
               <p class="mb-1">
-                <strong>Khởi hành lúc:</strong> <%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
-              </p>
-              <p class="mb-0">
-                <strong>Đến nơi:</strong> <%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
-              </p>
+                <strong>Giờ Khởi Hành:</strong> <%= new Date(bus.departureDate).toLocaleTimeString('vi-VN', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                }) %>
             </div>
             <div class="col-md-6">
               <div class="seat-legend text-end mb-3">
@@ -178,25 +177,25 @@
           const seatNumber = this.getAttribute('data-seat');
           
           if (this.classList.contains('selected')) {
-            // Deselect seat
+            // Bỏ chọn chỗ ngồi
             this.classList.remove('selected');
             selectedSeats = selectedSeats.filter(s => s !== seatNumber);
           } else {
-            // Select seat
+            // Chọn chỗ ngồi
             this.classList.add('selected');
             selectedSeats.push(seatNumber);
           }
           
-          // Update selected seats input and display
+          // Cập nhật đầu vào và hiển thị ghế đã chọn
           selectedSeatsInput.value = selectedSeats;
           selectedSeatsDisplay.textContent = selectedSeats.join(', ') || 'None';
           
-          // Update total amount
+          // Cập nhật tổng số tiền
           const price = parseFloat(pricePerSeat.value);
           const total = price * selectedSeats.length;
           totalAmountDisplay.textContent = `${total.toLocaleString()} VND`;
           
-          // Enable/disable continue button
+          // Bật/tắt nút tiếp tục
           continueBtn.disabled = selectedSeats.length === 0;
         });
       });

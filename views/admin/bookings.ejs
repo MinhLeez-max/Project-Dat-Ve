@@ -1,7 +1,7 @@
 <div class="container-fluid py-4">
   <div class="row">
     <div class="col-lg-2 mb-4">
-      <!-- Admin Sidebar -->
+      <!--Thanh bên quản trị viên -->
       <div class="card">
         <div class="card-header">
           <h5 class="mb-0">Bảng Điều Khiển</h5>
@@ -14,7 +14,7 @@
             <i class="fas fa-route me-2"></i> Tuyến Đường
           </a>
           <a href="/admin/buses" class="list-group-item list-group-item-action">
-            <i class="fas fa-bus me-2"></i> Xe Buýt
+            <i class="fas fa-bus me-2"></i> Xe
           </a>
           <a href="/admin/bookings" class="list-group-item list-group-item-action active">
             <i class="fas fa-ticket-alt me-2"></i> Đặt Vé
@@ -66,11 +66,9 @@
               <table class="table table-hover align-middle">
                 <thead>
                   <tr>
-                    <th>Mã Đặt Vé</th>
                     <th>Khách Hàng</th>
                     <th>Tuyến Đường</th>
                     <th>Ngày Đi</th>
-                    <th>Số Ghế</th>
                     <th>Tổng Tiền</th>
                     <th>Trạng Thái</th>
                     <th>Thanh Toán</th>
@@ -80,14 +78,10 @@
                 <tbody>
                   <% bookings.forEach(booking => { %>
                     <tr>
-                      <td><span class="badge bg-secondary"><%= booking.bookingReference %></span></td>
                       <td><%= booking.user.name %></td>
                       <td><%= booking.bus.route.departureCity %> - <%= booking.bus.route.arrivalCity %></td>
-                      <td><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
-                      <td>
-                        <%= booking.seats && booking.seats.length ? booking.seats.length : 0 %>
-                        (<%= booking.seats && booking.seats.length ? booking.seats.map(s => s.seatNumber).join(', ') : 'N/A' %>)
-                      </td>                      
+                      <td><%= new Date(booking.journeyDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
+                                           
                       <td><%= booking.totalAmount.toLocaleString() %> VND</td>
                       <td>
                         <span class="badge bg-<%= booking.status === 'confirmed' ? 'success' : booking.status === 'cancelled' ? 'danger' : 'warning' %>">
@@ -159,11 +153,15 @@
                                     <table class="table table-sm">
                                       <tr>
                                         <td>Tuyến Đường:</td>
-                                        <td><%= booking.route.departureCity %> đến <%= booking.route.arrivalCity %></td>
+                                        <td><%= booking.bus.route.departureCity %> đến <%= booking.bus.route.arrivalCity %></td>
                                       </tr>
                                       <tr>
-                                        <td>Xe Buýt:</td>
-                                        <td><%= booking.busId.busName %> (<%= booking.busId.busNumber %>)</td>
+                                        <td>Xe:</td>
+                                        <% if (booking.bus) { %>
+                                          <td><%= booking.bus.name %> (<%= booking.bus.busNumber %>)</td>
+                                        <% } else { %>
+                                          <td>Không có thông tin xe</td>
+                                        <% } %>                                        
                                       </tr>
                                       <tr>
                                         <td>Ngày Đi:</td>
@@ -171,11 +169,15 @@
                                       </tr>
                                       <tr>
                                         <td>Giờ Khởi Hành:</td>
-                                        <td><%= new Date(booking.busId.departureTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></td>
+                                        <% if (booking.bus && booking.bus.departureTime) { %>
+                                          <td><%= new Date(booking.bus.departureTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></td>
+                                        <% } else { %>
+                                          <td>Không có giờ khởi hành</td>
+                                        <% } %>                                        
                                       </tr>
                                       <tr>
                                         <td>Giờ Đến:</td>
-                                        <td><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></td>
+                                        <td><%= new Date(booking.bus.arrivalTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></td>
                                       </tr>
                                     </table>
                                   </div>
@@ -184,15 +186,15 @@
                                     <table class="table table-sm">
                                       <tr>
                                         <td>Họ Tên:</td>
-                                        <td><%= booking.userId.name %></td>
+                                        <td><%= booking.user.name %></td>
                                       </tr>
                                       <tr>
                                         <td>Email:</td>
-                                        <td><%= booking.userId.email %></td>
+                                        <td><%= booking.user.email %></td>
                                       </tr>
                                       <tr>
                                         <td>Điện Thoại:</td>
-                                        <td><%= booking.userId.phone %></td>
+                                        <td><%= booking.user.phone %></td>
                                       </tr>
                                       <tr>
                                         <td>Ngày Đặt Vé:</td>
@@ -218,14 +220,18 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <% booking.seats.forEach(seat => { %>
-                                        <tr>
-                                          <td><%= seat.seatNumber %></td>
-                                          <td><%= seat.passengerName %></td>
-                                          <td><%= seat.passengerAge %></td>
-                                          <td><%= seat.passengerGender === 'male' ? 'Nam' : seat.passengerGender === 'female' ? 'Nữ' : 'Khác' %></td>
-                                        </tr>
-                                      <% }); %>
+                                      <% if (booking.passengerDetails && booking.passengerDetails.length > 0) { %>
+                                        <% booking.passengerDetails.forEach(seat => { %>
+                                          <tr>
+                                            <td><%= seat.seatNumber %></td>
+                                            <td><%= seat.passengerName %></td>
+                                            <td><%= seat.passengerAge %></td>
+                                            <td><%= seat.passengerGender %></td>
+                                          </tr>
+                                        <% }); %>
+                                      <% } else { %>
+                                        <tr><td colspan="4">Không có thông tin hành khách</td></tr>
+                                      <% } %>                                      
                                     </tbody>
                                   </table>
                                 </div>

@@ -1,5 +1,5 @@
 <div class="container py-4">
-  <!-- Booking Steps -->
+  <!-- Các bước đặt chỗ -->
   <div class="booking-steps mb-4">
     <div class="booking-step completed">
       <i class="fas fa-chair"></i>
@@ -26,118 +26,14 @@
           <div class="mb-4">
             <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
           </div>
-          <h2 class="mb-3">Booking Confirmed!</h2>
-          <p class="lead mb-0">Your booking has been successfully confirmed.</p>
-          <p class="text-muted">A confirmation email has been sent to your registered email address.</p>
-          <p class="mb-0">
-            <strong>Booking Reference:</strong> <span class="badge bg-primary"><%= booking.bookingReference %></span>
-          </p>
+          <h2 class="mb-3">Thành công!</h2>
         </div>
       </div>
 
       <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h4 class="mb-0">Booking Details</h4>
-          <div>
-            <button class="btn btn-sm btn-outline-primary me-2" onclick="window.print()">
-              <i class="fas fa-print me-1"></i> Print
-            </button>
-            <a href="/bookings/my-bookings" class="btn btn-sm btn-primary">
-              My Bookings
-            </a>
-          </div>
-        </div>
+        
         <div class="card-body">
           <div class="row">
-            <div class="col-md-6 mb-4">
-              <h5>Chi tiết hành trình</h5>
-              <table class="table table-borderless table-sm">
-                <tr>
-                  <td><strong>Từ:</strong></td>
-                  <td><%= bus.route.departureCity %></td>
-                </tr>
-                <tr>
-                  <td><strong>Đến:</strong></td>
-                  <td><%= bus.route.arrivalCity %></td>
-                </tr>
-                <tr>
-                  <td><strong>Date:</strong></td>
-                  <td><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></td>
-                </tr>
-                <tr>
-                  <td><strong>Khởi Hành:</strong></td>
-                  <td><%= new Date(bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></td>
-                </tr>
-                <tr>
-                  <td><strong>Đến Nơi:</strong></td>
-                  <td><%= new Date(bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></td>
-                </tr>
-                <tr>
-                  <td><strong>Duration:</strong></td>
-                  <td>
-                    <%= Math.floor((new Date(bus.arrivalTime) - new Date(bus.departureTime)) / 3600000) %>h 
-                    <%= Math.floor(((new Date(bus.arrivalTime) - new Date(bus.departureTime)) % 3600000) / 60000) %>m
-                  </td>
-                </tr>
-              </table>
-            </div>
-            <div class="col-md-6 mb-4">
-              <h5>Bus Details</h5>
-              <table class="table table-borderless table-sm">
-                <tr>
-                  <td><strong>Bus Name:</strong></td>
-                  <td><%= bus.busName %></td>
-                </tr>
-                <tr>
-                  <td><strong>Bus Number:</strong></td>
-                  <td><%= bus.busNumber %></td>
-                </tr>
-                <tr>
-                  <td><strong>Bus Type:</strong></td>
-                  <td><%= bus.busType %></td>
-                </tr>
-                <tr>
-                  <td><strong>Amenities:</strong></td>
-                  <td>
-                    <% if (bus.amenities.wifi) { %><span class="badge bg-light text-dark me-1">WiFi</span><% } %>
-                    <% if (bus.amenities.usb) { %><span class="badge bg-light text-dark me-1">USB</span><% } %>
-                    <% if (bus.amenities.food) { %><span class="badge bg-light text-dark me-1">Food</span><% } %>
-                    <% if (bus.amenities.waterBottle) { %><span class="badge bg-light text-dark me-1">Water</span><% } %>
-                    <% if (bus.amenities.blanket) { %><span class="badge bg-light text-dark me-1">Blanket</span><% } %>
-                    <% if (bus.amenities.entertainment) { %><span class="badge bg-light text-dark me-1">Entertainment</span><% } %>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="mb-4">
-            <h5>Thông tin hành khách</h5>
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Seat No</th>
-                    <th>Passenger Name</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% booking.seats.forEach(seat => { %>
-                    <tr>
-                      <td><%= seat.seatNumber %></td>
-                      <td><%= seat.passengerName %></td>
-                      <td><%= seat.passengerAge %></td>
-                      <td><%= seat.passengerGender %></td>
-                    </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-            </div>
-          </div>
 
           <hr>
 
@@ -146,11 +42,11 @@
               <h5>Thông tin thanh toán</h5>
               <table class="table table-borderless table-sm">
                 <tr>
-                  <td><strong>Payment Method:</strong></td>
+                  <td><strong>Phương thức thanh toán:</strong></td>
                   <td class="text-capitalize"><%= booking.paymentMethod.replace('_', ' ') %></td>
                 </tr>
                 <tr>
-                  <td><strong>Payment Status:</strong></td>
+                  <td><strong>Trạng thái:</strong></td>
                   <td>
                     <span class="badge bg-<%= booking.paymentStatus === 'completed' ? 'success' : booking.paymentStatus === 'pending' ? 'warning' : 'danger' %>">
                       <%= booking.paymentStatus.toUpperCase() %>
@@ -158,22 +54,14 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><strong>Booking Date:</strong></td>
-                  <td><%= new Date(booking.bookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></td>
+                  <td><strong>Ngày đặt:</strong></td>
+                  <td><%= new Date(booking.bookingDate).toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></td>
                 </tr>
               </table>
             </div>
             <div class="col-md-6 mb-4">
-              <h5>Fare Details</h5>
+              <h5>Chi tiết giá</h5>
               <table class="table table-borderless table-sm">
-                <tr>
-                  <td><strong>Base Fare:</strong></td>
-                  <td><%= (booking.totalAmount).toLocaleString() %> VND</td>
-                </tr>
-                <tr>
-                  <td><strong>Service Fee:</strong></td>
-                  <td>0 VND</td>
-                </tr>
                 <tr class="fw-bold">
                   <td><strong>Tổng số tiền:</strong></td>
                   <td><%= booking.totalAmount.toLocaleString() %> VND</td>
@@ -181,24 +69,15 @@
               </table>
             </div>
           </div>
-
-          <div class="alert alert-warning">
-            <h6 class="mb-2"><i class="fas fa-exclamation-triangle me-2"></i> Important Information</h6>
-            <ul class="mb-0 ps-3">
-              <li>Please arrive at least 30 minutes before the scheduled departure time.</li>
-              <li>Carry a valid ID proof matching the details provided during booking.</li>
-              <li>For any assistance, please contact our customer support at support@vexereclone.com or call +84 123 456 789.</li>
-            </ul>
-          </div>
         </div>
       </div>
 
       <div class="text-center mb-5">
         <a href="/" class="btn btn-outline-secondary me-2">
-          <i class="fas fa-home me-1"></i> Return to Home
+          <i class="fas fa-home me-1"></i> Quay về Trang Chủ
         </a>
         <a href="/buses/search" class="btn btn-primary">
-          <i class="fas fa-search me-1"></i> Search More Buses
+          <i class="fas fa-search me-1"></i> Tìm Xe Khác
         </a>
       </div>
     </div>

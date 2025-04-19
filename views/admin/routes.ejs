@@ -14,7 +14,7 @@
             <i class="fas fa-route me-2"></i> Tuyến Đường
           </a>
           <a href="/admin/buses" class="list-group-item list-group-item-action">
-            <i class="fas fa-bus me-2"></i> Xe Buýt
+            <i class="fas fa-bus me-2"></i> Xe
           </a>
           <a href="/admin/bookings" class="list-group-item list-group-item-action">
             <i class="fas fa-ticket-alt me-2"></i> Đặt Vé
@@ -169,10 +169,7 @@
                         <td><%= route.departureCity %></td>
                         <td><%= route.arrivalCity %></td>
                         <td><%= route.distance %></td>
-                        <td>
-                          <%= Math.floor(route.estimatedDuration / 60) %> giờ 
-                          <%= route.estimatedDuration % 60 %> phút
-                        </td>
+                        <td><%= route.estimatedDuration %></td>
                         <td>
                           <% if (route.createdAt) { %>
                             <%= new Date(route.createdAt).toLocaleString('vi-VN') %>

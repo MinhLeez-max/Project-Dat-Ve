@@ -14,7 +14,7 @@
             <i class="fas fa-route me-2"></i> Tuyến Đường
           </a>
           <a href="/admin/buses" class="list-group-item list-group-item-action active">
-            <i class="fas fa-bus me-2"></i> Xe Buýt
+            <i class="fas fa-bus me-2"></i> Xe
           </a>
           <a href="/admin/bookings" class="list-group-item list-group-item-action">
             <i class="fas fa-ticket-alt me-2"></i> Đặt Vé
@@ -30,7 +30,7 @@
       <% if (locals.addBus) { %>
         <!-- Add Bus Form -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="mb-0">Thêm Xe Buýt Mới</h2>
+          <h2 class="mb-0">Thêm Xe Mới</h2>
           <a href="/admin/buses" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-1"></i> Quay Lại Danh Sách
           </a>
@@ -45,11 +45,9 @@
                   <div class="col-md-6">
                     <label for="routeId" class="form-label">Tuyến Đường</label>
                     <select class="form-select" id="routeId" name="routeId" required>
-                      <option value="">Select Tuyến Đường</option>
+                      <option value="">Chọn Tuyến</option>
                       <% routes.forEach(route => { %>
-                        <option value="<%= route.id %>">
-                          <%= route.departureCity %> đến <%= route.arrivalCity %>
-                        </option>
+                        <option value="<%= route.id %>"><%= route.departureCity %> đến <%= route.arrivalCity %></option>
                       <% }); %>
                     </select>
                     <div class="invalid-feedback">
@@ -96,7 +94,7 @@
                     <label for="departureTime" class="form-label">Thời Gian Khởi Hành</label>
                     <%
   let departureValue = '';
-  if (bus && bus.departureTime && !isNaN(new Date(bus.departureTime))) {
+  if (typeof bus !== 'undefined' && bus.departureTime && !isNaN(new Date(bus.departureTime))) {
     departureValue = new Date(bus.departureTime).toISOString().slice(0, 16);
   }
 %>
@@ -108,12 +106,12 @@
                   <div class="col-md-6">
                     <label for="arrivalTime" class="form-label">Thời Gian Đến</label>
                     <%
-  let arrivalValue = '';
-  if (bus && bus.arrivalTime && !isNaN(new Date(bus.arrivalTime))) {
-    arrivalValue = new Date(bus.arrivalTime).toISOString().slice(0, 16);
-  }
-%>
-<input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" value="<%= arrivalValue %>" required>
+                    let arrivalValue = '';
+                    if (typeof bus !== 'undefined' && bus.arrivalTime && !isNaN(new Date(bus.arrivalTime))) {
+                      arrivalValue = new Date(bus.arrivalTime).toISOString().slice(0, 16);
+                    }
+                  %>
+                  <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" value="<%= arrivalValue %>" required>
                     <div class="invalid-feedback">
                       Vui lòng nhập thời gian đến.
                     </div>
@@ -210,7 +208,7 @@
       <% } else if (locals.editBus) { %>
         <!-- Edit Bus Form -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="mb-0">Sửa Thông Tin Xe Buýt</h2>
+          <h2 class="mb-0">Sửa Thông Tin Xe</h2>
           <a href="/admin/buses" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-1"></i> Quay Lại Danh Sách
           </a>
@@ -396,9 +394,9 @@
       <% } else { %>
         <!-- Buses List -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="mb-0">Quản Lý Xe Buýt</h2>
+          <h2 class="mb-0">Quản Lý Xe</h2>
           <a href="/admin/buses/add" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Thêm Xe Buýt Mới
+            <i class="fas fa-plus me-1"></i> Thêm Xe Mới
           </a>
         </div>
         
@@ -406,7 +404,7 @@
           <div class="card-body">
             <% if (buses.length === 0) { %>
               <div class="text-center py-4">
-                <p class="mb-0">Không tìm thấy xe buýt nào. Vui lòng thêm xe buýt mới.</p>
+                <p class="mb-0">Không tìm thấy xe nào. Vui lòng thêm xe mới.</p>
               </div>
             <% } else { %>
               <div class="table-responsive">
@@ -425,6 +423,7 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <% console.log(buses); %>
                     <% buses.forEach((bus, index) => { %>
                       <tr>
                         <td><%= index + 1 %></td>
@@ -439,16 +438,24 @@
                         </td>
                         <td><%= bus.type %></td>
                         <td>
-                          <%= new Date(bus.departureTime).toLocaleString('vi-VN', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          }) %>
+                          <% if (bus.departureTime) { %>
+                            <%= new Date(bus.departureTime).toLocaleString('vi-VN', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            }) %>
+                          <% } else { %>
+                            <em>Không xác định</em>
+                          <% } %>
                         </td>
                         <td>
-                          <%= new Date(bus.arrivalTime).toLocaleString('vi-VN', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          }) %>
+                          <% if (bus.arrivalTime) { %>
+                            <%= new Date(bus.arrivalTime).toLocaleString('vi-VN', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            }) %>
+                          <% } else { %>
+                            <em>Không xác định</em>
+                          <% } %>
                         </td>
                         <td><%= bus.fare.toLocaleString('vi-VN') %> đ</td>
                         <td>

@@ -1,13 +1,13 @@
 const { Bus, Route, Booking } = require('../models/index');
 
 module.exports = {
-  // Get all routes and buses
+  // Lấy tất cả tuyến đường và xe
   getAllRoutesAndBuses: async (req, res) => {
     try {
-      // Get all routes
+      // Lấy tất cả tuyến đường
       const routes = await Route.find().sort({ departureCity: 1 });
       
-      // Get buses for each route
+      // Lấy danh sách xe cho từng tuyến đường
       const routesWithBuses = await Promise.all(routes.map(async (route) => {
         const buses = await Bus.find({ route: route._id })
                            .sort({ departureDate: 1, departureTime: 1 });
@@ -29,13 +29,13 @@ module.exports = {
     }
   },
   
-  // Get search form
+  // Hiển thị form tìm kiếm
   getSearchForm: async (req, res) => {
     try {
-      // Get unique departure cities using MongoDB
+      // Lấy danh sách các thành phố khởi hành duy nhất
       const departureCities = await Route.distinct('departureCity');
       
-      // Get unique arrival cities using MongoDB
+      // Lấy danh sách các thành phố đến duy nhất
       const arrivalCities = await Route.distinct('arrivalCity');
       
       res.render('bus/search', {
@@ -50,18 +50,18 @@ module.exports = {
     }
   },
 
-  // Search buses
+  // Tìm kiếm xe
   searchBuses: async (req, res) => {
     try {
       const { departureCity, arrivalCity, departureDate } = req.body;
       
-      // Validate input
+      // Kiểm tra đầu vào
       if (!departureCity || !arrivalCity || !departureDate) {
         req.flash('error_msg', 'Vui lòng điền đầy đủ thông tin');
         return res.redirect('/buses/search');
       }
 
-      // Find routes matching the search criteria
+      // Tìm tuyến đường phù hợp với tiêu chí tìm kiếm
       const routes = await Route.find({
         departureCity: departureCity,
         arrivalCity: arrivalCity
@@ -74,12 +74,12 @@ module.exports = {
 
       const routeIds = routes.map(route => route._id);
 
-      // Set date range for search
+      // Thiết lập phạm vi ngày tìm kiếm
       const date = new Date(departureDate);
       const nextDay = new Date(departureDate);
       nextDay.setDate(nextDay.getDate() + 1);
 
-      // Find buses for these routes and date
+      // Tìm xe phù hợp với tuyến đường và ngày
       const buses = await Bus.find({
         route: { $in: routeIds },
         departureDate: {
@@ -102,12 +102,12 @@ module.exports = {
     }
   },
 
-  // Get bus details and available seats
+  // Lấy thông tin chi tiết xe và ghế trống
   getBusDetails: async (req, res) => {
     try {
       const busId = req.params.id;
       
-      // Find bus with details using MongoDB
+      // Tìm xe với thông tin chi tiết
       const bus = await Bus.findById(busId).populate('route');
       
       if (!bus) {
@@ -115,13 +115,13 @@ module.exports = {
         return res.redirect('/buses/search');
       }
 
-      // Find existing bookings for this bus
+      // Tìm các đặt chỗ hiện có cho xe này
       const bookings = await Booking.find({
         bus: busId,
         status: { $ne: 'cancelled' }
       });
 
-      // Create an array of already booked seats
+      // Tạo danh sách các ghế đã được đặt
       const bookedSeats = [];
       bookings.forEach(booking => {
         if (booking.seatNumbers && booking.seatNumbers.length) {
@@ -143,14 +143,42 @@ module.exports = {
     }
   },
 
-  // Admin: Get all buses
+  // Lấy danh sách tất cả xe
   getAllBuses: async (req, res) => {
     try {
-      // Using MongoDB to fetch all buses with routes
+      // Lấy danh sách xe từ MongoDB
       const buses = await Bus.find()
-        .populate('route')
+        .populate('route') // Lấy thông tin tuyến đường
         .sort({ departureDate: 1, departureTime: 1 });
+  
+      // Kiểm tra và xử lý thời gian
+      buses.forEach(bus => {
+        try {
+          if (bus.departureTime) {
+            const departureDate = new Date(bus.departureTime);
+            if (!isNaN(departureDate)) {
+              bus.departureTime = departureDate.toISOString();
+            } else {
+              bus.departureTime = null;
+            }
+          }
       
+          if (bus.arrivalTime) {
+            const arrivalDate = new Date(bus.arrivalTime);
+            if (!isNaN(arrivalDate)) {
+              bus.arrivalTime = arrivalDate.toISOString();
+            } else {
+              bus.arrivalTime = null;
+            }
+          }
+        } catch (err) {
+          console.error(`Lỗi khi xử lý thời gian cho xe: ${bus._id}`, err);
+          bus.departureTime = null;
+          bus.arrivalTime = null;
+        }
+      });
+  
+      // Hiển thị danh sách xe
       res.render('admin/buses', {
         title: 'Quản lý Xe',
         buses
@@ -162,15 +190,17 @@ module.exports = {
     }
   },
 
-  // Admin: Render add bus form
+  // Admin: Hiển thị form thêm xe
   getAddBus: async (req, res) => {
     try {
-      // Using MongoDB to fetch routes sorted by departure city
+      // Lấy danh sách tuyến đường
       const routes = await Route.find().sort({ departureCity: 1 });
       
+      const bus = {};
       res.render('admin/buses', {
         title: 'Thêm Xe Mới',
         routes,
+        bus,
         addBus: true
       });
     } catch (err) {
@@ -180,68 +210,47 @@ module.exports = {
     }
   },
 
-  // Admin: Add new bus
+  // Admin: Thêm xe mới
   addBus: async (req, res) => {
     try {
+      console.log("Dữ liệu nhận được từ form:", req.body);
+  
       const { 
-        routeId, busNumber, busName, busType, totalSeats, 
-        departureTime, arrivalTime, price, 
-        wifi, usb, food, waterBottle, blanket, entertainment,
-        rows, columns, layout
+        routeId, busNumber, name, type, capacity, 
+        departureDate, departureTime, arrivalDate, arrivalTime, fare 
       } = req.body;
-      
-      // Validate input
-      if (!routeId || !busNumber || !busName || !busType || !totalSeats || 
-          !departureTime || !arrivalTime || !price || !rows || !columns || !layout) {
-        req.flash('error_msg', 'Vui lòng điền đầy đủ thông tin');
+  
+      // Kiểm tra dữ liệu
+      if (!routeId || !busNumber || !name || !type || !capacity || 
+          !departureDate || !departureTime || !arrivalDate || !arrivalTime || !fare) {
+        req.flash('error_msg', 'Vui lòng điền đủ thông tin');
         return res.redirect('/admin/buses/add');
       }
-
-      // Check if bus number already exists
-      const existingBus = await Bus.findOne({ busNumber });
-      
-      if (existingBus) {
-        req.flash('error_msg', 'Xe buýt với số hiệu này đã tồn tại');
-        return res.redirect('/admin/buses/add');
-      }
-
-      // Create new bus using MongoDB
+  
+      // Tạo xe mới
       await Bus.create({
         route: routeId,
         busNumber,
-        name: busName,
-        type: busType,
-        capacity: totalSeats,
+        name,
+        type,
+        capacity,
+        departureDate,
         departureTime,
+        arrivalDate,
         arrivalTime,
-        fare: price,
-        departureDate: new Date(), // Mặc định ngày hiện tại, cần cập nhật sau
-        arrivalDate: new Date(),   // Mặc định ngày hiện tại, cần cập nhật sau
-        amenities: {
-          wifi: wifi === 'on',
-          usb: usb === 'on',
-          food: food === 'on',
-          waterBottle: waterBottle === 'on',
-          blanket: blanket === 'on',
-          entertainment: entertainment === 'on'
-        },
-        seatLayout: {
-          rows,
-          columns,
-          layout
-        }
+        fare
       });
-      
+  
       req.flash('success_msg', 'Thêm xe mới thành công');
       res.redirect('/admin/buses');
     } catch (err) {
-      console.error(err);
+      console.error("Lỗi khi thêm xe:", err);
       req.flash('error_msg', 'Lỗi khi thêm xe mới');
-      res.redirect('/admin/buses');
+      res.redirect('/admin/buses/add');
     }
   },
 
-  // Admin: Get bus by ID
+  // Admin: Lấy thông tin xe theo ID
   getBus: async (req, res) => {
     try {
       const bus = await Bus.findById(req.params.id);
@@ -265,7 +274,7 @@ module.exports = {
     }
   },
 
-  // Admin: Update bus
+  // Admin: Cập nhật thông tin xe
   updateBus: async (req, res) => {
     try {
       const { 
@@ -275,14 +284,14 @@ module.exports = {
         rows, columns, layout
       } = req.body;
       
-      // Validate input
+      // Kiểm tra dữ liệu
       if (!routeId || !busNumber || !busName || !busType || !totalSeats || 
           !departureTime || !arrivalTime || !fare || !rows || !columns || !layout) {
         req.flash('error_msg', 'Vui lòng điền đầy đủ thông tin');
         return res.redirect(`/admin/buses/${req.params.id}`);
       }
 
-      // Find bus
+      // Tìm xe
       const bus = await Bus.findById(req.params.id);
       
       if (!bus) {
@@ -290,17 +299,17 @@ module.exports = {
         return res.redirect('/admin/buses');
       }
       
-      // Check if bus number already exists (except for this bus)
+      // Kiểm tra số xe đã tồn tại
       if (busNumber !== bus.busNumber) {
         const existingBus = await Bus.findOne({ busNumber });
         
         if (existingBus && !existingBus._id.equals(bus._id)) {
-          req.flash('error_msg', 'Xe buýt với số hiệu này đã tồn tại');
+          req.flash('error_msg', 'Xe với số hiệu này đã tồn tại');
           return res.redirect(`/admin/buses/${req.params.id}`);
         }
       }
 
-      // Update bus with MongoDB
+      // Cập nhật thông tin xe
       await Bus.findByIdAndUpdate(req.params.id, {
         route: routeId,
         busNumber,
@@ -334,10 +343,10 @@ module.exports = {
     }
   },
 
-  // Admin: Delete bus
+  // Admin: Xóa xe
   deleteBus: async (req, res) => {
     try {
-      // Check if bus has any active bookings
+      // Kiểm tra nếu xe có các đặt chỗ đang hoạt động
       const bookings = await Booking.find({ 
         bus: req.params.id,
         status: { $ne: 'cancelled' }
@@ -348,7 +357,7 @@ module.exports = {
         return res.redirect('/admin/buses');
       }
       
-      // Find and delete bus
+      // Tìm và xóa xe
       const bus = await Bus.findById(req.params.id);
       
       if (!bus) {

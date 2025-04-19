@@ -14,7 +14,7 @@
             <i class="fas fa-route me-2"></i> Tuyến Đường
           </a>
           <a href="/admin/buses" class="list-group-item list-group-item-action">
-            <i class="fas fa-bus me-2"></i> Xe Buýt
+            <i class="fas fa-bus me-2"></i> Xe
           </a>
           <a href="/admin/bookings" class="list-group-item list-group-item-action">
             <i class="fas fa-ticket-alt me-2"></i> Đặt Vé
@@ -31,25 +31,7 @@
       
       <!-- Stats Cards -->
       <div class="row mb-4">
-        <div class="col-md-3 mb-4">
-          <div class="card dashboard-card bg-primary text-white h-100">
-            <div class="card-body">
-              <div class="d-flex justify-content-between">
-                <div>
-                  <h6 class="text-white-50">Tổng Số Đặt Vé</h6>
-                  <div class="stat-number"><%= stats.bookins %></div>
-                </div>
-                <div>
-                  <i class="fas fa-ticket-alt fa-3x text-white-50"></i>
-                </div>
-              </div>
-              <p class="mb-0 mt-2 small">
-                <span class="me-2"><i class="fas fa-clock"></i> Hôm nay: <%= stats.todayBookings %></span>
-                <span><i class="fas fa-exclamation-circle"></i> Đang xử lý: <%= stats.pendingBookings %></span>
-              </p>
-            </div>
-          </div>
-        </div>
+        
         
         <div class="col-md-3 mb-4">
           <div class="card dashboard-card bg-success text-white h-100">
@@ -57,11 +39,9 @@
               <div class="d-flex justify-content-between">
                 <div>
                   <h6 class="text-white-50">Tổng Doanh Thu</h6>
-                  <div class="stat-number"><%= stats.totalRevenue.toLocaleString() %> đ</div>
+                  <div class="stat-number"><%= stats.totalRevenue.toLocaleString() %>đ</div>
                 </div>
-                <div>
-                  <i class="fas fa-money-bill-wave fa-3x text-white-50"></i>
-                </div>
+                
               </div>
               <p class="mb-0 mt-2 small">
                 <span><i class="fas fa-calendar-alt"></i> Tháng này: <%= stats.monthlyRevenue.toLocaleString() %> đ</span>
@@ -75,7 +55,7 @@
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <div>
-                  <h6 class="text-white-50">Xe Buýt</h6>
+                  <h6 class="text-white-50">Xe</h6>
                   <div class="stat-number"><%= stats.buses %></div>
                 </div>
                 <div>
@@ -123,7 +103,6 @@
               <table class="table table-hover align-middle">
                 <thead>
                   <tr>
-                    <th>Mã Đặt Vé</th>
                     <th>Khách Hàng</th>
                     <th>Tuyến Đường</th>
                     <th>Ngày Khởi Hành</th>
@@ -136,10 +115,9 @@
                 <tbody>
                   <% recentBookings.forEach(booking => { %>
                     <tr>
-                      <td><span class="badge bg-secondary"><%= booking.bookingReference %></span></td>
                       <td><%= booking.user.name %></td>
                       <td><%= booking.bus.route.departureCity %> - <%= booking.bus.route.arrivalCity %></td>
-                      <td><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
+                      <td><%= new Date(booking.journeyDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
                       <td><%= booking.seats ? booking.seats.length : 0 %></td>
                       <td><%= booking.totalAmount.toLocaleString() %> VND</td>
                       <td>
@@ -174,7 +152,7 @@
                   <i class="fas fa-plus me-2"></i> Thêm Tuyến Đường Mới
                 </a>
                 <a href="/admin/buses/add" class="btn btn-outline-primary">
-                  <i class="fas fa-plus me-2"></i> Thêm Xe Buýt Mới
+                  <i class="fas fa-plus me-2"></i> Thêm Xe  Mới
                 </a>
                 <a href="/admin/bookings" class="btn btn-outline-primary">
                   <i class="fas fa-search me-2"></i> Xem Tất Cả Đặt Vé
@@ -183,54 +161,15 @@
             </div>
           </div>
         </div>
-        
         <div class="col-md-8 mb-4">
           <div class="card h-100">
             <div class="card-header">
-              <h5 class="mb-0">Thông Tin Hệ Thống</h5>
+              <h5 class="mb-0">Thông Báo</h5>
             </div>
             <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-borderless">
-                  <tr>
-                    <td width="30%"><strong>Môi Trường:</strong></td>
-                    <td><%= process.env.NODE_ENV || 'development' %></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Phiên Bản Node.js:</strong></td>
-                    <td><%= process.version %></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Thời Gian Hoạt Động:</strong></td>
-                    <td>
-                      <% 
-                        const uptime = process.uptime();
-                        const days = Math.floor(uptime / 86400);
-                        const hours = Math.floor((uptime % 86400) / 3600);
-                        const minutes = Math.floor((uptime % 3600) / 60);
-                      %>
-                      <%= days %> ngày, <%= hours %> giờ, <%= minutes %> phút
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Bộ Nhớ Sử Dụng:</strong></td>
-                    <td>
-                      <% 
-                        const memoryUsage = process.memoryUsage();
-                        const mbUsed = Math.round(memoryUsage.rss / 1024 / 1024 * 100) / 100;
-                      %>
-                      <%= mbUsed %> MB
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Thời Gian Hiện Tại:</strong></td>
-                    <td><%= new Date().toLocaleString() %></td>
-                  </tr>
-                </table>
-              </div>
+              <p class="text-center">Không có thông báo mới.</p>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>

@@ -1,13 +1,13 @@
-// Common functionality for all pages
+// Chức năng chung cho tất cả các trang
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize Bootstrap tooltips
+  // Khởi tạo Bootstrap tooltips
   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
   
-  // Close alert messages after 5 seconds
+  // Tự động đóng thông báo sau 8 giây
   const alertMessages = document.querySelectorAll('.alert:not(.alert-persistent)');
   if (alertMessages.length > 0) {
     setTimeout(() => {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 8000);
   }
   
-  // Form validation
+  // Xác thực biểu mẫu
   const forms = document.querySelectorAll('.needs-validation');
   
   Array.from(forms).forEach(form => {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, false);
   });
   
-  // City search autocomplete
+  // Tự động hoàn thành tìm kiếm thành phố
   const cityInputs = document.querySelectorAll('.city-autocomplete');
   
   if (cityInputs.length > 0) {
@@ -44,12 +44,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const value = this.value.toLowerCase();
             const datalist = document.getElementById(this.getAttribute('list'));
             
-            // Clear existing options
+            // Xóa các tùy chọn hiện có
             while (datalist.firstChild) {
               datalist.removeChild(datalist.firstChild);
             }
             
-            // Add filtered cities as options
+            // Thêm các thành phố phù hợp làm tùy chọn
             cities.filter(city => city.toLowerCase().includes(value))
               .forEach(city => {
                 const option = document.createElement('option');
@@ -59,19 +59,19 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         });
       })
-      .catch(error => console.error('Error loading cities:', error));
+      .catch(error => console.error('Lỗi khi tải danh sách thành phố:', error));
   }
   
-  // Date picker configuration
+  // Cấu hình bộ chọn ngày (Date Picker)
   const datePickers = document.querySelectorAll('.datepicker');
   
   if (datePickers.length > 0) {
     datePickers.forEach(input => {
-      // Set min date to today
+      // Đặt ngày tối thiểu là ngày hôm nay
       const today = new Date().toISOString().split('T')[0];
       input.setAttribute('min', today);
       
-      // Set default date to today if empty
+      // Đặt ngày mặc định là hôm nay nếu trống
       if (!input.value) {
         input.value = today;
       }

@@ -3,18 +3,18 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { User, Route, Bus } = require('./models');
 
-// Connect to database directly
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/doandatve';
+// Kết nối trực tiếp tới cơ sở dữ liệu
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/project';
 
-console.log('Connecting to MongoDB...');
+console.log('Đang kết nối tới MongoDB...');
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB connected...'))
+  .then(() => console.log('Kết nối MongoDB thành công...'))
   .catch(err => {
-    console.error('MongoDB connection error:', err.message);
+    console.error('Lỗi kết nối MongoDB:', err.message);
     process.exit(1);
   });
 
-// Sample data
+// Dữ liệu mẫu
 const routes = [
   {
     departureCity: 'Hà Nội',
@@ -71,27 +71,27 @@ const users = [
   }
 ];
 
-// Seed data
+// Hàm seed dữ liệu
 const seedData = async () => {
   try {
-    // Clear existing data
+    // Xóa dữ liệu cũ
     await User.deleteMany({});
     await Route.deleteMany({});
     await Bus.deleteMany({});
 
-    console.log('Old data cleared successfully');
+    console.log('Dữ liệu cũ đã được xóa thành công');
 
-    // Create users
-    // Create users
-const createdUsers = [];
-for (const user of users) {
-  const newUser = new User(user); // Không hash password thủ công
-  const savedUser = await newUser.save(); // middleware sẽ tự hash
-  createdUsers.push(savedUser);
-}
+    // Tạo người dùng
+    const createdUsers = [];
+    for (const user of users) {
+      const newUser = new User(user); // Không cần hash password thủ công
+      const savedUser = await newUser.save(); // Middleware sẽ tự động hash
+      createdUsers.push(savedUser);
+    }
 
+    console.log('Người dùng đã được tạo thành công');
 
-    // Create routes
+    // Tạo tuyến đường
     const createdRoutes = [];
     for (const route of routes) {
       const newRoute = new Route(route);
@@ -99,11 +99,11 @@ for (const user of users) {
       createdRoutes.push(savedRoute);
     }
 
-    console.log('Routes seeded successfully');
+    console.log('Tuyến đường đã được tạo thành công');
 
-    // Create buses for each route
+    // Tạo xe buýt cho từng tuyến đường
     for (const route of createdRoutes) {
-      // Create buses
+      // Tạo xe buýt
       const today = new Date();
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
@@ -164,11 +164,11 @@ for (const user of users) {
       await newBus2.save();
     }
 
-    console.log('Buses seeded successfully');
-    console.log('All data seeded successfully');
+    console.log('Xe buýt đã được tạo thành công');
+    console.log('Tất cả dữ liệu đã được seed thành công');
     process.exit();
   } catch (error) {
-    console.error('Error seeding data:', error);
+    console.error('Lỗi khi seed dữ liệu:', error);
     process.exit(1);
   }
 };

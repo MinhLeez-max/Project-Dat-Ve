@@ -92,7 +92,7 @@
             </div>
 
             <div id="debit_cardDetails" class="payment-details d-none">
-              <h5>Debit Card Details</h5>
+              <h5>Thẻ ghi nợ</h5>
               <div class="alert alert-info mb-4">
                 <i class="fas fa-info-circle me-2"></i>
                 Đây là một ứng dụng demo. Không có khoản thanh toán thực tế sẽ được xử lý.
@@ -118,15 +118,15 @@
             </div>
 
             <div id="bankingDetails" class="payment-details d-none">
-              <h5>Banking Details</h5>
+              <h5>Chuyển khoản</h5>
               <div class="alert alert-info mb-4">
                 <i class="fas fa-info-circle me-2"></i>
                 Đây là một ứng dụng demo. Không có khoản thanh toán thực tế sẽ được xử lý.
               </div>
               <div class="mb-3">
-                <label for="bankName" class="form-label">Bank Name</label>
+                <label for="bankName" class="form-label">Ngân Hàng</label>
                 <select class="form-select" id="bankName">
-                  <option value="">Select Bank</option>
+                  <option value="">Chọn ngân hàng</option>
                   <option value="vietcombank">Vietcombank</option>
                   <option value="techcombank">Techcombank</option>
                   <option value="vietinbank">Vietinbank</option>
@@ -135,25 +135,25 @@
                 </select>
               </div>
               <div class="mb-3">
-                <label for="accountNumber" class="form-label">Account Number</label>
+                <label for="accountNumber" class="form-label">Số tài khoản</label>
                 <input type="text" class="form-control" id="accountNumber">
               </div>
               <div class="mb-3">
-                <label for="accountName" class="form-label">Account Holder Name</label>
+                <label for="accountName" class="form-label">Chủ tài khoản</label>
                 <input type="text" class="form-control" id="accountName">
               </div>
             </div>
 
             <div id="e-walletDetails" class="payment-details d-none">
-              <h5>E-Wallet Details</h5>
+              <h5>Ví Điện Tử</h5>
               <div class="alert alert-info mb-4">
                 <i class="fas fa-info-circle me-2"></i>
                 Đây là một ứng dụng demo. Không có khoản thanh toán thực tế sẽ được xử lý.
               </div>
               <div class="mb-3">
-                <label for="walletType" class="form-label">E-Wallet Provider</label>
+                <label for="walletType" class="form-label">Ví</label>
                 <select class="form-select" id="walletType">
-                  <option value="">Select E-Wallet</option>
+                  <option value="">Chọn Ví</option>
                   <option value="momo">MoMo</option>
                   <option value="zalopay">ZaloPay</option>
                   <option value="vnpay">VNPay</option>
@@ -161,8 +161,8 @@
                 </select>
               </div>
               <div class="mb-3">
-                <label for="walletPhone" class="form-label">Phone Number</label>
-                <input type="text" class="form-control" id="walletPhone" placeholder="Enter the phone number linked to your wallet">
+                <label for="walletPhone" class="form-label">Sô Tài Khoản</label>
+                <input type="text" class="form-control" id="walletPhone" placeholder="Nhập số điện thoại được liên kết với ví của bạn">
               </div>
             </div>
 
@@ -172,7 +172,7 @@
                 Tôi đồng ý với <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản và điều kiện</a>
               </label>
               <div class="invalid-feedback">
-                You must agree to the terms and conditions.
+                Bạn phải đồng ý với điều khoản và điều kiện trước khi tiếp tục.
               </div>
             </div>
 
@@ -192,48 +192,26 @@
     <div class="col-lg-4">
       <div class="card mb-4 position-sticky" style="top: 20px;">
         <div class="card-header">
-          <h5 class="mb-0">Booking Summary</h5>
+          <h5 class="mb-0">Tóm tắt Đặt Vé</h5>
         </div>
         <div class="card-body">
           <div class="mb-3">
             <h6>Chi tiết hành trình</h6>
             <p class="mb-1 small">
-              <strong>TừTừ:</strong> <%= bookingData.bus.departureCity %>
+              <strong>Từ:</strong> <%= bookingData.bus.departureCity %>
             </p>
             <p class="mb-1 small">
               <strong>Đến:</strong> <%= bookingData.bus.arrivalCity %>
             </p>
             <p class="mb-1 small">
-              <strong>Date:</strong> <%= new Date(bookingData.journeyDate).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
-            </p>
-            <p class="mb-1 small">
               <strong>Số Xe:</strong> <%= bookingData.bus.busName %> (<%= bookingData.bus.busNumber %>)
             </p>
-            <p class="mb-1 small">
-              <strong>Khởi Hành:</strong> <%= new Date(bookingData.bus.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
-            </p>
-            <p class="mb-0 small">
-              <strong>Đến Nơi:</strong> <%= new Date(bookingData.bus.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %>
-            </p>
-          </div>
-          <hr>
-          <div class="mb-3">
-            <h6>Passengers</h6>
-            <span><%= bookingData.bus.fare ? bookingData.bus.fare.toLocaleString('vi-VN') : '0' %> VND</span>
           </div>
           <hr>
           <div class="mb-3">
             <div class="d-flex justify-content-between mb-2">
               <span>Giá Ghế:</span>
               <span><%= bookingData.bus.fare.toLocaleString() %> VND</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Số lượng ghế:</span>
-              <span><%= bookingData && bookingData.seats ? bookingData.seats.length : 0 %></span>
-            </div>
-            <div class="d-flex justify-content-between mb-0">
-              <span>Service Fee:</span>
-              <span>0 VND</span>
             </div>
           </div>
           <hr>
@@ -247,7 +225,7 @@
   </div>
 </div>
 
-<!-- Terms Modal -->
+<!-- Điều khoản phương thức -->
 <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
@@ -292,12 +270,12 @@
     
     paymentMethodInputs.forEach(input => {
       input.addEventListener('change', function() {
-        // Hide all payment detail containers
+        // Ẩn tất cả các container chi tiết thanh toán
         paymentDetailsContainers.forEach(container => {
           container.classList.add('d-none');
         });
         
-        // Show the selected payment method details
+        // Hiển thị chi tiết phương thức thanh toán đã chọn
         const selectedMethod = this.value;
         const selectedContainer = document.getElementById(`${selectedMethod}Details`);
         

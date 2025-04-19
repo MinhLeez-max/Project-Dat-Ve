@@ -38,7 +38,7 @@
         </ul>
 
         <div class="tab-content" id="bookingTabsContent">
-          <!-- Upcoming Bookings -->
+          <!-- Đặt chỗ sắp tới -->
           <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
             <% 
               const upcomingBookings = bookings.filter(booking => 
@@ -68,8 +68,8 @@
                         <div class="row mb-3">
                           <div class="col-md-4">
                             <div class="d-flex flex-column">
-                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
-                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
                               <span class="text-muted small"><%= booking.route.departureCity %></span>
                             </div>
                           </div>
@@ -88,8 +88,8 @@
                           </div>
                           <div class="col-md-4 text-end">
                             <div class="d-flex flex-column align-items-end">
-                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
-                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
                               <span class="text-muted small"><%= booking.route.arrivalCity %></span>
                             </div>
                           </div>
@@ -112,7 +112,7 @@
                             <i class="fas fa-bookmark me-1"></i> <%= booking.bookingReference %>
                           </span>
                           <span>
-                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
                           </span>
                         </div>
                       </div>
@@ -137,7 +137,7 @@
             <% } %>
           </div>
           
-          <!-- Completed Bookings -->
+          <!-- Đặt chỗ đã hoàn tất -->
           <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
             <% 
               const completedBookings = bookings.filter(booking => 
@@ -165,8 +165,8 @@
                         <div class="row mb-3">
                           <div class="col-md-4">
                             <div class="d-flex flex-column">
-                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
-                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
                               <span class="text-muted small"><%= booking.route.departureCity %></span>
                             </div>
                           </div>
@@ -185,8 +185,8 @@
                           </div>
                           <div class="col-md-4 text-end">
                             <div class="d-flex flex-column align-items-end">
-                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
-                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
                               <span class="text-muted small"><%= booking.route.arrivalCity %></span>
                             </div>
                           </div>
@@ -209,7 +209,7 @@
                             <i class="fas fa-bookmark me-1"></i> <%= booking.bookingReference %>
                           </span>
                           <span>
-                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
                           </span>
                         </div>
                       </div>
@@ -226,7 +226,7 @@
             <% } %>
           </div>
           
-          <!-- Cancelled Bookings -->
+          <!-- Đặt chỗ đã hủy -->
           <div class="tab-pane fade" id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
             <% 
               const cancelledBookings = bookings.filter(booking => booking.status === 'cancelled');
@@ -252,8 +252,8 @@
                         <div class="row mb-3">
                           <div class="col-md-4">
                             <div class="d-flex flex-column">
-                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
-                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="fw-bold"><%= new Date(booking.busId.departureTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
                               <span class="text-muted small"><%= booking.route.departureCity %></span>
                             </div>
                           </div>
@@ -272,8 +272,8 @@
                           </div>
                           <div class="col-md-4 text-end">
                             <div class="d-flex flex-column align-items-end">
-                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
-                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              <span class="fw-bold"><%= new Date(booking.busId.arrivalTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
+                              <span class="text-muted small"><%= new Date(booking.journeyDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
                               <span class="text-muted small"><%= booking.route.arrivalCity %></span>
                             </div>
                           </div>
@@ -296,7 +296,7 @@
                             <i class="fas fa-bookmark me-1"></i> <%= booking.bookingReference %>
                           </span>
                           <span class="me-3">
-                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                            <i class="fas fa-calendar-alt me-1"></i> Booked on <%= new Date(booking.bookingDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
                           </span>
                           <% if (booking.paymentStatus === 'refunded') { %>
                             <span class="badge bg-info">REFUNDED</span>
